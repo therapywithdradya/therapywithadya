@@ -1,0 +1,36 @@
+---
+description: Project rules
+alwaysApply: true
+---
+
+# Project rules
+
+This is a small production website for one independent practice in India. It is not a SaaS product. Public marketing pages and a paid booking flow are in scope. An admin dashboard, user accounts, a CMS, analytics, and two-way calendar sync are out of scope.
+
+## Product and code rules
+
+1. Do not add features that were not requested. Do not create an admin dashboard.
+2. Keep the architecture appropriate for a small production website. Avoid unnecessary dependencies. Before installing one, write a one-line justification.
+3. All secrets, payments, OAuth, and sensitive operations stay on the server. Never expose the Razorpay secret, Google client secret, Google refresh token, Supabase service-role key, database credentials, or email API keys to the browser. Only `NEXT_PUBLIC_*` variables may reach the client, and none of them may be secret.
+4. Use environment variables for all credentials. Validate them with a typed env module.
+5. Validate all input on the server with zod, even when the client already validated it.
+6. Never trust a frontend payment status. Verify Razorpay signatures on the server. Never write fake or mock payment-success logic on a production code path.
+7. Never log secrets or personal data (email, phone, name, tokens, signatures).
+8. Business logic lives in `src/lib` and stays framework-independent where practical. UI components stay thin.
+9. The site is fully responsive (mobile first) and accessible: semantic HTML, labels, focus states, keyboard navigation, sufficient contrast, and reduced motion respected. It is also SEO-friendly.
+10. Placeholder or dummy content must be clearly marked and must never be presented as a real claim. Do not invent qualifications, testimonials, statistics, or professional claims.
+11. After every meaningful change run `npm run typecheck`, `npm run lint`, and `npm run build`. Fix errors before moving on.
+12. Explain any large architectural change in `docs/DECISIONS.md` before implementing it.
+13. Store money as integer paise, never floats. Store timestamps as UTC `timestamptz`. Display them in the business timezone (default `Asia/Kolkata`, configurable).
+14. Minimize sensitive data. Collect only name, email, phone, and an optional short note. Never ask for clinical or health details.
+
+## Autonomy and safety rules
+
+The user is not watching this run.
+
+15. Never ask the user questions and never wait for confirmation. If something is ambiguous, pick the safest reasonable option and append an entry to `docs/DECISIONS.md` (date, decision, reason, alternative considered). Stop early only for something truly blocking: a missing credential that cannot be stubbed, or an irreversible action.
+16. Git: after each completed and verified phase, make one commit with a clear message. Never push. Never force anything. Never run `git reset --hard`, `git clean`, `git rebase`, or anything else that rewrites history. Stay on the current branch.
+17. Never deploy and never run `vercel`, `supabase db push`, `supabase db reset`, or any command that touches a remote or production service. Use only test or dev credentials. If a command would affect anything outside this folder, do not run it, and note it in `docs/DECISIONS.md` instead.
+18. Never run destructive commands (`rm -rf` outside build artefacts such as `.next` or `node_modules`, deleting files outside the project, `sudo`). Never edit files outside the project folder. Never print or commit the contents of `.env` files.
+19. Never run interactive commands that wait for input. Always pass non-interactive flags. Start long-running processes such as the dev server in the background with a time limit, test them with curl, and always kill them afterward. Never leave a process running and never block on one.
+20. Fix-loop limit: if the same error persists after three genuinely different fix attempts, stop trying. If the attempts made things worse, revert that specific change by editing, not with `git reset`. Record the problem in `docs/KNOWN_ISSUES.md` with the error text and what was tried, then continue with the remaining work.
