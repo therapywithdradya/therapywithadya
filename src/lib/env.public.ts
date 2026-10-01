@@ -26,3 +26,38 @@ export function getSiteUrl(): string {
 
   return parsed.origin;
 }
+
+const localMetadataBase = new URL("http://localhost:3000");
+
+/**
+ * Base URL for metadata. Never throws, so a missing variable cannot fail the build.
+ * Development falls back to localhost. Production logs a warning and uses the same fallback.
+ */
+export function getMetadataBase(): URL {
+  if (!siteUrl || siteUrl.trim() === "") {
+    warnIfProductionSiteUrlUnusable();
+    return localMetadataBase;
+  }
+
+  try {
+    const parsed = new URL(siteUrl);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      warnIfProductionSiteUrlUnusable();
+      return localMetadataBase;
+    }
+    return new URL(parsed.origin);
+  } catch {
+    warnIfProductionSiteUrlUnusable();
+    return localMetadataBase;
+  }
+}
+
+function warnIfProductionSiteUrlUnusable(): void {
+  if (process.env.NODE_ENV !== "production") {
+    return;
+  }
+
+  console.warn(
+    "WARNING: NEXT_PUBLIC_SITE_URL is missing or invalid during a production build or server start. metadataBase is falling back to http://localhost:3000. Set NEXT_PUBLIC_SITE_URL before deploying.",
+  );
+}

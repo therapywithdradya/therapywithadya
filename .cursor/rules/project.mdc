@@ -34,3 +34,35 @@ The user is not watching this run.
 18. Never run destructive commands (`rm -rf` outside build artefacts such as `.next` or `node_modules`, deleting files outside the project, `sudo`). Never edit files outside the project folder. Never print or commit the contents of `.env` files.
 19. Never run interactive commands that wait for input. Always pass non-interactive flags. Start long-running processes such as the dev server in the background with a time limit, test them with curl, and always kill them afterward. Never leave a process running and never block on one.
 20. Fix-loop limit: if the same error persists after three genuinely different fix attempts, stop trying. If the attempts made things worse, revert that specific change by editing, not with `git reset`. Record the problem in `docs/KNOWN_ISSUES.md` with the error text and what was tried, then continue with the remaining work.
+
+## Database source of truth
+
+The SQL files in `supabase/migrations/` are authoritative. `src/types/database.ts` is a hand-written mirror. Future code must read the migrations instead of guessing names. There is no `session_types` table. Session names, durations, and prices live in server code.
+
+Tables: `bookings`, `payment_events`, `rate_limits`, `testimonials`, `events_workshops`, `gallery_items`.
+
+`bookings` columns: `id`, `public_token_hash`, `session_slug`, `session_name`, `amount_paise`, `currency`, `duration_minutes`, `buffer_minutes`, `customer_name`, `customer_email`, `customer_phone`, `customer_note`, `starts_at`, `ends_at`, `blocked_until`, `timezone`, `booking_status`, `payment_status`, `hold_expires_at`, `cancel_reason`, `razorpay_order_id`, `razorpay_payment_id`, `google_event_id`, `calendar_sync_status`, `calendar_attempts`, `calendar_error`, `needs_manual_review`, `review_reason`, `admin_note`, `confirmed_at`, `cancelled_at`, `created_at`, `updated_at`.
+
+`payment_events` columns: `razorpay_event_id` (primary key), `event_type`, `razorpay_order_id`, `razorpay_payment_id`, `received_at`, `processed_at`.
+
+Status values, exactly as constrained:
+
+- `booking_status`: `pending`, `confirmed`, `cancelled`, `failed`
+- `payment_status`: `unpaid`, `pending`, `paid`, `failed`, `refund_pending`, `refunded`
+- `cancel_reason`: `hold_expired`, `operator`, `customer_request` (or null)
+- `calendar_sync_status`: `not_required`, `pending`, `created`, `failed`
+- `events_workshops.kind`: `event`, `workshop`
+
+Stored columns are `starts_at`, `ends_at`, and `amount_paise`. Some jsonb payloads still use `start_at`, `end_at`, and `price_paise`. `get_booked_ranges` returns `start_at` and `blocked_until`, not `starts_at`.
+
+Jsonb `code` values:
+
+- `create_pending_booking`: `invalid_price`, `invalid_duration`, `invalid_buffer`, `invalid_timezone`, `invalid_time`, `invalid_token`, `invalid_input`, `slot_taken`, `token_conflict`. Success has `ok: true` and a `booking` object (`id`, `session_name`, `start_at`, `end_at`, `price_paise`, `currency`, `hold_expires_at`) and no `code`.
+- `attach_razorpay_order`: `booking_not_found`, `not_pending`, `hold_expired`, `order_mismatch`, `already_attached`, `order_conflict`, `attached`
+- `confirm_booking_payment`: `order_not_found`, `already_confirmed`, `duplicate_payment`, `paid_slot_lost`, `amount_mismatch`, `confirmed`, `paid_but_cancelled`, `payment_id_conflict`
+- `mark_payment_failed`: `order_not_found`, `marked_failed`, `unchanged`
+- `mark_calendar_synced`: `booking_not_found`, `invalid_input`, `event_id_conflict`, `synced`
+- `mark_calendar_failed`: `booking_not_found`, `recorded`
+- `get_booking_by_token_hash`: `not_found` (failure only)
+
+`record_razorpay_event` and `mark_razorpay_event_processed` return boolean. `check_rate_limit` returns `allowed`, `remaining`, and `retry_after_seconds`, not a `code`.

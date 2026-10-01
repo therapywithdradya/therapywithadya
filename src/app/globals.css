@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
+/*
+  Colour and type live here so client branding can be swapped in one place.
+  themeColor in src/app/layout.tsx must stay equal to --background.
+
+  WCAG 2.2 AA contrast checked 2026-10-01 (4.5:1 body text, 3:1 UI):
+  - ink #1c1915 on background #f6f1e8 = 15.56:1
+  - muted #4a433c on background #f6f1e8 = 8.64:1
+  - ink #1c1915 on surface #fffdf8 = 17.23:1
+  - muted #4a433c on surface #fffdf8 = 9.57:1
+  - on-primary #f7f3ec on primary #3f6b58 = 5.49:1
+  - on-primary #f7f3ec on primary-hover #2f5344 = 7.78:1
+  - primary #3f6b58 on background #f6f1e8 = 5.40:1
+  - error #8f2d2d on background #f6f1e8 = 7.23:1
+  - error #8f2d2d on surface #fffdf8 = 8.00:1
+  - success #1d6b45 on background #f6f1e8 = 5.76:1
+  - on-primary #f7f3ec on success #1d6b45 = 5.86:1
+  - on-primary #f7f3ec on error #8f2d2d = 7.36:1
+  - ink #1c1915 on accent #e7d3be = 12.06:1
+  - focus-ring #1f4d3a against background #f6f1e8 = 8.56:1
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f1e8;
+  --surface: #fffdf8;
+  --ink: #1c1915;
+  --muted: #4a433c;
+  --primary: #3f6b58;
+  --primary-hover: #2f5344;
+  --on-primary: #f7f3ec;
+  --accent: #e7d3be;
+  --border: #d9cec1;
+  --focus-ring: #1f4d3a;
+  --success: #1d6b45;
+  --error: #8f2d2d;
+  --text-body-size: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
+  --text-lead-size: clamp(1.125rem, 1rem + 0.55vw, 1.375rem);
+  --text-heading-size: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
+  --text-display-size: clamp(2rem, 1.35rem + 2.2vw, 3.5rem);
+  --leading-body: 1.6;
+  --leading-heading: 1.15;
+  --section-space: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  --gutter: clamp(1rem, 0.45rem + 2.2vw, 2rem);
+  --content-width: 72rem;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-focus: var(--focus-ring);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --font-sans: var(--font-source-sans), "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, Cambria, "Times New Roman", serif;
+  --text-body: var(--text-body-size);
+  --text-body--line-height: var(--leading-body);
+  --text-lead: var(--text-lead-size);
+  --text-lead--line-height: 1.5;
+  --text-heading: var(--text-heading-size);
+  --text-heading--line-height: var(--leading-heading);
+  --text-display: var(--text-display-size);
+  --text-display--line-height: var(--leading-heading);
+  --spacing-gutter: var(--gutter);
+  --spacing-section: var(--section-space);
+  --container-content: var(--content-width);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--leading-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  line-height: var(--leading-heading);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+#main-content {
+  scroll-margin-top: 5.5rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
