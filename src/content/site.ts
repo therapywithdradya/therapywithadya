@@ -17,10 +17,33 @@ export type SiteImageSource = {
   height: number;
 };
 
-export type ServiceOverview = {
-  id: string;
+export const internalPaths = [
+  "/about",
+  "/services",
+  "/sessions",
+  "/events",
+  "/gallery",
+  "/reviews",
+  "/contact",
+  "/book",
+  "/privacy",
+  "/terms-and-cancellation",
+] as const;
+
+export type InternalPath = (typeof internalPaths)[number];
+
+export type ServiceListing = {
+  slug: string;
   title: string;
-  description: string;
+  shortDescription: string;
+  longDescription: string;
+  href?: InternalPath;
+  linkLabel?: string;
+};
+
+export type Qualification = {
+  title: string;
+  issuer?: string;
 };
 
 export const socialChannels = [
@@ -82,26 +105,6 @@ export const site = {
     servicesTitle: "Services",
     servicesIntro:
       "[DUMMY] These cards are placeholders. They are not a published list of offers.",
-    services: [
-      {
-        id: "supervision",
-        title: "Supervision",
-        description:
-          "[DUMMY] Placeholder description for supervision. This is not a published offer.",
-      },
-      {
-        id: "events",
-        title: "Events",
-        description:
-          "[DUMMY] Placeholder description for events. This is not a published offer.",
-      },
-      {
-        id: "workshops",
-        title: "Workshops",
-        description:
-          "[DUMMY] Placeholder description for workshops. This is not a published offer.",
-      },
-    ] satisfies ServiceOverview[],
     sessionsTitle: "Sessions",
     sessionsIntro:
       "[DUMMY] Session names below are placeholders. A fee line appears only from the session list.",
@@ -118,6 +121,86 @@ export const site = {
     contactIntro:
       "[DUMMY] Only contact details that have been supplied are shown here.",
   },
+  services: [
+    {
+      slug: "supervision",
+      title: "Supervision",
+      shortDescription:
+        "[DUMMY] Placeholder description for supervision. This is not a published offer.",
+      longDescription:
+        "[DUMMY] A longer note about supervision will go here. This is not a published offer, and it is not a claim about training or results.",
+      href: "/sessions",
+      linkLabel: "View bookable sessions",
+    },
+    {
+      slug: "events",
+      title: "Events",
+      shortDescription:
+        "[DUMMY] Placeholder description for events. This is not a published offer.",
+      longDescription:
+        "[DUMMY] A longer note about events will go here. This is not a published listing, and no dates are claimed on this card.",
+      href: "/events",
+      linkLabel: "View events",
+    },
+    {
+      slug: "workshops",
+      title: "Workshops",
+      shortDescription:
+        "[DUMMY] Placeholder description for workshops. This is not a published offer.",
+      longDescription:
+        "[DUMMY] A longer note about workshops will go here. This is not a published listing, and no topics are claimed on this card.",
+      href: "/events",
+      linkLabel: "View workshops",
+    },
+  ] satisfies ServiceListing[],
+  about: {
+    aboutIntro:
+      "[DUMMY] A short introduction will go here. A full biography is not published yet.",
+    bioParagraphs: [
+      "[DUMMY] A biography paragraph will go here. This is not a statement of experience, credentials, or results.",
+      "[DUMMY] A second paragraph will go here. Background details are not published yet.",
+      "[DUMMY] A third paragraph will go here. It leaves room for a longer biography without adding a claim.",
+    ],
+    background: undefined as string | undefined,
+    qualifications: [] as Qualification[],
+    approach:
+      "[DUMMY] A description of the approach will go here. This is not a published philosophy.",
+    aboutPhotos: [
+      {
+        src: "/placeholders/portrait.svg",
+        alt: "[DUMMY] Placeholder illustration of an empty frame labelled Portrait. This is not a photograph.",
+        width: 800,
+        height: 1000,
+      },
+    ] satisfies SiteImageSource[],
+  },
+  pages: {
+    about: {
+      title: "About",
+      description:
+        "[DUMMY] A short introduction to this practice. Biography, background, and qualifications are not published yet. Read what is available here.",
+    },
+    services: {
+      title: "Services",
+      description:
+        "[DUMMY] Supervision, events, and workshops are outlined here as placeholders. They are not a published list of offers or results.",
+      intro:
+        "[DUMMY] Each item below is a placeholder outline. It is not a published offer.",
+    },
+    sessions: {
+      title: "Sessions",
+      description:
+        "[DUMMY] Placeholder session lengths are listed on this page. Fees stay unpublished until a real price is set, and booking happens on this site.",
+      intro:
+        "[DUMMY] The sessions below are placeholders. Duration and the fee line come from the session list.",
+    },
+  },
+  bookingSteps: [
+    "Choose a session.",
+    "Pick an available time.",
+    "Enter your details.",
+    "Pay securely to confirm.",
+  ],
   policies: {
     paymentTerms:
       "[DEFAULT] Full payment is taken up front. This sentence is a default, not final legal text.",

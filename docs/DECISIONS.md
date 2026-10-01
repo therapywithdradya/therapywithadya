@@ -120,6 +120,31 @@ Status values: `DEFAULT` (confirm with the client), `PROVISIONAL` (developer sho
 - An event that has just ended: it leaves the upcoming list on the next render after the 3600-second revalidation.
 - Anchor offset: in-page targets use 12rem of scroll margin. At 768px the wrapped header is about 133px tall, so 8rem was not enough.
 
+| 2026-10-01 | `site.home.services` moved to `site.services`. Each item has `slug`, `title`, `shortDescription`, `longDescription`, and an optional `href` limited to `internalPaths`. | The home page and `/services` need one list. Home cards still show the short description and still link to `/services` with "View {title}", so the home page looks the same. `/services` uses the long description and the item href. | Leaving a second copy of the three cards on the services page. | FINAL |
+| 2026-10-01 | Service `href` is `InternalPath`, a union of this site's routes. There is no free-text URL field. | A link to a missing path cannot be stored without a type error. Supervision points at `/sessions`. Events and workshops point at `/events`. | Accepting any string and checking it at runtime. | FINAL |
+| 2026-10-01 | The about page `h1` is `wordmark()`. `aboutIntro` is the paragraph under it. Qualifications stay an empty list, so that section is not rendered. Background is omitted. Approach and biography are `[DUMMY]` text. One placeholder portrait is in `aboutPhotos`. | The public name is the introduction until a real biography title exists. A dummy qualification would still look like a credential. The screenshot titles are not used. | Putting `aboutIntro` in the `h1`, or adding placeholder qualification titles. | FINAL |
+| 2026-10-01 | Biography and other about prose use `max-w-[70ch]`. | That is about 70 characters per line, inside the requested 65 to 75. | Leaving the shared `Prose` width at `max-w-2xl`. | FINAL |
+| 2026-10-01 | The four booking steps are the product instructions from this phase, stored on `site.bookingSteps`, and they are not marked `[DUMMY]`. | They describe the booking flow and do not claim experience, credentials, or results. None of them mention email or SMS. | Marking the steps as dummy, which would make the instructions look unpublished. | FINAL |
+| 2026-10-01 | `PolicySummary` shows only "[DUMMY] Policy text pending client confirmation" while `policies.confirmed` is false. Confirmed policies render one row per field, skipping blank strings. Boolean fields include false. | The 24-hour default must not be presented as a confirmed rule. A later field is another row in the same list. | Printing `paymentTerms` and `cancellationNoticeHours` on the sessions page now. | FINAL |
+| 2026-10-01 | Page titles use `title.absolute` as `"{Page} \| {wordmark()}"` when that string is 60 characters or fewer, otherwise the short page name. | The layout template would duplicate the site name, and an empty site name would leave a trailing separator. These three titles are 24 to 27 characters with the current wordmark. | Relying on the `%s \| siteName` template. | FINAL |
+
+## Phase 4b edge cases
+
+- No qualifications supplied: `qualifications` is empty, and the qualifications heading is not rendered.
+- Very long bio: biography paragraphs stack in a `70ch` measure with normal wrapping, with no fixed height.
+- No about photos: an empty `aboutPhotos` array omits the photographs section. One photo renders one image. Several render a wrapping grid.
+- A service with no `href`: the card shows the title and long description and no link.
+- One session only: `/sessions` maps the array, so a single card is the whole list.
+- Very long session names: the session heading wraps with `overflow-wrap: anywhere` and does not set a fixed width.
+- Price 0: the card shows the label from `getSessions()` and does not add a rupee sign.
+- `policies.confirmed` false: only the pending dummy line is shown. True: stored fields render as rows, and blank strings are skipped.
+- Empty services list: `/services` hides the card stack, keeps the intro and booking band, and shows one dummy line that outlines will be added.
+- Empty practitioner name or site name: the about `h1` uses `wordmark()`, which falls back to `Practice [DUMMY]`.
+- Very narrow screens: sections stay one column, cards use `min-w-0`, and buttons are full width below `sm`.
+- Keyboard: cards are not click targets. Links and buttons are the tab stops, with the existing gold focus ring and at least 44px height.
+- A link to a missing slug: service hrefs are the `InternalPath` union, so a path outside this site does not typecheck.
+- Home page after the services move: cards still use the same short sentences, the same "View {title}" label, and the same `/services` destination.
+
 ## Phase 3a edge cases
 
 - 320px: the header wraps, gutters use a fluid minimum of 1rem, and the menu button stays a 44px target.

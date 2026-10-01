@@ -19,23 +19,25 @@ export function ServicesOverview() {
           intro={site.home.servicesIntro}
           className="mx-auto text-center"
         />
-        <ul className="mt-8 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
-          {site.home.services.map((service) => (
-            <li key={service.id} className="min-w-0">
-              <Card className="flex h-full flex-col">
-                <h3 className="line-clamp-2 font-heading text-[clamp(1.15rem,2vw,1.4rem)] text-ink [overflow-wrap:anywhere]">
-                  {service.title}
-                </h3>
-                <p className="mt-3 line-clamp-4 flex-1 text-muted [overflow-wrap:anywhere]">
-                  {service.description}
-                </p>
-                <Link href="/services" className={`mt-4 ${textLinkClass}`}>
-                  View {service.title}
-                </Link>
-              </Card>
-            </li>
-          ))}
-        </ul>
+        {site.services.length > 0 ? (
+          <ul className="mt-8 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+            {site.services.map((service) => (
+              <li key={service.slug} className="min-w-0">
+                <Card className="flex h-full flex-col">
+                  <h3 className="line-clamp-2 font-heading text-[clamp(1.15rem,2vw,1.4rem)] text-ink [overflow-wrap:anywhere]">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 line-clamp-4 flex-1 text-muted [overflow-wrap:anywhere]">
+                    {service.shortDescription}
+                  </p>
+                  <Link href="/services" className={`mt-4 ${textLinkClass}`}>
+                    View {service.title}
+                  </Link>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </Container>
     </Section>
   );

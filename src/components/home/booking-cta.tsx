@@ -2,12 +2,12 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { site } from "@/content/site";
 
-export function BookingCta() {
+export function BookingCta({ headingId = "home-booking-title" }: { headingId?: string }) {
   return (
-    <section aria-labelledby="home-booking-title" className="scroll-mt-48 bg-primary py-section text-on-primary">
+    <section aria-labelledby={headingId} className="scroll-mt-48 bg-primary py-section text-on-primary">
       <Container className="max-w-3xl text-center">
         <h2
-          id="home-booking-title"
+          id={headingId}
           className="font-heading text-heading text-on-primary [overflow-wrap:anywhere]"
         >
           {site.home.bookingTitle}
