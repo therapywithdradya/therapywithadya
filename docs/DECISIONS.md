@@ -87,6 +87,39 @@ Status values: `DEFAULT` (confirm with the client), `PROVISIONAL` (developer sho
 - Reference sage `#4E7A60` fails body contrast on the dark backgrounds. Text sage is `#6C917B`. Gold and ivory needed no change.
 - Plus Jakarta Sans and Inter are on Google Fonts, so no substitute face was chosen.
 
+| 2026-10-01 | The home page sets `export const revalidate = 3600`. The clock read is `clockMs()` in `src/lib/format.ts`, called from the page. | Upcoming events depend on the current time, so the page must not stay frozen at build. The Next.js 16 ISR guide in `node_modules/next/dist/docs` still documents this segment config for time-based revalidation. An event that has just ended can remain on the cached page until the next regeneration, then it drops off. The React purity lint rejects a direct `Date.now()` call inside a component, so the read sits in that helper. | `dynamic = "force-dynamic"` on every request, which would skip the hour cache this phase asked for. Calling `Date.now()` in the page and disabling the lint. | FINAL |
+| 2026-10-01 | Home section order is hero, about, services, sessions, booking, reviews, events, gallery, contact. | The style guide records hero, about, services, then contact. Sessions, booking, reviews, events, and gallery are inserted before contact so that recorded order stays intact. | Moving contact to fourth place and putting the other sections after it. | FINAL |
+| 2026-10-01 | No reveal animation was added on the home page. | The style guide says page-enter motion is not added. Existing reduced-motion rules already shorten transitions. A reveal that waits on JavaScript could hide content. | A CSS fade that is visible by default. | FINAL |
+| 2026-10-01 | The hero heading is the tagline from `site.ts`. There is no gold italic phrase, stat card, or qualification pills. | The only positioning line is the dummy tagline. The reference about extras need a confirmed phrase, count, or credential, and none of those are published. | Splitting the dummy tagline to italicize a few words. | FINAL |
+| 2026-10-01 | Supervision, events, and workshops are cards in `site.home.services`, with `[DUMMY]` descriptions. | The phase asks for those three cards, plus any later service added in `site.ts`. The screenshot wording is not used. | Hardcoding the three titles inside the component. | FINAL |
+| 2026-10-01 | The home preview does not filter `is_published`. | Dummy events and gallery rows are unpublished, and filtering them would hide the placeholder layout. When the database read replaces the dummy return, published filtering belongs in the getter. | Hiding every unpublished row on the page and showing only the empty states. | FINAL |
+| 2026-10-01 | `formatDuration` uses "N minutes" below and at 60, and "N hr" / "M min" above 60. Non-integers round to the nearest minute. Non-positive and non-finite values return "0 minutes". | That matches the requested "60 minutes" and "1 hr 30 min" strings, and it stays readable for 15, 45, 120, and values that are not multiples of 15. | Always using minutes, including "90 minutes". | FINAL |
+| 2026-10-01 | `formatEventDateRange` formats the calendar day with `Intl.DateTimeFormat("en-IN")` in the timezone argument. An invalid date or timezone returns "Date unavailable" and null ISO strings, with no `<time>` element. | Display has to follow the business zone, including a start that is the next local day after midnight IST. A thrown Intl error should not take down the page. | Formatting in the server's local zone. | FINAL |
+| 2026-10-01 | Gallery preview images use 1200 by 800. | `gallery_items` has no width or height column. Those are the dimensions of the placeholder SVGs. | Leaving width and height off and letting the layout collapse. | FINAL |
+| 2026-10-01 | `wordmark()` is the site name, then the practitioner name, then `Practice [DUMMY]`. The home metadata description is a separate 136-character `[DUMMY]` sentence. | An empty name must not render blank or "undefined", and the existing tagline is shorter than the 120-character metadata minimum. | Using the short tagline as the home description. | FINAL |
+| 2026-10-01 | A client count is shown only when `visibleClientCount()` returns a positive integer. `clientCountMarker` still contains `[DUMMY]`, so the count stays hidden. | A missing or zero count must not become "0 clients", and a dummy marker must not be published as a real total. | Showing the number 0. | FINAL |
+| 2026-10-01 | Home metadata calls `getMetadataBase()`. | A missing or invalid `NEXT_PUBLIC_SITE_URL` in development already falls back to `http://localhost:3000` without throwing, including during `next build`. | Reading the env var again in the page and throwing when it is absent. | FINAL |
+| 2026-10-01 | Zero gallery images use the sentence "No gallery images right now." | The phase specifies that sentence for events only. The gallery uses the same calm empty state so the heading is not left with a blank grid. | Hiding the gallery section when it has no images. | FINAL |
+
+## Phase 4a edge cases
+
+- Zero testimonials: the reviews section returns nothing, including its heading.
+- No client count: `clientCount` is unset and `clientCountMarker` is `[DUMMY]`, so no count line is rendered.
+- No upcoming events: the events section stays, with "No upcoming events right now."
+- No events at all: the same empty line is shown.
+- Fewer than 6 gallery images: the grid renders however many exist, up to 6.
+- Missing portrait or hero image: `SiteImage` renders a plain block of the same aspect ratio, with no broken-image icon.
+- Very long session names or descriptions: titles and body lines are clamped, and long words break instead of widening the page.
+- Price 0: the card shows the label from `getSessions()` and does not add a rupee amount.
+- Optional contact fields missing: email is the only contact line; phone, WhatsApp, location, and socials are omitted, with no empty icons or separators.
+- One session only: the session list renders that one card.
+- Empty practitioner name or site name: `wordmark()` falls back to `Practice [DUMMY]` instead of a blank or "undefined".
+- Very long names: the wordmark and headings use `overflow-wrap: anywhere`.
+- Dates near midnight IST: `2026-10-01T18:30:00.000Z` formats as 2 Oct 2026 in `Asia/Kolkata`, and the same instant formats as 1 Oct 2026 in `UTC`.
+- Missing `NEXT_PUBLIC_SITE_URL` in dev: `getMetadataBase()` uses `http://localhost:3000` and does not warn.
+- An event that has just ended: it leaves the upcoming list on the next render after the 3600-second revalidation.
+- Anchor offset: in-page targets use 12rem of scroll margin. At 768px the wrapped header is about 133px tall, so 8rem was not enough.
+
 ## Phase 3a edge cases
 
 - 320px: the header wraps, gutters use a fluid minimum of 1rem, and the menu button stays a 44px target.

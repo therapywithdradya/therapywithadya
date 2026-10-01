@@ -1,14 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { SiteLink } from "@/components/site-link";
 import { Container } from "@/components/ui/container";
-import { filled, site, type SocialLinks } from "@/content/site";
-
-const socialItems: { key: keyof SocialLinks; label: string }[] = [
-  { key: "instagram", label: "Instagram" },
-  { key: "facebook", label: "Facebook" },
-  { key: "youtube", label: "YouTube" },
-  { key: "linkedin", label: "LinkedIn" },
-];
+import { filled, listedSocials, site, wordmark } from "@/content/site";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -16,14 +9,8 @@ export function SiteFooter() {
   const phone = filled(site.phone) ? site.phone : undefined;
   const whatsapp = filled(site.whatsapp) ? site.whatsapp : undefined;
   const location = filled(site.location) ? site.location : undefined;
-  const socialLinks: SocialLinks = site.socials ?? {};
-  const socials = socialItems.flatMap((item) => {
-    const href = socialLinks[item.key];
-    if (!filled(href)) {
-      return [];
-    }
-    return [{ ...item, href }];
-  });
+  const socials = listedSocials();
+  const brand = wordmark();
   const hasContact = Boolean(email || phone || whatsapp || location);
 
   return (
@@ -31,10 +18,10 @@ export function SiteFooter() {
       <Container className="grid gap-10 py-section md:grid-cols-2 lg:grid-cols-4">
         <div className="max-w-sm">
           <p className="font-heading text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]">
-            {site.siteName}
+            {brand}
           </p>
           {filled(site.tagline) ? <p className="mt-4 max-w-sm text-muted">{site.tagline}</p> : null}
-          {filled(site.practitionerName) ? (
+          {filled(site.practitionerName) && site.practitionerName !== brand ? (
             <p className="mt-3 text-muted">{site.practitionerName}</p>
           ) : null}
         </div>
@@ -121,7 +108,7 @@ export function SiteFooter() {
       </Container>
       <Container className="flex flex-col gap-3 border-t border-border py-6 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <p className="text-sm text-muted [overflow-wrap:anywhere]">
-          © {year} {site.siteName}
+          © {year} {brand}
         </p>
         <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-2">
           <SiteLink href="/privacy">Privacy</SiteLink>

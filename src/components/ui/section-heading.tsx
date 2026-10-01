@@ -1,16 +1,20 @@
+import { cn } from "@/lib/utils";
+
 export function SectionHeading({
   id,
   eyebrow,
   title,
   intro,
+  className,
 }: {
   id?: string;
   eyebrow?: string;
   title: string;
   intro?: string;
+  className?: string;
 }) {
   return (
-    <div className="max-w-2xl">
+    <div className={cn("max-w-2xl", className)}>
       {eyebrow ? (
         <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
           {eyebrow}

@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 
 const backgrounds = {
   default: "bg-background text-ink",
-  surface: "bg-surface text-ink",
-  accent: "bg-surface text-ink",
+  surface: "border-y border-border bg-surface text-ink",
+  accent: "border-y border-border bg-surface text-ink",
 } as const;
 
 export function Section({
@@ -24,7 +24,11 @@ export function Section({
     <section
       id={id}
       aria-labelledby={ariaLabelledBy}
-      className={cn("py-section", backgrounds[background], className)}
+      className={cn(
+        "scroll-mt-48 py-section",
+        backgrounds[background],
+        className,
+      )}
     >
       {children}
     </section>

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { site } from "@/content/site";
+import { site, wordmark } from "@/content/site";
 import { isCurrentPath } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
@@ -157,7 +157,7 @@ export function SiteHeader() {
           aria-current={homeCurrent ? "page" : undefined}
           className="order-1 min-w-0 flex-1 rounded-sm font-heading text-xl font-semibold tracking-tight text-ink [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          {site.siteName}
+          {wordmark()}
         </Link>
         <div className="order-2 flex items-center gap-2 md:order-3">
           <Button
