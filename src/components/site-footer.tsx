@@ -30,12 +30,18 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-surface text-ink">
       <Container className="grid gap-10 py-section md:grid-cols-2 lg:grid-cols-4">
         <div className="max-w-sm">
-          <p className="font-serif text-heading [overflow-wrap:anywhere]">{site.siteName}</p>
-          <p className="mt-3 text-muted">{site.tagline}</p>
-          <p className="mt-3 text-muted">{site.practitionerName}</p>
+          <p className="font-heading text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]">
+            {site.siteName}
+          </p>
+          {filled(site.tagline) ? <p className="mt-4 max-w-sm text-muted">{site.tagline}</p> : null}
+          {filled(site.practitionerName) ? (
+            <p className="mt-3 text-muted">{site.practitionerName}</p>
+          ) : null}
         </div>
         <nav aria-label="Quick links">
-          <h2 className="font-serif text-lead text-ink">Quick links</h2>
+          <h2 className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            Quick links
+          </h2>
           <ul className="mt-3 space-y-2">
             <li>
               <SiteLink href="/">Home</SiteLink>
@@ -52,7 +58,9 @@ export function SiteFooter() {
         </nav>
         {hasContact ? (
           <div>
-            <h2 className="font-serif text-lead text-ink">Contact</h2>
+            <h2 className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+              Contact
+            </h2>
             <ul className="mt-3 space-y-2">
               {email ? (
                 <li>
@@ -90,7 +98,9 @@ export function SiteFooter() {
         ) : null}
         {socials.length > 0 ? (
           <div>
-            <h2 className="font-serif text-lead text-ink">Social</h2>
+            <h2 className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+              Social
+            </h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {socials.map((item) => (
                 <li key={item.key}>
@@ -99,10 +109,9 @@ export function SiteFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${item.label} (opens in a new tab)`}
-                    className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                    className="inline-flex size-11 items-center justify-center rounded-full border border-border text-muted shadow-soft hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                   >
                     <ExternalLink className="size-5 shrink-0" aria-hidden={true} />
-                    {item.label}
                   </a>
                 </li>
               ))}

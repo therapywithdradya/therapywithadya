@@ -1,17 +1,17 @@
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
-export const fontSans = Source_Sans_3({
+export const fontBody = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-source-sans",
+  variable: "--font-inter",
   fallback: ["Segoe UI", "Helvetica Neue", "Arial", "sans-serif"],
   adjustFontFallback: true,
 });
 
-export const fontSerif = Source_Serif_4({
+export const fontHeading = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-source-serif",
-  fallback: ["Georgia", "Cambria", "Times New Roman", "serif"],
+  variable: "--font-plus-jakarta",
+  fallback: ["Segoe UI", "Helvetica Neue", "Arial", "sans-serif"],
   adjustFontFallback: true,
 });

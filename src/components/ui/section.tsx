@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 const backgrounds = {
   default: "bg-background text-ink",
   surface: "bg-surface text-ink",
-  accent: "bg-accent text-ink",
+  accent: "bg-surface text-ink",
 } as const;
 
 export function Section({

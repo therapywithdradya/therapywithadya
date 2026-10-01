@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/content/site";
-import { fontSans, fontSerif } from "@/app/fonts";
+import { fontBody, fontHeading } from "@/app/fonts";
 import { getMetadataBase } from "@/lib/env.public";
 import "./globals.css";
 
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  colorScheme: "light",
-  themeColor: "#f6f1e8",
+  colorScheme: "dark",
+  themeColor: "#0f1410",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       data-scroll-behavior="smooth"
-      className={`${fontSans.variable} ${fontSerif.variable} h-full antialiased`}
+      className={`${fontBody.variable} ${fontHeading.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col overflow-x-clip bg-background font-sans text-ink">
         <a

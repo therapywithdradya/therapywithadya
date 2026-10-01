@@ -20,8 +20,8 @@ export function SiteLink({ href, className, children, ...props }: SiteLinkProps)
       href={href}
       aria-current={current ? "page" : undefined}
       className={cn(
-        "rounded-sm text-ink underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-        current ? "font-semibold underline" : "hover:underline",
+        "rounded-sm underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+        current ? "font-semibold text-primary underline decoration-primary" : "text-ink hover:text-primary",
         className,
       )}
     >

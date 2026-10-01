@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Private client reference material. Not part of the public site.
+/reference docs/
+
+# Visual reference project. Read-only and not part of this site.
+/anchor & sage/

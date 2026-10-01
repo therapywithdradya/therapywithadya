@@ -65,6 +65,27 @@ Status values: `DEFAULT` (confirm with the client), `PROVISIONAL` (developer sho
 | 2026-10-01 | The mobile menu is a disclosure, not a focus trap. Escape, outside click, route change, and a desktop viewport close it. Focus moves to the first menu link on open and returns to the menu button on close only when that button is visible. | A trap that cannot be left would strand keyboard users. Returning focus to a `display: none` control after a resize is worse. | A modal focus trap. | FINAL |
 | 2026-10-01 | `clientCount` is `0` and marked dummy. It is not shown on any page in this phase. | A made-up client total would be a false claim. | Publishing an example count such as 100. | FINAL |
 | 2026-10-01 | The root `<html>` element sets `data-scroll-behavior="smooth"`. | Next.js 16 no longer disables CSS smooth scrolling during route changes unless that attribute is present. In-page smooth scroll stays, and route changes stay instant. Reduced motion still forces `scroll-behavior: auto`. | Leaving the dev warning, which would also smooth-scroll the page on every navigation. | FINAL |
+| 2026-10-01 | Phase 3b restyles the shell from the anchor & sage reference: dark background `#0F1410`, forest surface `#16251C`, ivory text, gold `#C9A86C` actions, Plus Jakarta Sans and Inter. Sage text is `#6C917B`, not the reference `#4E7A60`. | The reference palette is the visual source. `#4E7A60` on `#0F1410` is 3.79:1. `#6C917B` is 5.30:1 on the page and 4.54:1 on the surface. | Keeping the phase 3a light sage palette. | FINAL |
+| 2026-10-01 | The header stays sticky. It turns translucent until scroll, then solid with blur and the nav shadow. | A fixed header can cover the title when the wordmark wraps. Sticky keeps the same look without covering content. | Copying the reference `position: fixed` header. | FINAL |
+| 2026-10-01 | Page-enter animation from the reference is not added. | The reference uses Framer Motion. This site already disables non-essential motion, and a new animation library was not needed for the shell. | Installing Framer Motion. | FINAL |
+| 2026-10-01 | Only `adyavats13@gmail.com` is copied from the client screenshots into the site. Name, bio, titles, years, age ranges, fees, phone, and photos are not published. `policies.confirmed` is false. `clientCount` is omitted. | The two about screenshots disagree, and they do not state a name, fee, phone, or policy. An email local-part is not a name. | Merging both bios into one public about text. | FINAL |
+| 2026-10-01 | `reference docs/` is gitignored. `git ls-files` showed no tracked files in that folder. | The screenshots are private source material. The inventory in `docs/CONTENT_INVENTORY.md` is the committed record. | Committing the JPEG screenshots. | FINAL |
+| 2026-10-01 | An untracked copy of the visual reference sits inside this repo at `anchor & sage/`. It is gitignored and excluded from TypeScript and ESLint. It was not deleted. | Typecheck was compiling that copy, and committing it would put the other project into this repository. | Deleting the copy, which would touch the reference. | FINAL |
+
+## Phase 3b edge cases
+
+- Anchor & sage was found at `D:\Major Project\anchor & sage` and read only. Its dev server and install were not run.
+- Conflicting about text, years, age ranges, and title lists: none of those claims are published. They are listed for the client.
+- No fee was stated, including no range, approximate fee, or dollar fee, so both sessions stay at `pricePaise` 0.
+- No personal name was stated. Titles such as Dr. or Mrs. are not added. The dummy site name stays marked `[DUMMY]`.
+- No phone number was stated, so nothing was normalised to E.164.
+- No location was stated, so nothing is hidden or shown.
+- Qualifications are listed without an issuing body, so they are not published.
+- The first screenshot includes a portrait but is not a website image file. It was not copied. The second screenshot is text only.
+- Neither file is HEIC or over 5 MB. Both are JPEGs under 5 MB.
+- Non-text files were the two JPEGs. They were viewed. No other file types were in the folder.
+- Reference sage `#4E7A60` fails body contrast on the dark backgrounds. Text sage is `#6C917B`. Gold and ivory needed no change.
+- Plus Jakarta Sans and Inter are on Google Fonts, so no substitute face was chosen.
 
 ## Phase 3a edge cases
 

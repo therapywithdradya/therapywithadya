@@ -11,22 +11,20 @@ export type SocialLinks = {
 };
 
 /**
- * Public site copy. Dummy values are marked in the strings.
- * Policies are DEFAULTS, not final legal text. Confirm them before publishing.
+ * Public site copy.
+ * Only values stated in the client reference docs are filled in.
+ * Policies stay the project defaults until policies.confirmed is true.
  */
 export const site = {
   siteName: "Practice [DUMMY]",
   tagline:
     "[DUMMY] Placeholder tagline. Real wording is not set, and this is not a claim about services.",
-  practitionerName: "Dr. Asha Verma [DUMMY]",
-  email: "hello@example.com",
-  phone: "+91 00000 00000",
+  practitionerName: "" as string,
+  email: "adyavats13@gmail.com",
+  phone: "" as string,
   whatsapp: undefined as string | undefined,
   location: undefined as string | undefined,
-  socials: {
-    instagram: "https://example.com/dummy",
-    linkedin: "https://example.com/dummy",
-  } satisfies SocialLinks,
+  socials: {} as SocialLinks,
   nav: [
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
@@ -39,16 +37,14 @@ export const site = {
   bookHref: "/book",
   bookLabel: "Book a session",
   businessTimezone: "Asia/Kolkata",
-  /**
-   * [DUMMY] Not a real client count. Do not show this number as a statistic.
-   */
-  clientCount: 0,
+  clientCount: undefined as number | undefined,
   policies: {
     paymentTerms:
       "[DEFAULT] Full payment is taken up front. This sentence is a default, not final legal text.",
     cancellationNoticeHours: 24,
     selfServeCancel: false,
     selfServeReschedule: false,
+    confirmed: false,
   },
 } as const;
 

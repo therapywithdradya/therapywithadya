@@ -145,17 +145,17 @@ export function SiteHeader() {
     <header
       ref={headerRef}
       className={cn(
-        "sticky top-0 z-40 border-b",
+        "sticky top-0 z-40 border-b transition-colors duration-300",
         scrolled
-          ? "border-border bg-surface shadow-sm"
-          : "border-transparent bg-background",
+          ? "border-border bg-[color-mix(in_srgb,var(--background)_95%,transparent)] shadow-nav backdrop-blur-md"
+          : "border-transparent bg-[color-mix(in_srgb,var(--background)_80%,transparent)] backdrop-blur-sm md:bg-transparent md:backdrop-blur-none",
       )}
     >
       <Container className="flex flex-wrap items-center gap-x-3 gap-y-2 py-3">
         <Link
           href="/"
           aria-current={homeCurrent ? "page" : undefined}
-          className="order-1 min-w-0 flex-1 rounded-sm font-serif text-heading text-ink [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="order-1 min-w-0 flex-1 rounded-sm font-heading text-xl font-semibold tracking-tight text-ink [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           {site.siteName}
         </Link>
@@ -206,8 +206,10 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "rounded-sm px-1 py-2 text-ink [overflow-wrap:anywhere] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-                  current ? "font-semibold underline" : "hover:underline",
+                  "rounded-sm px-1 py-2 font-heading text-[0.9375rem] font-medium tracking-wide [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+                  current
+                    ? "font-semibold text-primary underline decoration-primary decoration-2 underline-offset-8"
+                    : "text-muted hover:text-ink",
                 )}
               >
                 {item.label}
