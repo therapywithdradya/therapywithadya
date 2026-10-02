@@ -66,3 +66,10 @@ Jsonb `code` values:
 - `get_booking_by_token_hash`: `not_found` (failure only)
 
 `record_razorpay_event` and `mark_razorpay_event_processed` return boolean. `check_rate_limit` returns `allowed`, `remaining`, and `retry_after_seconds`, not a `code`.
+
+## Documentation conventions
+
+- New decisions go as new rows in the main table of docs/DECISIONS.md, never after a bullet list.
+- Edge cases go as bullets under a "## Phase ... edge cases" heading placed after the table.
+- Before adding a helper, component or constant, search src/ for an existing one and reuse it.
+- At the start of each task, read only the parts of docs/ARCHITECTURE.md that the task needs.
