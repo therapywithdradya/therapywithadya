@@ -236,13 +236,6 @@ export const site = {
       intro:
         "[DUMMY] Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
     },
-    terms: {
-      title: "Terms and cancellation",
-      description:
-        "[DUMMY] Booking terms, payment, cancellation notice, and refund guidelines for sessions and workshops. Review practice policies before booking.",
-      intro:
-        "[DUMMY] Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
-    },
   },
   bookingSteps: [
     "Choose a session.",
