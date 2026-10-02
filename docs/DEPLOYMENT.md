@@ -1,68 +1,62 @@
 # Deployment Guide
 
-Step-by-step instructions to set up and deploy this project from scratch. Follow sections in order. Each section states clearly when it applies to development only versus production.
-
-> **Rule from ARCHITECTURE.md §L:** The agent does not run `vercel` or a remote database push as part of unattended work. Every command below is meant to be run by a person.
+> **Rule (ARCHITECTURE.md §L):** Every command here must be run by a person. The agent does not run `vercel` or any remote database command unattended.
 
 ---
 
-## Prerequisites
+## Current state (as of last push)
 
-| Tool | Version | Install |
-|---|---|---|
-| Node.js | `>=24.12.0 <25` | [nodejs.org/en/download](https://nodejs.org/en/download) or `nvm use` (see `.nvmrc`) |
-| npm | bundled with Node | — |
-| Git | any recent | [git-scm.com](https://git-scm.com) |
-| psql (optional) | any | Only needed if you prefer CLI over the Supabase SQL editor |
+| Item | Status |
+|---|---|
+| Git repository | ✅ Initialized |
+| Remote (`origin`) | ✅ `https://github.com/therapywithdradya/therapywithadya.git` |
+| Branch | ✅ `main`, tracking `origin/main` |
+| Node version | ✅ 24.x (see `.nvmrc`) |
+| Dependencies | ✅ `npm install` done |
+| `.env.local` | ⬜ Not yet — copy from `.env.example` and fill in |
+| **Phase 1** — Scaffold & architecture | ✅ Done (`c65aa0c`) |
+| **Phase 2** — Database schema, RLS, booking functions | ✅ SQL written (`c98545c`) — **not yet applied to any remote database** |
+| **Phase 3** — Design system, layout shell | ✅ Done (`b376d4e`, `806e650`) |
+| **Phase 4** — All public pages (home → terms) | ✅ Done (`6d80dca` → `d4e9b4d`) |
+| **Phase 5a** — Availability engine + tests | ✅ Done (`b8260a2`) |
+| **Phase 5b** — Google Calendar free/busy + API route | ⬜ Not started |
+| **Phase 6** — Razorpay + booking flow | ⬜ Not started |
+| **Phase 7** — Integration end-to-end | ⬜ Not started |
+| **Phase 8** — Notifications | ⬜ Skipped until client requests |
+| **Phase 9** — Real content | ⬜ Waiting for client copy |
+| **Phase 10** — SEO | ⬜ Not started |
+| **Phase 11** — Security review | ⬜ Not started |
+| **Phase 12** — Production deployment | ⬜ Not started |
 
-Check your versions:
+---
+
+## Immediate next steps
+
+Work through these in order before touching Phase 6 (Razorpay).
+
+### Step A — Set up `.env.local`
 
 ```bash
-node -v      # must print v24.x.x
-npm -v
-git --version
+# Windows PowerShell — run from the project root
+copy .env.example .env.local
 ```
+
+Open `.env.local`. The dummy values are placeholders — the dev server starts with them, but each feature fails until the real value is set. Fill in each section as you complete Steps B–E below.
+
+> Never commit `.env.local`. Never add any secret to a `NEXT_PUBLIC_` variable except `NEXT_PUBLIC_SITE_URL`.
 
 ---
 
-## 1. Clone and install
+### Step B — Create and configure Supabase
 
-```bash
-# Clone the repository (replace URL with your remote)
-git clone https://github.com/YOUR_ORG/adyas-project.git
-cd adyas-project
+#### B1. Create a project
 
-# Install dependencies (Node 24 required)
-npm install
-```
+1. Go to [supabase.com](https://supabase.com) → sign in → **New project**.
+2. Region: **South Asia (Mumbai)** — closest to Indian users.
+3. Set a strong database password. Save it somewhere secure (you need it for psql later).
+4. Wait ~2 minutes for provisioning.
 
----
-
-## 2. Environment variables
-
-All secrets live in `.env.local`, which is **never committed**.
-
-```bash
-# Copy the example file
-cp .env.example .env.local
-```
-
-Then open `.env.local` and fill in the values described in the sections below. The table in `docs/ARCHITECTURE.md §I` lists every variable and who supplies it. Leave dummy values in place for any service you have not set up yet — the dev server will start but those features will not work.
-
-> **Never prefix a secret with `NEXT_PUBLIC_`.** Only `NEXT_PUBLIC_SITE_URL` is intentionally public.
-
----
-
-## 3. Supabase setup
-
-### 3a. Create a project
-
-1. Go to [supabase.com](https://supabase.com) → **New project**.
-2. Choose a region close to your users (India → `ap-south-1`).
-3. Set a strong database password and save it somewhere safe.
-4. Wait for provisioning (~2 minutes).
-
-### 3b. Copy credentials into `.env.local`
+#### B2. Copy credentials into `.env.local`
 
 In the Supabase dashboard: **Project Settings → API**.
 
@@ -71,39 +65,21 @@ SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-> The service-role key bypasses Row Level Security. Never put it in a `NEXT_PUBLIC_` variable or expose it to the browser.
+> The `service_role` key bypasses Row Level Security. Never use it in client code or a `NEXT_PUBLIC_` variable.
 
-### 3c. Run the migrations (SQL Editor)
+#### B3. Apply migrations — SQL Editor (recommended)
 
-Open the Supabase dashboard → **SQL Editor**. Run each file in a **separate query**, in order, and wait for each to finish before running the next.
+Go to Supabase dashboard → **SQL Editor**. Run each file as a **separate query** in the order shown. Wait for each to complete before running the next.
 
-**Step 1 — Core tables**
-```
-Paste the full contents of:  supabase/migrations/0001_core_tables.sql
-Click "Run"
-```
+| Order | File | Notes |
+|---|---|---|
+| 1 | `supabase/migrations/0001_core_tables.sql` | Creates all tables and the exclusion constraint |
+| 2 | `supabase/migrations/0002_booking_functions.sql` | PL/pgSQL functions for booking and expiry |
+| 3 | `supabase/migrations/0003_rls_and_grants.sql` | RLS + grants — needs Supabase roles `anon`, `authenticated`, `service_role` |
+| 4 | `supabase/seed.sql` | Dummy rows for development only |
+| 5 | `supabase/tests/verify.sql` | Runs as one script — read the NOTICE output |
 
-**Step 2 — Booking functions**
-```
-New query. Paste: supabase/migrations/0002_booking_functions.sql
-Click "Run"
-```
-
-**Step 3 — RLS and grants**
-```
-New query. Paste: supabase/migrations/0003_rls_and_grants.sql
-Click "Run"
-```
-
-> `0003` uses the Supabase roles `anon`, `authenticated`, and `service_role`. It must be run inside the Supabase project, not against a bare Postgres instance.
-
-**Step 4 — Seed dummy data** (development only)
-```
-New query. Paste: supabase/seed.sql
-Click "Run"
-```
-
-Expected row counts after seed:
+After seed, confirm row counts:
 
 ```sql
 select count(*) as testimonials from public.testimonials;     -- 3
@@ -112,164 +88,146 @@ select count(*) as gallery      from public.gallery_items;    -- 6
 select count(*) as bookings     from public.bookings;         -- 0
 ```
 
-**Step 5 — Verification** (optional but recommended)
-```
-New query. Paste: supabase/tests/verify.sql
-Run the WHOLE file in one execution.
-```
-Look for the notice `VERIFICATION PASSED` followed by `ROLLBACK`. A `VERIFICATION FAILED` notice lists what did not match. Run `rollback;` in a follow-up query if the editor reports an open transaction.
+After `verify.sql`, look for: `VERIFICATION PASSED` then `ROLLBACK`. If you see `VERIFICATION FAILED`, it lists what did not match. Run `rollback;` if the editor shows an open transaction.
 
-### 3d. Alternative: psql
+#### B4. Apply migrations — psql (alternative)
 
-If you have `psql` installed, from the repository root:
+If you have `psql` installed:
 
 ```bash
-export DB="postgresql://postgres:YOUR_DB_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres"
+# Replace USER, PASSWORD, HOST with values from Supabase
+# Project Settings → Database → Connection string → URI
+set DB=postgresql://postgres:YOUR_PASSWORD@db.YOUR_REF.supabase.co:5432/postgres
 
-psql "$DB" -v ON_ERROR_STOP=1 -f supabase/migrations/0001_core_tables.sql
-psql "$DB" -v ON_ERROR_STOP=1 -f supabase/migrations/0002_booking_functions.sql
-psql "$DB" -v ON_ERROR_STOP=1 -f supabase/migrations/0003_rls_and_grants.sql
-psql "$DB" -v ON_ERROR_STOP=1 -f supabase/seed.sql
-psql "$DB" -v ON_ERROR_STOP=1 -f supabase/tests/verify.sql
+psql "%DB%" -v ON_ERROR_STOP=1 -f supabase/migrations/0001_core_tables.sql
+psql "%DB%" -v ON_ERROR_STOP=1 -f supabase/migrations/0002_booking_functions.sql
+psql "%DB%" -v ON_ERROR_STOP=1 -f supabase/migrations/0003_rls_and_grants.sql
+psql "%DB%" -v ON_ERROR_STOP=1 -f supabase/seed.sql
+psql "%DB%" -v ON_ERROR_STOP=1 -f supabase/tests/verify.sql
 ```
 
-Get the connection string from: **Project Settings → Database → Connection string → URI**.
+> Do not commit the connection string. Do not run `supabase db reset` on a database that has real bookings.
 
-> Do **not** commit the connection string. Do **not** run `supabase db reset` on a database with real bookings.
-
-### 3e. Confirm RLS is working
+#### B5. Verify RLS is working
 
 In the SQL editor:
 
 ```sql
 set local role anon;
 select count(*) from public.bookings;
--- Expected: permission denied (or 0 rows if the statement was allowed but RLS hides them)
+-- Expected: permission denied
 reset role;
 ```
 
 ---
 
-## 4. Razorpay setup (test mode first)
+### Step C — Set up Razorpay (test mode)
 
-### 4a. Create a Razorpay account
+You need this before Phase 6 (booking flow + payment).
 
-1. Go to [razorpay.com](https://razorpay.com) → sign up → complete KYC (required for live mode; test mode works before KYC).
-2. Stay on the **Test** tab in the dashboard for all development and staging work.
+#### C1. Create an account
 
-### 4b. Get test API keys
+1. Go to [razorpay.com](https://razorpay.com) → **Sign up**.
+2. KYC is required for live mode. Test mode works before KYC is complete.
+3. Stay on the **Test** tab for all development work.
 
-Dashboard → **Settings → API Keys → Test Mode**.
+#### C2. Get test API keys
 
-Generate keys and copy them into `.env.local`:
+Dashboard → **Settings → API Keys → Generate Test Key**.
 
 ```env
 RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXX
 RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-### 4c. Set up a webhook (test mode)
+#### C3. Set up a test webhook
 
 Dashboard → **Settings → Webhooks → Add new webhook**.
 
 | Field | Value |
 |---|---|
-| Webhook URL | `https://YOUR_NGROK_OR_TUNNEL_URL/api/webhooks/razorpay` |
-| Secret | any strong random string |
-| Events to subscribe | `payment.captured`, `payment.failed`, `order.paid`, `refund.processed` |
-
-Copy the secret into `.env.local`:
+| Webhook URL | `https://YOUR_TUNNEL_URL/api/webhooks/razorpay` |
+| Secret | generate a strong random string (see Step E for how) |
+| Active events | `payment.captured`, `payment.failed`, `order.paid`, `refund.processed` |
 
 ```env
 RAZORPAY_WEBHOOK_SECRET=YOUR_WEBHOOK_SECRET
 ```
 
-> For local testing you need a tunnel. Run `npx localtunnel --port 3000` or install [ngrok](https://ngrok.com). Update the webhook URL in the Razorpay dashboard each time the tunnel URL changes.
+For local webhook testing you need a tunnel. Start one in a separate terminal:
 
-### 4d. Test card numbers
+```bash
+npx localtunnel --port 3000
+# or install ngrok: https://ngrok.com
+```
 
-Use Razorpay's [test payment methods](https://razorpay.com/docs/payments/payments/test-card-details/) during development. Never use a real card against test keys.
+The tunnel URL changes on every restart — update the webhook URL in Razorpay each time.
+
+Razorpay test cards: https://razorpay.com/docs/payments/payments/test-card-details/
 
 ---
 
-## 5. Google Calendar OAuth setup
+### Step D — Set up Google Calendar OAuth
 
-This project uses **OAuth with a stored refresh token** (Architecture §G, Option 1). Complete this section only when building the Calendar phase (Phase 5 in the architecture).
+Complete this section when starting **Phase 5b** (Google Calendar free/busy). The availability engine (Phase 5a) is already done and tested; this wires it to the real Google API.
 
-### 5a. Create a Google Cloud project
+#### D1. Create a Google Cloud project
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) → **New project**.
-2. Name it (e.g., `adyas-booking`).
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) → **New project** → name it `adyas-booking`.
 
-### 5b. Enable the Google Calendar API
+#### D2. Enable the Google Calendar API
 
 **APIs & Services → Library → Google Calendar API → Enable**.
 
-### 5c. Create an OAuth 2.0 client
+#### D3. Create an OAuth 2.0 client
 
 1. **APIs & Services → Credentials → Create Credentials → OAuth client ID**.
-2. Application type: **Web application**.
-3. Name: `Adyas Booking`.
-4. Authorized redirect URIs: Add `https://developers.google.com/oauthplayground` (for the one-time token generation step).
-5. Download the JSON — you need `client_id` and `client_secret`.
+2. Application type: **Web application** → name it `Adyas Booking`.
+3. Authorized redirect URI: `https://developers.google.com/oauthplayground`
+4. Save `client_id` and `client_secret`:
 
 ```env
 GOOGLE_CLIENT_ID=000000000000-xxxx.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxxxxxxxxxx
 ```
 
-### 5d. Configure the OAuth consent screen
+#### D4. Configure the consent screen — CRITICAL
 
 **APIs & Services → OAuth consent screen**.
 
-- **User type**: External (unless you have Google Workspace for the practitioner's domain).
-- **Publishing status**: Set to **In production** before generating the refresh token. This prevents the 7-day expiry that applies to tokens from apps in Testing status.
-- Scopes to add:
+- User type: **External**
+- **Publishing status: set to `In production` BEFORE generating any refresh token**
+  - Tokens from an app left in `Testing` status expire in 7 days. Calendar scopes are not exempt.
+  - The unverified-app warning still appears when granting access — that is fine for a single internal user.
+- Add scopes:
   - `https://www.googleapis.com/auth/calendar.events.freebusy`
   - `https://www.googleapis.com/auth/calendar.events`
 
-> The unverified-app warning will appear when the practitioner signs in. That is expected and safe for a single internal user. Google verification (to remove the warning) is not required for the app to function.
+#### D5. Generate a refresh token (one-time, by the practitioner)
 
-### 5e. Generate a refresh token (one-time)
-
-1. Go to [Google OAuth Playground](https://developers.google.com/oauthplayground).
-2. Click the **gear icon** → check **Use your own OAuth credentials** → enter your `client_id` and `client_secret`.
-3. In the left panel, paste and select both scopes:
+1. Open [Google OAuth Playground](https://developers.google.com/oauthplayground).
+2. **Gear icon** → check **Use your own OAuth credentials** → enter `client_id` and `client_secret`.
+3. In the left panel enter both scopes:
    ```
    https://www.googleapis.com/auth/calendar.events.freebusy
    https://www.googleapis.com/auth/calendar.events
    ```
-4. Click **Authorize APIs** → sign in as the practitioner's Google account → grant access.
-5. Click **Exchange authorization code for tokens**.
-6. Copy the **Refresh token** value.
+4. **Authorize APIs** → sign in as the practitioner's Google account → grant access.
+5. **Exchange authorization code for tokens** → copy the **Refresh token**.
 
 ```env
 GOOGLE_REFRESH_TOKEN=1//0gXXXXXXXXXXXXXXX...
-```
-
-> Do **not** use tokens generated from an account in Testing status. Do **not** commit the refresh token. If the token expires or is revoked, repeat this step.
-
-### 5f. Set the calendar ID
-
-For the practitioner's primary calendar:
-
-```env
 GOOGLE_CALENDAR_ID=primary
 ```
 
-Or, if they want a dedicated booking calendar, share it with the OAuth account and use its calendar ID (found in calendar settings → **Integrate calendar**).
+> If the practitioner has a dedicated booking calendar, use its calendar ID instead of `primary` (found in Google Calendar Settings → the calendar → **Integrate calendar**).
 
 ---
 
-## 6. Cron secret
+### Step E — Generate a cron secret
 
-Generate a strong random string for the hold-expiry cron route:
-
-```bash
-# On macOS/Linux:
-openssl rand -base64 32
-
-# On Windows (PowerShell):
+```powershell
+# PowerShell
 [Convert]::ToBase64String((1..32 | ForEach-Object { [byte](Get-Random -Max 256) }))
 ```
 
@@ -279,115 +237,184 @@ CRON_SECRET=YOUR_RANDOM_STRING_HERE
 
 ---
 
-## 7. Run locally
+### Step F — Run the dev server and verify
 
 ```bash
 npm run dev
 ```
 
-The site is available at [http://localhost:3000](http://localhost:3000).
+Site at [http://localhost:3000](http://localhost:3000).
 
-### Health checks
+Run all checks — all must pass before committing:
 
 ```bash
-# TypeScript — must pass with zero errors
-npm run typecheck
-
-# ESLint
-npm run lint
-
-# Unit tests
-npm run test
-
-# Check for placeholder copy (run before any content phase)
-npm run check:placeholders
-
-# Production build (run before deploying)
-npm run build
+npm run typecheck        # zero TypeScript errors
+npm run lint             # zero ESLint errors
+npm run test             # all vitest tests pass
+npm run check:placeholders  # reports dummy markers (expected until Phase 9)
+npm run build            # production build succeeds
 ```
-
-All four checks must pass before each deployment.
 
 ---
 
-## 8. Git workflow
+## Git workflow going forward
 
-### Initial commit (first time only)
-
-```bash
-cd "D:\Major Project\adyas-project"
-
-git init                          # skip if the repo already exists
-git remote add origin https://github.com/YOUR_ORG/adyas-project.git
-
-git add .
-git commit -m "chore: initial scaffold and architecture"
-git push -u origin main
-```
-
-### Normal commit flow
+The remote is already set. Every change follows this pattern:
 
 ```bash
-# Stage changes
+# Stage files
 git add .
+# or specific files:
+git add src/lib/google-calendar/freebusy.ts src/app/api/availability/route.ts
 
-# Or stage specific files
-git add src/app/about/page.tsx src/components/site-header.tsx
+# Commit
+git commit -m "feat: wire availability route to Google free/busy"
 
-# Commit with a short, present-tense message
-git commit -m "feat: add about page and site header"
-
-# Push to remote
+# Push
 git push
 ```
 
-### Commit message conventions
+### Commit message prefixes
 
-| Prefix | When to use |
+| Prefix | Use for |
 |---|---|
 | `feat:` | New page, component, or API route |
 | `fix:` | Bug fix |
 | `chore:` | Config, deps, scripts, docs |
-| `refactor:` | Code reorganisation without behaviour change |
+| `refactor:` | Restructure with no behaviour change |
 | `test:` | Add or update tests |
 | `docs:` | Documentation only |
 
-### `.gitignore` — what is never committed
+### What is never committed
 
-The existing `.gitignore` already excludes:
-
-- `.env.local` — your real secrets
+`.gitignore` already excludes:
+- `.env.local` — real secrets
 - `.next/` — build output
 - `node_modules/` — dependencies
 
-Never add `.env.local`, database passwords, API keys, or the Supabase connection string to any committed file.
+Never commit a database connection string, API key, or the Supabase service-role key.
 
 ---
 
-## 9. Deploy to Vercel
+## Remaining build phases
 
-> **Only proceed here when typecheck, lint, and build all pass, and test mode works end-to-end.**
+These follow the architecture phases in `docs/ARCHITECTURE.md §L`. Complete them in order.
 
-### 9a. Install Vercel CLI (optional)
+### Phase 5b — Google Calendar free/busy + `/api/availability` route
 
-```bash
-npm install -g vercel
-```
+**What to build:**
+- `src/lib/google-calendar/auth.ts` — OAuth token refresh using `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`
+- `src/lib/google-calendar/freebusy.ts` — calls `freeBusy.query` for `GOOGLE_CALENDAR_ID` over a date range; throws `AvailabilityUnavailableError` on any failure
+- `src/app/api/availability/route.ts` — GET handler: validates query params, calls the availability engine (already built in Phase 5a) with Google busy periods and database booked ranges, returns JSON
 
-Or deploy entirely through the Vercel dashboard without the CLI.
+**Done when:** A forced Google error returns HTTP 503 with `{ "error": "availability_unavailable" }`. Real busy times disappear from the slot list.
 
-### 9b. Connect the repository
+**Commit:** `git commit -m "feat: phase 5b — Google Calendar free/busy and availability route"`
 
-1. Go to [vercel.com](https://vercel.com) → **New Project**.
-2. Import the GitHub/GitLab/Bitbucket repository.
-3. Framework: **Next.js** (auto-detected).
-4. **Do not click Deploy yet** — set environment variables first.
+---
 
-### 9c. Add environment variables in Vercel
+### Phase 6 — Razorpay + booking flow
 
-In the project settings → **Environment Variables**, add every variable from `.env.local`:
+**What to build:**
+- `src/lib/razorpay/client.ts` — create orders, fetch order payments
+- `src/lib/razorpay/verify.ts` — HMAC-SHA256 for Checkout signature and webhook signature
+- `src/lib/booking/create-hold.ts` — insert pending booking + create Razorpay order (one transaction)
+- `src/lib/booking/confirm.ts` — the shared `confirmBooking` function (all three paths)
+- `src/lib/booking/status.ts` — token lookup + recovery read from Razorpay
+- `src/app/api/bookings/route.ts` — POST: create hold
+- `src/app/api/payments/verify/route.ts` — POST: Path 1 confirm
+- `src/app/api/webhooks/razorpay/route.ts` — POST: Path 2 confirm
+- `src/app/api/bookings/[token]/route.ts` — GET: status + Path 3 recovery
+- `src/app/book/page.tsx` — session picker → slot picker → details form → Checkout
+- `src/app/book/confirmation/[token]/page.tsx` — polls status, shows confirmed only when `booking_status = confirmed`
 
-| Variable | Environment |
+**Requires:** Steps B (Supabase) and C (Razorpay) complete.
+
+**Done when:** A test payment reaches `confirmed` / `paid` in the database. A bad signature is HTTP 400 with no write. A duplicate webhook is a no-op.
+
+**Commit:** `git commit -m "feat: phase 6 — Razorpay orders, checkout, verify, webhook, confirm"`
+
+---
+
+### Phase 7 — Integration
+
+**What to do:**
+- Walk the full visitor path with test keys: choose session type → pick slot → fill details → pay → see the confirmation page → confirm one calendar event was created
+- Trigger the late-payment path: let a hold expire while payment is captured → check `refund_pending` + `needs_manual_review` + no double-book
+
+**Done when:** Both scripts have been run and the database rows match the state machine in `docs/ARCHITECTURE.md §C`.
+
+**Commit:** `git commit -m "test: phase 7 — integration verification"`
+
+---
+
+### Phase 8 — Notifications *(skip unless the client asks)*
+
+Transactional email (confirmation + reminders). Not started. `docs/DECISIONS.md` says no email until requested.
+
+---
+
+### Phase 9 — Real content
+
+**What to do:**
+- Replace every `[DUMMY]` string in `src/content/site.ts`, `src/lib/booking/session-config.ts`, `src/content/content.ts`, and any inline copy with text, prices, and images the client supplies
+- Set real session prices in paise (e.g., ₹1500 = `150000`)
+- Run `npm run check:placeholders` — it must report zero dummy markers
+
+**Done when:** No `[DUMMY]` or `[PLACEHOLDER]` string remains on any public page.
+
+**Commit:** `git commit -m "content: replace all placeholder copy with real content"`
+
+---
+
+### Phase 10 — SEO
+
+**What to do:**
+- Unique `title` and `description` metadata on every public route (already scaffolded with `marketingMetadata()` — just needs real strings from Phase 9)
+- Canonical URL using `NEXT_PUBLIC_SITE_URL`
+- `sitemap.xml` via Next.js app router `sitemap.ts`
+- `robots.txt` — allow all on production, disallow on preview/staging
+
+**Done when:** Each public route has a unique title and description under 160 characters.
+
+**Commit:** `git commit -m "feat: phase 10 — SEO metadata, sitemap, robots"`
+
+---
+
+### Phase 11 — Security review
+
+**What to check against `docs/ARCHITECTURE.md §K`:**
+- Content-Security-Policy (must allow `https://checkout.razorpay.com` and `https://api.razorpay.com`)
+- HSTS on production HTTPS only
+- Rate limit tuning (`rate_limits` table in Supabase)
+- Log review: no name, email, phone, token, or signature in server logs
+- RLS re-check: anon and authenticated roles still have zero policies
+
+**Done when:** Every item in the security checklist is either implemented or noted in `docs/KNOWN_ISSUES.md`.
+
+**Commit:** `git commit -m "chore: phase 11 — security headers, CSP, rate limit review"`
+
+---
+
+### Phase 12 — Production deployment on Vercel
+
+> **Do this step yourself. Do not ask the agent to run `vercel` or push to the production database.**
+
+#### 12a. Create the Vercel project
+
+1. [vercel.com](https://vercel.com) → **New Project** → Import `therapywithdradya/therapywithadya`.
+2. Framework auto-detected as **Next.js**.
+3. **Do not click Deploy yet.**
+
+#### 12b. Set Node.js version
+
+Project Settings → **General → Node.js Version → 24.x**.
+
+#### 12c. Add all environment variables
+
+Project Settings → **Environment Variables**. Add every key from `.env.local`:
+
+| Variable | Environments |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Production, Preview, Development |
 | `SUPABASE_URL` | Production, Preview, Development |
@@ -402,34 +429,18 @@ In the project settings → **Environment Variables**, add every variable from `
 | `CRON_SECRET` | Production, Preview, Development |
 | `BUSINESS_TIMEZONE` | Production, Preview, Development |
 
-Set `NEXT_PUBLIC_SITE_URL` to your actual production domain (e.g., `https://adyas.in`).
+Set `NEXT_PUBLIC_SITE_URL` to the production domain (e.g., `https://adyas.in`).
 
-> For **Production** deployments, swap `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` from test keys to live keys (see §9e). Do this deliberately — not automatically.
+#### 12d. Switch to Razorpay live keys (production only, deliberate)
 
-### 9d. Node.js version
+1. Complete KYC on Razorpay if not done.
+2. Razorpay dashboard → **Live** tab → **Settings → API Keys** → generate live keys.
+3. In Vercel → update `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` for **Production** only.
+4. Create a live webhook at `https://YOUR_DOMAIN/api/webhooks/razorpay` with the same four events. Use a new `RAZORPAY_WEBHOOK_SECRET`.
 
-In Vercel project settings → **General → Node.js Version**, select **24.x**. This matches `"engines": { "node": ">=24.12.0 <25" }` in `package.json`.
+#### 12e. Add the cron job
 
-### 9e. Switch to Razorpay live mode (production only)
-
-1. In the Razorpay dashboard, complete KYC if not done.
-2. Switch to the **Live** tab → **Settings → API Keys** → generate live keys.
-3. Update `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in Vercel → **Production** environment only.
-4. Create a live webhook in Razorpay pointing to `https://YOUR_DOMAIN/api/webhooks/razorpay` with the same events as the test webhook. Use a new `RAZORPAY_WEBHOOK_SECRET` for live mode.
-
-### 9f. Deploy
-
-```bash
-# Via CLI (first deployment)
-vercel --prod
-
-# Or push to main branch — Vercel auto-deploys on every push
-git push origin main
-```
-
-### 9g. Set up the cron job on Vercel
-
-Add a `vercel.json` at the repository root to schedule the hold-expiry endpoint:
+Create `vercel.json` in the repository root:
 
 ```json
 {
@@ -442,64 +453,56 @@ Add a `vercel.json` at the repository root to schedule the hold-expiry endpoint:
 }
 ```
 
-The cron route requires the `Authorization: Bearer CRON_SECRET` header. Configure the CRON_SECRET env var in Vercel and verify your route reads it from `process.env.CRON_SECRET`.
+Commit and push:
 
-### 9h. Update Razorpay webhook URL for production
-
-In the Razorpay dashboard (live mode): update the webhook URL from your tunnel URL to `https://YOUR_DOMAIN/api/webhooks/razorpay`.
-
-### 9i. Update `NEXT_PUBLIC_SITE_URL`
-
-```env
-NEXT_PUBLIC_SITE_URL=https://YOUR_DOMAIN
+```bash
+git add vercel.json
+git commit -m "chore: add Vercel cron for hold expiry"
+git push
 ```
 
-This value is used for Origin checks on all browser-to-server POST requests.
+#### 12f. Apply migrations to the production Supabase database
+
+In the production Supabase SQL editor, repeat Step B3 with the production project. Do **not** apply `seed.sql` to production.
+
+#### 12g. Deploy
+
+Either push to `main` (Vercel auto-deploys) or:
+
+```bash
+vercel --prod
+```
+
+#### 12h. Custom domain
+
+Vercel → **Domains** → add your domain → copy the DNS records to your registrar. TLS is automatic.
 
 ---
 
-## 10. Domain and DNS
+## Pre-launch checklist
 
-1. In Vercel → **Domains**, add your custom domain.
-2. Vercel will show you the DNS records to add at your domain registrar (usually an `A` record or `CNAME`).
-3. TLS is automatic via Vercel.
-
----
-
-## 11. Pre-launch checklist
-
-Work through this before switching to live Razorpay keys:
+Complete all items before going live:
 
 - [ ] `npm run typecheck` — zero errors
 - [ ] `npm run lint` — zero errors
 - [ ] `npm run build` — succeeds
 - [ ] `npm run test` — all pass
-- [ ] `npm run check:placeholders` — no placeholder strings remain on public pages
-- [ ] All Supabase migrations applied to the production database and `verify.sql` passed
-- [ ] RLS confirmed: `anon` role cannot read `public.bookings`
-- [ ] Razorpay test end-to-end: a test payment reaches `confirmed` / `paid` in the database
-- [ ] Bad Razorpay signature returns HTTP 400 with no database write
-- [ ] Duplicate webhook returns 200 with no second calendar event (idempotent)
-- [ ] Google busy times disappear from the availability payload
-- [ ] A forced Google failure returns 503, never an empty slot array
-- [ ] Two overlapping booking inserts — second one rejected with `bookings_no_overlap`
-- [ ] `NEXT_PUBLIC_SITE_URL` set to the production domain in Vercel
-- [ ] Razorpay live keys set in Vercel → Production environment only
-- [ ] Live Razorpay webhook URL updated to the production domain
-- [ ] Google OAuth consent screen is in **In production** status
-- [ ] `CRON_SECRET` is set and the cron route returns 401 without it
-- [ ] No secret appears in Vercel build logs or in the browser network tab
-- [ ] Security headers reviewed (see `docs/ARCHITECTURE.md §K`)
-
----
-
-## 12. After first production deploy
-
-1. Create a booking in production using a real test card if Razorpay live is not yet active, or a live small-value transaction.
-2. Confirm the booking row is `confirmed` / `paid` in Supabase.
-3. Confirm a Google Calendar event appeared on the practitioner's calendar.
-4. Check the confirmation page loads and shows the correct session details.
-5. Verify that replaying the Razorpay live webhook does not create a second calendar event.
+- [ ] `npm run check:placeholders` — zero dummy markers
+- [ ] Supabase migrations applied to production, `verify.sql` passed
+- [ ] `anon` role gets permission denied on `public.bookings`
+- [ ] Test payment end-to-end: reaches `confirmed` / `paid`
+- [ ] Bad Razorpay signature → HTTP 400, no DB write
+- [ ] Duplicate webhook → 200, no second calendar event
+- [ ] Google busy times removed from slot list
+- [ ] Forced Google error → 503, never empty slot array
+- [ ] Two overlapping inserts → second rejected with `bookings_no_overlap`
+- [ ] `NEXT_PUBLIC_SITE_URL` = production domain in Vercel
+- [ ] Razorpay **live** keys in Vercel → Production only
+- [ ] Live Razorpay webhook URL = production domain
+- [ ] Google OAuth consent screen = **In production** status
+- [ ] Cron route returns 401 without the correct `Authorization` header
+- [ ] No secret visible in Vercel build logs or browser network tab
+- [ ] Security headers checked (see `docs/ARCHITECTURE.md §K`)
 
 ---
 
@@ -507,14 +510,15 @@ Work through this before switching to live Razorpay keys:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `supabase: failed to fetch` | `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` wrong | Re-copy from Supabase dashboard → Project Settings → API |
-| Availability returns 503 | Google credentials invalid or not set | Check `GOOGLE_REFRESH_TOKEN`. Re-run OAuth Playground step if token expired |
-| Razorpay Checkout does not open | `RAZORPAY_KEY_ID` not set or wrong | Check the value; must start with `rzp_test_` in dev |
-| Webhook always 400 | `RAZORPAY_WEBHOOK_SECRET` mismatch | Re-copy the secret from the Razorpay webhook settings |
-| Double-booking not rejected | Migration `0001` or `0002` not applied | Re-run migrations in order |
-| `invalid_grant` from Google | Refresh token revoked or expired | Re-run OAuth Playground step; ensure consent screen is In production |
-| Cron route returns 401 | `CRON_SECRET` not set or header wrong | Check the `Authorization: Bearer` header matches the env var |
-| Build fails on Vercel | Node version mismatch | Set Node 24.x in Vercel project settings |
+| `supabase: failed to fetch` | Wrong `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` | Re-copy from Supabase → Project Settings → API |
+| Availability returns 503 | Google credentials missing or invalid | Check `GOOGLE_REFRESH_TOKEN`; re-run OAuth Playground if revoked |
+| Razorpay Checkout does not open | `RAZORPAY_KEY_ID` wrong or missing | Must start with `rzp_test_` in dev |
+| Webhook always 400 | `RAZORPAY_WEBHOOK_SECRET` mismatch | Re-copy from Razorpay webhook settings |
+| Double-booking not rejected | Migrations not applied | Re-run `0001` then `0002` in order |
+| `invalid_grant` from Google | Refresh token revoked or expired | Re-run OAuth Playground; confirm consent screen is In production |
+| Cron route returns 401 | `CRON_SECRET` missing or header wrong | Header must be `Authorization: Bearer <CRON_SECRET>` |
+| Build fails on Vercel | Node version wrong | Set Node 24.x in Vercel project settings |
+| `pricePaise` is 0, booking fails | Placeholder session prices not set | Set real values in `src/lib/booking/session-config.ts` (Phase 9) |
 
 ---
 
@@ -523,6 +527,6 @@ Work through this before switching to live Razorpay keys:
 | Document | What it covers |
 |---|---|
 | `docs/ARCHITECTURE.md` | Full system design, state machine, security checklist |
-| `docs/DECISIONS.md` | Defaults that need client confirmation |
-| `supabase/README.md` | Database run order and operator runbook |
-| `.env.example` | All environment variable names and dummy values |
+| `docs/DECISIONS.md` | All decisions with status; PROVISIONAL items need human confirmation |
+| `supabase/README.md` | Migration run order and operator runbook (cancel, refund, review) |
+| `.env.example` | All environment variable names with dummy values |
