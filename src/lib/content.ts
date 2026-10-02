@@ -60,6 +60,8 @@ export async function getTestimonials(): Promise<TestimonialRow[]> {
   // TODO(content-db): Replace this dummy return with a server read of
   // public.testimonials through getSupabaseAdmin() (service role).
   // Never query Supabase from the browser.
+  // TODO(approved-filter): approved filtering belongs in this getter —
+  // add `.eq('is_approved', true)` when the database read replaces the dummy data.
   return getDummyTestimonials();
 }
 
@@ -67,6 +69,8 @@ export async function getEventsAndWorkshops(): Promise<EventWorkshopRow[]> {
   // TODO(content-db): Replace this dummy return with a server read of
   // public.events_workshops through getSupabaseAdmin() (service role).
   // Never query Supabase from the browser.
+  // TODO(published-filter): published/approved filtering belongs in this getter —
+  // add `.eq('is_published', true)` when the database read replaces the dummy data.
   return getDummyEventsAndWorkshops();
 }
 
@@ -74,5 +78,7 @@ export async function getGalleryItems(): Promise<GalleryItemRow[]> {
   // TODO(content-db): Replace this dummy return with a server read of
   // public.gallery_items through getSupabaseAdmin() (service role).
   // Never query Supabase from the browser.
+  // TODO(published-filter): published/approved filtering belongs in this getter —
+  // add `.eq('is_published', true)` when the database read replaces the dummy data.
   return getDummyGalleryItems();
 }

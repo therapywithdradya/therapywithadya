@@ -194,6 +194,27 @@ export const site = {
       intro:
         "[DUMMY] The sessions below are placeholders. Duration and the fee line come from the session list.",
     },
+    events: {
+      title: "Events",
+      description:
+        "[DUMMY] Upcoming and past events and workshops are listed here. No dates or topics are confirmed until published.",
+      intro:
+        "[DUMMY] Events and workshops listed below are placeholders. They are not confirmed offers.",
+    },
+    gallery: {
+      title: "Gallery",
+      description:
+        "[DUMMY] A collection of images from this practice. Photos are not published until they are reviewed and approved.",
+      intro:
+        "[DUMMY] The photographs below are placeholder images. They are not real photographs of this practice.",
+    },
+    reviews: {
+      title: "Reviews",
+      description:
+        "[DUMMY] Client testimonials from this practice. Reviews are not published until they are approved and confirmed.",
+      intro:
+        "[DUMMY] The reviews below are placeholder notes for layout only. They are not real client testimonials.",
+    },
   },
   bookingSteps: [
     "Choose a session.",
