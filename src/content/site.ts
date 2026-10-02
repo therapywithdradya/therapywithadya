@@ -215,6 +215,34 @@ export const site = {
       intro:
         "[DUMMY] The reviews below are placeholder notes for layout only. They are not real client testimonials.",
     },
+    contact: {
+      title: "Contact",
+      description:
+        "[DUMMY] Get in touch by email, phone, or WhatsApp to enquire about sessions, workshops, or questions. Direct message details are listed here.",
+      intro:
+        "[DUMMY] Get in touch by email, phone, or WhatsApp. Enquiries and booking questions are welcome.",
+    },
+    privacy: {
+      title: "Privacy",
+      description:
+        "[DUMMY] How your personal details and booking data are collected, used, and protected by this practice. Read our complete privacy policy here.",
+      intro:
+        "[DUMMY] How your personal information is handled when you visit this website or book a session.",
+    },
+    termsAndCancellation: {
+      title: "Terms and cancellation",
+      description:
+        "[DUMMY] Booking terms, payment, cancellation notice, and refund guidelines for sessions and workshops. Review practice policies before booking.",
+      intro:
+        "[DUMMY] Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
+    },
+    terms: {
+      title: "Terms and cancellation",
+      description:
+        "[DUMMY] Booking terms, payment, cancellation notice, and refund guidelines for sessions and workshops. Review practice policies before booking.",
+      intro:
+        "[DUMMY] Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
+    },
   },
   bookingSteps: [
     "Choose a session.",
@@ -222,10 +250,29 @@ export const site = {
     "Enter your details.",
     "Pay securely to confirm.",
   ],
+  legalLastUpdated: "[DUMMY] 2 October 2026",
+  safetyNotice: {
+    heading: "Emergency and crisis support",
+    text: "This practice does not provide crisis or emergency support. If you or someone else is in immediate danger, contact your local emergency number.",
+    // VERIFY-BEFORE-LAUNCH: helpline numbers need client confirmation
+    resources: [
+      {
+        label: "Emergency services (India): 112",
+        tel: "112",
+      },
+      {
+        label: "Tele-MANAS, national mental health helpline (India): 14416",
+        tel: "14416",
+      },
+    ],
+  },
   policies: {
     paymentTerms:
       "[DEFAULT] Full payment is taken up front. This sentence is a default, not final legal text.",
     cancellationNoticeHours: 24,
+    refundSummary: "" as string,
+    reschedulingSummary: "" as string,
+    minorsSummary: "" as string,
     selfServeCancel: false,
     selfServeReschedule: false,
     confirmed: false,

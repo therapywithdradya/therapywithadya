@@ -51,12 +51,100 @@ function confirmedPolicyRows(): PolicyRow[] {
   return rows.filter((row) => row.value !== undefined);
 }
 
+/**
+ * Sections definition for /terms-and-cancellation.
+ * Adding another policy later means adding one field to site.policies and one row here.
+ */
+type PolicySectionDef = {
+  key: string;
+  heading: string;
+  getValue: (policies: typeof site.policies) => string | undefined;
+};
+
+const policySections: PolicySectionDef[] = [
+  {
+    key: "payment",
+    heading: "Payment",
+    getValue: (p) => (filled(p.paymentTerms) ? p.paymentTerms.trim() : undefined),
+  },
+  {
+    key: "cancellation",
+    heading: "Cancellation and refunds",
+    getValue: (p) => {
+      const parts: string[] = [];
+      const notice = noticeHours(p.cancellationNoticeHours);
+      if (notice) parts.push(`Notice: ${notice}`);
+      if (filled(p.refundSummary)) parts.push(p.refundSummary.trim());
+      return parts.length > 0 ? parts.join(". ") : undefined;
+    },
+  },
+  {
+    key: "rescheduling",
+    heading: "Rescheduling",
+    getValue: (p) => (filled(p.reschedulingSummary) ? p.reschedulingSummary.trim() : undefined),
+  },
+  {
+    key: "minors",
+    heading: "Under-18s",
+    getValue: (p) => (filled(p.minorsSummary) ? p.minorsSummary.trim() : undefined),
+  },
+];
+
 export function PolicySummary({
   headingId = "policy-summary-title",
+  mode = "table",
 }: {
   headingId?: string;
+  mode?: "table" | "sections";
 }) {
   const confirmed = site.policies.confirmed;
+
+  if (mode === "sections") {
+    return (
+      <div className="space-y-8">
+        {policySections.map((section) => {
+          const sectionHeadingId = `policy-section-${section.key}`;
+
+          if (!confirmed) {
+            return (
+              <div key={section.key} className="min-w-0">
+                <h3
+                  id={sectionHeadingId}
+                  className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
+                >
+                  {section.heading}
+                </h3>
+                <p className="mt-3 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
+                  [DUMMY] Pending client confirmation
+                </p>
+              </div>
+            );
+          }
+
+          const val = section.getValue(site.policies);
+          if (!val) {
+            return null;
+          }
+
+          return (
+            <div key={section.key} className="min-w-0">
+              <h3
+                id={sectionHeadingId}
+                className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
+              >
+                {section.heading}
+              </h3>
+              <p className="mt-3 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
+                {val}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // mode === "table" (kept untouched for /sessions)
   const rows = confirmed ? confirmedPolicyRows() : [];
 
   return (

@@ -8,6 +8,7 @@ const patterns = [
   { label: "example.com", regex: /example\.com/ },
   { label: "/placeholders/", regex: /\/placeholders\// },
   { label: "pricePaise: 0", regex: /pricePaise:\s*0\b/ },
+  { label: "VERIFY-BEFORE-LAUNCH", regex: /VERIFY-BEFORE-LAUNCH/ },
 ];
 
 const groups = new Map(patterns.map((pattern) => [pattern.label, []]));

@@ -32,6 +32,8 @@ The two screenshots are different “About me” texts. Where they disagree, nei
 | Portrait / hero | `photo_2026-10-01_15-58-29.jpg` contains a portrait inside an about-page screenshot. It is not a standalone website file. | NEEDS CLIENT CONFIRMATION | Not copied and not published. |
 | Logo | Neither file | MISSING | Wordmark is the dummy site name. |
 | Brand colours / fonts | Neither file states brand colours or fonts. | MISSING | Visual style comes from the separate anchor & sage reference, not from these screenshots. |
+| Emergency services number (112) | Standard national emergency number (India) | NEEDS CLIENT CONFIRMATION | Safety notice on `/contact` and `/terms-and-cancellation`. |
+| Mental health helpline number (Tele-MANAS: 14416) | Standard national mental health helpline (India) | NEEDS CLIENT CONFIRMATION | Safety notice on `/contact` and `/terms-and-cancellation`. |
 
 ## Screenshot readings
 
@@ -65,3 +67,4 @@ The two screenshots are different “About me” texts. Where they disagree, nei
 - Are there approved testimonials, and how should each person be named?
 - Are there real events, workshops, or gallery photos to publish?
 - Is there a logo, and are there brand colours or fonts to use instead of the current dark-and-gold style?
+- Are the emergency and crisis support numbers (112 and Tele-MANAS 14416) accurate and preferred for the safety notice?
