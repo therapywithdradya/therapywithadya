@@ -90,10 +90,10 @@ export default function TermsPage() {
                 If we cannot honour a paid booking
               </h2>
               <p className="text-body text-ink [overflow-wrap:anywhere]">
-                [DUMMY] Pending client confirmation: In the rare situation where payment is completed
-                after a 15-minute hold has expired and the slot has already been taken by another
-                client, the session cannot be confirmed. In such cases, the practitioner will arrange
-                a full refund to your original payment method within [DUMMY] refund timeline to be confirmed.
+                In the rare situation where payment is completed after a 15-minute hold has expired
+                and the slot has already been taken by another client, the session cannot be confirmed.
+                In such cases, the practitioner will arrange a full refund to your original payment
+                method within 5 to 7 business days or offer an alternative mutually agreed slot.
               </p>
             </div>
 

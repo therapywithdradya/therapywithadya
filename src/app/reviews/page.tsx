@@ -134,7 +134,7 @@ export default async function ReviewsPage() {
             Ready to book?
           </h2>
           <p className="mt-4 max-w-[60ch] text-muted [overflow-wrap:anywhere]">
-            [DUMMY] A short note inviting visitors to book a session will go here.
+            Take the first step towards emotional well-being and personal growth. Book your confidential session today.
           </p>
           <div className="mt-8">
             <Button href="/book" id="reviews-cta-book-btn">

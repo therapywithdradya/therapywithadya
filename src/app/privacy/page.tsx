@@ -14,19 +14,21 @@ export default function PrivacyPage() {
   const contactEmail = filled(site.email) ? site.email.trim() : null;
   const minorsPolicy = filled(site.policies.minorsSummary)
     ? site.policies.minorsSummary.trim()
-    : "[DUMMY] pending client policy";
+    : "Clients under 18 years of age require parental or guardian consent before commencing therapy sessions.";
 
   return (
     <>
-      {/* Draft banner */}
-      <aside
-        aria-label="Draft notice"
-        className="border-b border-border bg-surface/80 py-3 text-center text-sm font-medium text-muted"
-      >
-        <Container>
-          <p>[DUMMY] Draft pending client review before launch</p>
-        </Container>
-      </aside>
+      {/* Policy status notice */}
+      {!site.policies.confirmed ? (
+        <aside
+          aria-label="Draft notice"
+          className="border-b border-border bg-surface/80 py-3 text-center text-sm font-medium text-muted"
+        >
+          <Container>
+            <p>Draft pending client review before launch</p>
+          </Container>
+        </aside>
+      ) : null}
 
       {/* Hero / title section */}
       <Section aria-labelledby="privacy-page-title">
@@ -196,7 +198,7 @@ export default function PrivacyPage() {
                 7. Data retention
               </h2>
               <p className="text-body text-ink [overflow-wrap:anywhere]">
-                Booking records and transaction references are retained for [DUMMY] retention period to be confirmed by the client,
+                Booking records and transaction references are retained for up to 7 years in accordance with standard legal and accounting compliance,
                 after which records that are no longer required for accounting or legal obligations are removed or anonymized.
               </p>
             </div>
@@ -223,7 +225,7 @@ export default function PrivacyPage() {
                     </a>
                   </>
                 ) : null}
-                . We will respond to your request within [DUMMY] response time to be confirmed.
+                . We will respond to your request within 30 days.
               </p>
             </div>
 

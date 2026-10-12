@@ -3,10 +3,10 @@ import { wordmark } from "@/content/site";
 import { getMetadataBase } from "@/lib/env.public";
 
 const ogImage = {
-  url: "/placeholders/og-default.svg",
+  url: "/images/og-default.jpg",
   width: 1200,
   height: 630,
-  alt: "Placeholder image",
+  alt: "Therapy with Dr. Adya Vats - Psychologist and Counselor",
 } as const;
 
 export function marketingMetadata(input: {

@@ -114,7 +114,7 @@ function walkSources(directory, imagePath, sources) {
       }
       const windowText = lines.slice(Math.max(0, index - 6), index + 7).join("\n");
       sources.push({
-        hasAlt: /alt\s*=|alt_text|altText/.test(windowText),
+        hasAlt: /alt\s*[:=]|alt_text|altText/.test(windowText),
       });
     });
   }

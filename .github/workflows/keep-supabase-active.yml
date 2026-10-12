@@ -1,0 +1,34 @@
+name: Keep Supabase Active
+
+on:
+  schedule:
+    # Runs every 3 days at 06:00 UTC (keeps well within the 7-day inactivity limit)
+    - cron: "0 6 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    name: Ping Supabase Database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send keep-alive query to Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "Pinging Supabase at: ${SUPABASE_URL}"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET "${SUPABASE_URL}/rest/v1/" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")
+          
+          echo "Response HTTP Status: ${HTTP_STATUS}"
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "Successfully pinged Supabase. 7-day inactivity timer reset."
+          else
+            echo "Warning: Received HTTP status ${HTTP_STATUS}. Attempting schema query..."
+            curl -s -f -X GET "${SUPABASE_URL}/rest/v1/?select=*" \
+              -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+              -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" > /dev/null || true
+          fi

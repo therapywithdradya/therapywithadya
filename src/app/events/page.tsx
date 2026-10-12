@@ -147,7 +147,7 @@ export default async function EventsPage() {
               Events and Workshops
             </h2>
             <p className="mt-6 text-muted">
-              [DUMMY] No events or workshops are scheduled right now. Check back soon.
+              No events or workshops are scheduled right now. Check back soon or contact Dr. Adya for custom bookings.
             </p>
           </Container>
         </Section>
@@ -209,7 +209,7 @@ export default async function EventsPage() {
             Get in touch
           </h2>
           <p className="mt-4 max-w-[60ch] text-muted [overflow-wrap:anywhere]">
-            [DUMMY] Interested in a workshop or have a question about an event?
+            Interested in organizing a workshop for your school, college, or organization? Reach out to coordinate custom topics and dates.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link

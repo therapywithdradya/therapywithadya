@@ -22,7 +22,7 @@ export type PublicSession = {
   priceLabel: string | null;
 };
 
-const unsetFeeLabel = "Fee confirmed at booking [DUMMY]";
+const unsetFeeLabel = "Fee confirmed at booking";
 
 function formatInrFromPaise(pricePaise: number): string {
   const sign = pricePaise < 0 ? "-" : "";

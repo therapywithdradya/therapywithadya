@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     description: site.tagline,
     images: [
       {
-        url: "/placeholders/og-default.svg",
+        url: "/images/og-default.jpg",
         width: 1200,
         height: 630,
-        alt: "Placeholder image",
+        alt: "Therapy with Dr. Adya Vats - Psychologist and Counselor",
       },
     ],
   },

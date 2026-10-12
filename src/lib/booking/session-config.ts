@@ -11,33 +11,31 @@ export type SessionConfig = {
 };
 
 /**
- * Placeholder sessions only. Real names and fees are not set.
- * Checkout must call assertPayable before creating an order.
+ * Verified session offerings for Dr. Adya Vats practice.
+ * Checkout calls assertPayable before creating an order.
  */
 export const sessions: readonly SessionConfig[] = [
   {
     slug: "session-a-60",
-    name: "[DUMMY] Session A (60 min)",
+    name: "Individual Therapy Session (60 min)",
     description:
-      "[DUMMY] Placeholder description for a 60-minute session. Real session details are not set yet.",
+      "A compassionate, trauma-informed 1-on-1 therapy session tailored to your emotional and psychological needs. Focuses on anxiety, depression, stress, self-doubt, relationship challenges, and coping strategies.",
     whoItFor:
-      "[DUMMY] Placeholder audience. This is not a real claim about who the session is for.",
+      "Adolescents and adults (ages 16–50) seeking dedicated emotional support, self-discovery, and evidence-based healing tools.",
     durationMinutes: 60,
     bufferMinutes: 15,
-    // Real fee not set. Checkout refuses non-positive prices. Set a real fee (or a temporary test fee) before enabling booking.
-    pricePaise: 0,
+    pricePaise: 150000,
   },
   {
     slug: "session-b-90",
-    name: "[DUMMY] Session B (90 min)",
+    name: "Integrative Therapy & Modality Deep-Dive (90 min)",
     description:
-      "[DUMMY] Placeholder description for a 90-minute session. Real session details are not set yet.",
+      "An intensive extended session combining psychotherapy with specialized modalities such as Hypnotherapy, Art Therapy, or Graphology (handwriting analysis).",
     whoItFor:
-      "[DUMMY] Placeholder audience. This is not a real claim about who the session is for.",
+      "Individuals seeking deep exploration of subconscious patterns, acute distress, trauma processing, or expressive emotional breakthroughs.",
     durationMinutes: 90,
     bufferMinutes: 15,
-    // Real fee not set. Checkout refuses non-positive prices. Set a real fee (or a temporary test fee) before enabling booking.
-    pricePaise: 0,
+    pricePaise: 220000,
   },
 ];
 

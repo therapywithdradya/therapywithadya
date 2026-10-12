@@ -58,7 +58,7 @@ export default function ServicesPage() {
             </div>
           ) : (
             <p className="mt-6 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
-              [DUMMY] Service outlines will be listed here when they are added.
+              Service outlines will be listed here when they are published.
             </p>
           )}
         </Container>

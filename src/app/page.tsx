@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     description: site.home.description,
     images: [
       {
-        url: "/placeholders/og-default.svg",
+        url: "/images/og-default.jpg",
         width: 1200,
         height: 630,
-        alt: "Placeholder image",
+        alt: "Therapy with Dr. Adya Vats - Psychologist and Counselor",
       },
     ],
   },
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: homeTitle,
     description: site.home.description,
-    images: ["/placeholders/og-default.svg"],
+    images: ["/images/og-default.jpg"],
   },
 };
 

@@ -6,7 +6,7 @@ type PolicyRow = {
   value: string | undefined;
 };
 
-const pendingCopy = "[DUMMY] Policy text pending client confirmation";
+const pendingCopy = "Policy text pending confirmation";
 
 function noticeHours(hours: number): string | undefined {
   if (!Number.isInteger(hours) || hours < 0) {
@@ -115,7 +115,7 @@ export function PolicySummary({
                   {section.heading}
                 </h3>
                 <p className="mt-3 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
-                  [DUMMY] Pending client confirmation
+                  Pending client confirmation
                 </p>
               </div>
             );

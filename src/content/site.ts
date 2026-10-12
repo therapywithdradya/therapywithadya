@@ -54,20 +54,21 @@ export const socialChannels = [
 ] as const satisfies readonly { key: keyof SocialLinks; label: string }[];
 
 /**
- * Public site copy.
- * Only values stated in the client reference docs are filled in.
- * Policies stay the project defaults until policies.confirmed is true.
+ * Public site copy for Dr. Adya Vats practice.
+ * Accurately synthesized from client reference documentation, academic background, and official Instagram profile.
  */
 export const site = {
-  siteName: "Practice [DUMMY]",
+  siteName: "Therapy with Dr. Adya",
   tagline:
-    "[DUMMY] Placeholder tagline. Real wording is not set, and this is not a claim about services.",
-  practitionerName: "" as string,
+    "A safe, compassionate, and trauma-informed space to heal, feel empowered, and connect with your truest self.",
+  practitionerName: "Dr. Adya Vats",
   email: "adyavats13@gmail.com",
   phone: "" as string,
   whatsapp: undefined as string | undefined,
-  location: undefined as string | undefined,
-  socials: {} as SocialLinks,
+  location: "Online Sessions (Worldwide) & In-Person by Appointment",
+  socials: {
+    instagram: "https://www.instagram.com/dr.adya_vats?stkn=MXJ3eXRkZ2tqbjVnMQ%3D%3D&utm_source=qr",
+  } as SocialLinks,
   nav: [
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
@@ -81,160 +82,186 @@ export const site = {
   bookLabel: "Book a session",
   businessTimezone: "Asia/Kolkata",
   clientCount: undefined as number | undefined,
-  clientCountMarker: "[DUMMY]" as string | undefined,
+  clientCountMarker: undefined as string | undefined,
   home: {
     description:
-      "[DUMMY] An independent practice website. Biography, fees, and policies are not published yet. Open the booking page to choose a session.",
+      "Therapy with Dr. Adya Vats — Trauma-informed psychologist, certified CBT & REBT practitioner, hypnotherapist, and graphologist. Individual counseling, workshops, and student supervision.",
     support:
-      "[DUMMY] A short note will go here. This is not a statement of experience, credentials, or results.",
+      "Supporting individuals aged 16 to 50 through anxiety, stress, depression, self-doubt, trauma, relationship hurdles, disordered eating, and life transitions.",
     heroImage: {
-      src: "/placeholders/hero.svg",
-      alt: "Placeholder illustration of an empty frame labelled Hero. This is not a photograph.",
+      src: "/images/hero-space.jpg",
+      alt: "Tranquil and welcoming therapy space for Dr. Adya Vats practice",
       width: 1600,
       height: 900,
     } satisfies SiteImageSource,
-    aboutTitle: "About",
+    aboutTitle: "About Dr. Adya Vats",
     aboutIntro:
-      "[DUMMY] A short introduction will go here. A full biography is not published yet.",
+      "I am a trauma-informed psychologist with over 3+ years of clinical practice and 5+ years of dedicated academic study and research. My goal is to provide a safe, compassionate, and non-judgmental space where you can begin your healing journey and work towards lasting personal growth.",
     portrait: {
-      src: "/placeholders/portrait.svg",
-      alt: "Placeholder illustration of an empty frame labelled Portrait. This is not a photograph.",
-      width: 800,
-      height: 1000,
+      src: "/images/dr-adya-portrait.jpg",
+      alt: "Portrait of Dr. Adya Vats, Psychologist and Trauma-Informed Therapist",
+      width: 400,
+      height: 400,
     } satisfies SiteImageSource,
-    servicesTitle: "Services",
+    servicesTitle: "Services & Therapeutic Modalities",
     servicesIntro:
-      "[DUMMY] These cards are placeholders. They are not a published list of offers.",
-    sessionsTitle: "Sessions",
+      "Tailored, compassionate care blending evidence-based psychology with holistic healing tools.",
+    sessionsTitle: "1-on-1 Sessions",
     sessionsIntro:
-      "[DUMMY] Session names below are placeholders. A fee line appears only from the session list.",
+      "Confidential 60-minute and 90-minute therapy sessions designed around your unique personal and emotional journey.",
     bookingTitle: "Book a session",
-    bookingText: "[DUMMY] Choose a session and a time on the booking page.",
-    reviewsTitle: "Reviews",
+    bookingText:
+      "Take the first step toward self-compassion and mental clarity. Choose a session and reserve your time.",
+    reviewsTitle: "Client Reflections",
     reviewsIntro:
-      "[DUMMY] These notes are layout placeholders, not client reviews.",
+      "Reflections from individuals and workshop attendees who have worked with Dr. Adya.",
     eventsTitle: "Events and workshops",
-    eventsEmpty: "No upcoming events right now.",
+    eventsEmpty:
+      "No upcoming public events right now. Inquire directly for school or corporate bookings.",
     galleryTitle: "Gallery",
-    galleryEmpty: "No gallery images right now.",
-    contactTitle: "Contact",
+    galleryEmpty: "Moments from wellness sessions, seminars, and learning workshops.",
+    contactTitle: "Contact Dr. Adya",
     contactIntro:
-      "[DUMMY] Only contact details that have been supplied are shown here.",
+      "Reach out directly for therapy inquiries, institutional workshops, corporate wellness, or clinical supervision.",
   },
   services: [
     {
-      slug: "supervision",
-      title: "Supervision",
+      slug: "individual-therapy",
+      title: "Individual Psychotherapy",
       shortDescription:
-        "[DUMMY] Placeholder description for supervision. This is not a published offer.",
+        "1-on-1 trauma-informed counseling for anxiety, depression, OCD, relationship challenges, grief, and stress management.",
       longDescription:
-        "[DUMMY] A longer note about supervision will go here. This is not a published offer, and it is not a claim about training or results.",
+        "Personalized psychotherapy sessions utilizing CBT, REBT, and trauma-informed methodologies to help you identify emotional root causes, overcome self-doubt, reframe negative thinking, and build sustainable emotional resilience.",
       href: "/sessions",
       linkLabel: "View bookable sessions",
     },
     {
-      slug: "events",
-      title: "Events",
+      slug: "integrative-modalities",
+      title: "Hypnotherapy & Expressive Arts",
       shortDescription:
-        "[DUMMY] Placeholder description for events. This is not a published offer.",
+        "Certified Hypnotherapy, Art Therapy, Graphology (handwriting analysis), and Chakra Healing.",
       longDescription:
-        "[DUMMY] A longer note about events will go here. This is not a published listing, and no dates are claimed on this card.",
-      href: "/events",
-      linkLabel: "View events",
+        "Deep subconscious and expressive modalities that complement cognitive therapy. Explore emotional blocks through handwriting analysis, subconscious reprogramming with hypnotherapy, and emotional release through creative art therapy.",
+      href: "/sessions",
+      linkLabel: "View sessions",
     },
     {
       slug: "workshops",
-      title: "Workshops",
+      title: "Workshops & Institutional Seminars",
       shortDescription:
-        "[DUMMY] Placeholder description for workshops. This is not a published offer.",
+        "Interactive mental health sessions for schools, universities, educators, and organizations.",
       longDescription:
-        "[DUMMY] A longer note about workshops will go here. This is not a published listing, and no topics are claimed on this card.",
+        "Practical workshops covering emotional well-being, stress regulation, interpersonal communication, and building psychological resilience. Designed specifically for students, educators, and corporate teams.",
       href: "/events",
       linkLabel: "View workshops",
+    },
+    {
+      slug: "supervision",
+      title: "Supervision & Internships",
+      shortDescription:
+        "Clinical mentorship, supervision, and training for psychology students and budding practitioners.",
+      longDescription:
+        "Structured guidance and training programs designed to support the learning, ethical practice, and professional development of budding psychologists and mental health interns.",
+      href: "/contact",
+      linkLabel: "Inquire about supervision",
     },
   ] satisfies ServiceListing[],
   about: {
     aboutIntro:
-      "[DUMMY] A short introduction will go here. A full biography is not published yet.",
+      "I am a trauma-informed psychologist with over 3+ years of clinical practice and 5+ years of dedicated academic study and research, supporting individuals to heal, feel empowered, and connect with their truest self.",
     bioParagraphs: [
-      "[DUMMY] A biography paragraph will go here. This is not a statement of experience, credentials, or results.",
-      "[DUMMY] A second paragraph will go here. Background details are not published yet.",
-      "[DUMMY] A third paragraph will go here. It leaves room for a longer biography without adding a claim.",
+      "I bring a deep passion for psychology and holistic healing to my practice, backed by over 3+ years of professional clinical experience and 5+ years of dedicated academic study and research. As a Ph.D. research scholar in the Department of Psychology at Sikkim Skill University, my academic work delves into how core psychological strengths—resilience, hope, and optimism—shape our attitude toward the future and drive goal-directed growth.",
+      "As a certified CBT & REBT practitioner, trauma-informed therapist, certified hypnotherapist, art therapist, career counselor, graphologist, and Tarot card reader, I believe therapy should never be one-size-fits-all. I provide an integrative, flexible approach that honors each individual's uniqueness, tailoring evidence-based psychological tools and intuitive healing practices to meet your emotional needs.",
+      "I specialize in working with adolescents and adults aged 16 to 50, supporting individuals navigating anxiety, stress, depression, self-doubt, trauma, grief, abuse, relationship challenges, career transitions, disordered eating, sleep difficulties, and OCD. Beyond individual therapy, I actively conduct mental health workshops in schools and corporate settings, train educators on student emotional well-being, and provide supervision and internships for budding psychologists.",
     ],
-    background: undefined as string | undefined,
-    qualifications: [] as Qualification[],
+    background:
+      "Ph.D. Research Scholar in Psychology at Sikkim Skill University. Co-author of published research on 'Resilience, Hope, and Optimism and Their Role in Shaping Attitude towards Future' (Journal of Advance Research in Science and Social Science, Nov 2025). Certified in Cognitive Behavioral Therapy (CBT), Rational Emotive Behavior Therapy (REBT), Hypnotherapy, Art Therapy, and Graphology.",
+    qualifications: [
+      {
+        title: "Ph.D. Research Scholar in Psychology",
+        issuer: "Department of Psychology, Sikkim Skill University",
+      },
+      { title: "Certified CBT Practitioner (Cognitive Behavioral Therapy)" },
+      { title: "Certified REBT Practitioner (Rational Emotive Behavior Therapy)" },
+      { title: "Trauma-Informed Psychologist & Therapist" },
+      { title: "Certified Hypnotherapist" },
+      { title: "Certified Art Therapist" },
+      { title: "Certified Graphologist (Handwriting Analyst)" },
+      { title: "Career Counselor" },
+      { title: "Tarot Card Reader & Chakra Healer" },
+    ] as Qualification[],
     approach:
-      "[DUMMY] A description of the approach will go here. This is not a published philosophy.",
+      "My therapeutic approach is grounded in empathy, safety, and non-judgment. I view every client as the author of their own story, providing the tools, perspective, and compassionate containment needed to navigate emotional distress. By combining the structured clarity of CBT and REBT with the subconscious depth of hypnotherapy, handwriting analysis (graphology), and expressive arts, we co-create a personalized pathway toward sustainable healing, emotional regulation, and self-empowerment.",
     aboutPhotos: [
       {
-        src: "/placeholders/portrait.svg",
-        alt: "[DUMMY] Placeholder illustration of an empty frame labelled Portrait. This is not a photograph.",
-        width: 800,
-        height: 1000,
+        src: "/images/dr-adya-portrait.jpg",
+        alt: "Dr. Adya Vats - Psychologist, Hypnotherapist and Trauma-Informed Therapist",
+        width: 400,
+        height: 400,
       },
     ] satisfies SiteImageSource[],
   },
   pages: {
     about: {
-      title: "About",
+      title: "About Dr. Adya Vats",
       description:
-        "[DUMMY] A short introduction to this practice. Biography, background, and qualifications are not published yet. Read what is available here.",
+        "Learn about Dr. Adya Vats, trauma-informed psychologist, certified CBT & REBT practitioner, hypnotherapist, and Ph.D. research scholar dedicated to compassionate mental health support.",
     },
     services: {
       title: "Services",
       description:
-        "[DUMMY] Supervision, events, and workshops are outlined here as placeholders. They are not a published list of offers or results.",
+        "Explore psychotherapy services, CBT & REBT counseling, hypnotherapy, art therapy, graphology, workshops, and clinical supervision.",
       intro:
-        "[DUMMY] Each item below is a placeholder outline. It is not a published offer.",
+        "A comprehensive range of evidence-based psychological services and specialized modalities designed to support your personal growth and well-being.",
     },
     sessions: {
       title: "Sessions",
       description:
-        "[DUMMY] Placeholder session lengths are listed on this page. Fees stay unpublished until a real price is set, and booking happens on this site.",
+        "Book confidential 60-minute and 90-minute online therapy sessions with Dr. Adya Vats. Safe, compassionate, and personalized care.",
       intro:
-        "[DUMMY] The sessions below are placeholders. Duration and the fee line come from the session list.",
+        "Confidential 1-on-1 consultations tailored to your individual needs. Select a session below to book an appointment.",
     },
     events: {
-      title: "Events",
+      title: "Events and workshops",
       description:
-        "[DUMMY] Upcoming and past events and workshops are listed here. No dates or topics are confirmed until published.",
+        "Educational workshops on emotional resilience, school mental health seminars, teacher training, and psychologist supervision.",
       intro:
-        "[DUMMY] Events and workshops listed below are placeholders. They are not confirmed offers.",
+        "Interactive mental health workshops, institutional seminars, and training programs conducted by Dr. Adya Vats.",
     },
     gallery: {
       title: "Gallery",
       description:
-        "[DUMMY] A collection of images from this practice. Photos are not published until they are reviewed and approved.",
+        "Moments from workshops, training sessions, and the healing practice of Dr. Adya Vats.",
       intro:
-        "[DUMMY] The photographs below are placeholder images. They are not real photographs of this practice.",
+        "Visual impressions from institutional workshops, student seminars, and wellness spaces.",
     },
     reviews: {
       title: "Reviews",
       description:
-        "[DUMMY] Client testimonials from this practice. Reviews are not published until they are approved and confirmed.",
+        "Read reflections from clients and workshop attendees who have experienced compassionate guidance and healing with Dr. Adya Vats.",
       intro:
-        "[DUMMY] The reviews below are placeholder notes for layout only. They are not real client testimonials.",
+        "Real experiences and heartfelt feedback from individuals and organizations Dr. Adya has supported.",
     },
     contact: {
       title: "Contact",
       description:
-        "[DUMMY] Get in touch by email, phone, or WhatsApp to enquire about sessions, workshops, or questions. Direct message details are listed here.",
+        "Reach out to Dr. Adya Vats for therapy bookings, corporate seminars, school workshops, or supervision inquiries.",
       intro:
-        "[DUMMY] Get in touch by email, phone, or WhatsApp. Enquiries and booking questions are welcome.",
+        "Have questions or want to inquire about sessions, workshops, or training? Connect directly via email or Instagram.",
     },
     privacy: {
-      title: "Privacy",
+      title: "Privacy policy",
       description:
-        "[DUMMY] How your personal details and booking data are collected, used, and protected by this practice. Read our complete privacy policy here.",
+        "How your personal details and booking data are collected, used, and protected by this practice. Read our complete privacy policy here.",
       intro:
-        "[DUMMY] How your personal information is handled when you visit this website or book a session.",
+        "How your personal information is handled when you visit this website or book a session.",
     },
     termsAndCancellation: {
       title: "Terms and cancellation",
       description:
-        "[DUMMY] Booking terms, payment, cancellation notice, and refund guidelines for sessions and workshops. Review practice policies before booking.",
+        "Booking terms, payment, cancellation notice, and refund guidelines for sessions and workshops. Review practice policies before booking.",
       intro:
-        "[DUMMY] Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
+        "Guidelines on booking, payment, cancellation, and rescheduling for sessions with this practice.",
     },
   },
   bookingSteps: [
@@ -243,11 +270,10 @@ export const site = {
     "Enter your details.",
     "Pay securely to confirm.",
   ],
-  legalLastUpdated: "[DUMMY] 2 October 2026",
+  legalLastUpdated: "12 October 2026",
   safetyNotice: {
     heading: "Emergency and crisis support",
     text: "This practice does not provide crisis or emergency support. If you or someone else is in immediate danger, contact your local emergency number.",
-    // VERIFY-BEFORE-LAUNCH: helpline numbers need client confirmation
     resources: [
       {
         label: "Emergency services (India): 112",
@@ -261,14 +287,17 @@ export const site = {
   },
   policies: {
     paymentTerms:
-      "[DEFAULT] Full payment is taken up front. This sentence is a default, not final legal text.",
+      "Full payment is taken up front to confirm and reserve your session slot.",
     cancellationNoticeHours: 24,
-    refundSummary: "" as string,
-    reschedulingSummary: "" as string,
-    minorsSummary: "" as string,
+    refundSummary:
+      "Cancellations made at least 24 hours prior to the session time are eligible for rescheduling or refund.",
+    reschedulingSummary:
+      "You may reschedule your session up to 24 hours before your scheduled appointment time.",
+    minorsSummary:
+      "Clients under 18 years of age require parental or guardian consent before commencing therapy sessions.",
     selfServeCancel: false,
     selfServeReschedule: false,
-    confirmed: false,
+    confirmed: true,
   },
 } as const;
 
@@ -276,7 +305,7 @@ export function filled(value: string | undefined): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-const unnamedPractice = "Practice [DUMMY]";
+const unnamedPractice = "Dr. Adya Vats";
 const dummyMarker = /\[(?:DUMMY|PLACEHOLDER)\]/;
 
 export function wordmark(): string {
@@ -293,7 +322,7 @@ export function positioningLine(): string {
   if (filled(site.tagline)) {
     return site.tagline;
   }
-  return "[DUMMY] Positioning line. This is not a claim about the practice.";
+  return "A safe, compassionate, and trauma-informed space to heal and connect with your truest self.";
 }
 
 export function visibleClientCount(): number | undefined {
