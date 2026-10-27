@@ -59,6 +59,60 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": ["MedicalBusiness", "Physician", "ProfessionalService"],
+              name: site.siteName,
+              legalName: "Dr. Adya Vats Clinical Psychology Practice",
+              url: "https://www.therapywithdradya.com",
+              logo: "https://www.therapywithdradya.com/images/portrait-hero.jpg",
+              image: "https://www.therapywithdradya.com/images/portrait-hero.jpg",
+              description: site.tagline,
+              medicalSpecialty: ["Psychology", "Psychotherapy"],
+              email: site.email,
+              telephone: site.phone || undefined,
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Gurugram",
+                addressRegion: "Haryana",
+                addressCountry: "IN",
+              },
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ],
+                  opens: "10:00",
+                  closes: "18:00",
+                },
+              ],
+              priceRange: "₹1500 - ₹3500",
+              availableService: [
+                {
+                  "@type": "MedicalTherapy",
+                  name: "Individual Psychotherapy",
+                  description:
+                    "60-minute confidential counseling session addressing anxiety, mood, self-doubt, and life transitions.",
+                },
+                {
+                  "@type": "MedicalTherapy",
+                  name: "Integrative Counseling & Modality Session",
+                  description:
+                    "90-minute session combining CBT, REBT, hypnotherapy, and graphology insights.",
+                },
+              ],
+            }),
+          }}
+        />
       </body>
     </html>
   );
