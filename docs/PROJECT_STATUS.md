@@ -14,7 +14,7 @@ This project is a bespoke, privacy-first web application for Dr. Adya’s clinic
 ### Current System Health
 - **Typecheck (`npm run typecheck`)**: 100% clean (0 TypeScript errors).
 - **Linter (`npm run lint`)**: 100% clean (0 ESLint warnings/errors).
-- **Unit Test Suite (`npm test`)**: 97/97 tests passing across 4 test suites.
+- **Unit Test Suite (`npm test`)**: 135/135 tests passing across 8 test suites.
 - **Placeholder Audit (`npm run check:placeholders`)**: 0 placeholders remaining (practitioner bio, photos, session options, and fees populated from reference docs).
 - **Build Status (`npm run build`)**: 14/14 static marketing routes compile successfully with ISR.
 
@@ -427,9 +427,9 @@ Perform a live verification check:
 | **4** | Public Marketing Pages | 14 static pages, lightbox, crisis safety notices | ✅ Complete (`d4e9b4d`) |
 | **5a** | Availability Engine | Pure slot calculation engine, 97 unit tests | ✅ Complete (`b8260a2`) |
 | **Content** | Practitioner Content | Real bio, portraits, gallery, session pricing | ✅ Complete (`adc3389`) |
-| **5b** | Google Calendar Client | Free/busy provider & event writer | ⬜ **Next Step** |
-| **5c** | Availability API Route | `/api/availability` endpoint with rate-limiting | ⬜ Pending 5b |
-| **6** | Booking Flow & Payments | `/book` wizard, Razorpay checkout, webhooks | ⬜ Pending 5c |
+| **5b** | Google Calendar Client | Free/busy provider & event writer | ✅ Complete |
+| **5c** | Availability API Route | `/api/availability` endpoint with rate-limiting | ✅ Complete |
+| **6** | Booking Flow & Payments | `/book` wizard, Razorpay checkout, webhooks | ⬜ **Next Step** |
 | **7** | Concurrency Integration | Double-booking race tests, late payment recovery | ⬜ Pending 6 |
 | **8** | Transactional Emails | Email receipts (if requested by client) | ⏸️ On Hold (per decisions) |
 | **9** | Policy Final Sign-Off | Client confirmation of cancellation rules | ⬜ Ready for client |
