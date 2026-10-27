@@ -66,6 +66,7 @@ export function BookingWizard() {
   const [selectedSlot, setSelectedSlot] = useState<string>("");
   const [loadingSlots, setLoadingSlots] = useState<boolean>(false);
   const [slotsError, setSlotsError] = useState<string | null>(null);
+  const [slotsCache, setSlotsCache] = useState<Record<string, string[]>>({});
 
   // Step 3: Details
   const [customerName, setCustomerName] = useState<string>("");
@@ -109,7 +110,56 @@ export function BookingWizard() {
     }
   }
 
-  // Event-driven slot fetching (React 19 compliant, avoiding setState in effect)
+  function getSlotDateKey(isoString: string): string {
+    const d = new Date(isoString);
+    return d.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  }
+
+  // Pre-fetch all slots for the full 14-day window in ONE request
+  async function prefetchFullWindow(sessionSlug: string, initialDate?: string) {
+    const firstDate = availableDates[0]?.dateString;
+    const lastDate = availableDates[availableDates.length - 1]?.dateString;
+    if (!firstDate || !lastDate) return;
+
+    setLoadingSlots(true);
+    setSlotsError(null);
+
+    try {
+      const res = await fetch(
+        `/api/availability?session=${encodeURIComponent(sessionSlug)}&fromDate=${encodeURIComponent(firstDate)}&toDate=${encodeURIComponent(lastDate)}`,
+      );
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { message?: string };
+        throw new Error(data.message || "Failed to load availability");
+      }
+      const data = (await res.json()) as { slots: string[] };
+
+      // Group slots by date in IST
+      const grouped: Record<string, string[]> = {};
+      for (const item of availableDates) {
+        grouped[item.dateString] = [];
+      }
+      for (const slot of data.slots || []) {
+        const key = getSlotDateKey(slot);
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(slot);
+      }
+
+      setSlotsCache(grouped);
+
+      const targetDate = initialDate || selectedDate || firstDate;
+      setSelectedDate(targetDate);
+      setAvailableSlots(grouped[targetDate] || []);
+    } catch (err) {
+      setSlotsError(
+        err instanceof Error ? err.message : "Availability temporarily unavailable",
+      );
+    } finally {
+      setLoadingSlots(false);
+    }
+  }
+
+  // Fallback single-date fetch if needed
   async function fetchSlots(date: string, sessionSlug: string) {
     if (!date || !sessionSlug) {
       setAvailableSlots([]);
@@ -140,8 +190,24 @@ export function BookingWizard() {
 
   function handleSelectDate(dateString: string) {
     setSelectedDate(dateString);
-    fetchSlots(dateString, selectedSession.slug);
+    setSelectedSlot("");
+    // Instant zero-lag cache lookup
+    if (slotsCache[dateString] !== undefined) {
+      setAvailableSlots(slotsCache[dateString]);
+    } else {
+      fetchSlots(dateString, selectedSession.slug);
+    }
   }
+
+  function handleGoToStep2() {
+    setStep(2);
+    const initial = availableDates[0]?.dateString;
+    if (initial) {
+      setSelectedDate(initial);
+    }
+    prefetchFullWindow(selectedSession.slug, initial);
+  }
+
 
   function validateForm(): boolean {
     const errors: Record<string, string> = {};
@@ -326,7 +392,13 @@ export function BookingWizard() {
               return (
                 <div
                   key={session.slug}
-                  onClick={() => setSelectedSession(session)}
+                  onClick={() => {
+                    if (selectedSession.slug !== session.slug) {
+                      setSelectedSession(session);
+                      setSlotsCache({});
+                      setSelectedSlot("");
+                    }
+                  }}
                   className={`group relative flex cursor-pointer flex-col justify-between rounded-xl border p-6 transition-all duration-200 ${
                     isSelected
                       ? "border-primary bg-primary/5 shadow-elevation-soft ring-1 ring-primary"
@@ -371,7 +443,7 @@ export function BookingWizard() {
           <div className="mt-8 flex justify-end">
             <button
               type="button"
-              onClick={() => setStep(2)}
+              onClick={handleGoToStep2}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary-hover shadow-elevation-soft"
             >
               Choose Date & Time <ChevronRight className="size-4" />
