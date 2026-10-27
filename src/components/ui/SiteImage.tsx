@@ -41,9 +41,13 @@ export function SiteImage({
     );
   }
 
-  if (isSvgSource(safeSrc)) {
+  if (
+    isSvgSource(safeSrc) ||
+    safeSrc.startsWith("http://") ||
+    safeSrc.startsWith("https://")
+  ) {
     return (
-      // Plain img: next/image does not optimize SVG while dangerouslyAllowSVG stays off.
+      // Plain img: Direct loading for SVG and external storage images
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={safeSrc}
@@ -57,6 +61,7 @@ export function SiteImage({
       />
     );
   }
+
 
   return (
     <Image

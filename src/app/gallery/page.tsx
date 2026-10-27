@@ -7,11 +7,14 @@ import { getGalleryItems } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
 import type { GalleryItemRow } from "@/types/database";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = marketingMetadata({
   title: site.pages.gallery.title,
   description: site.pages.gallery.description,
   path: "/gallery",
 });
+
 
 /** Group gallery items by category. Items without a category go under "More photos". */
 function groupByCategory(

@@ -7,11 +7,14 @@ import { getTestimonials } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
 import type { TestimonialRow } from "@/types/database";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = marketingMetadata({
   title: site.pages.reviews.title,
   description: site.pages.reviews.description,
   path: "/reviews",
 });
+
 
 function StarRating({ rating }: { rating: number }) {
   const clamped = Math.min(5, Math.max(1, Math.round(rating)));

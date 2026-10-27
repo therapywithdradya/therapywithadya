@@ -10,11 +10,14 @@ import { getPractitionerProfile } from "@/lib/content";
 
 const pageCopy = site.pages.about;
 
+export const dynamic = "force-dynamic";
+
 export const metadata = marketingMetadata({
   title: pageCopy.title,
   description: pageCopy.description,
   path: "/about",
 });
+
 
 export default async function AboutPage() {
   const profile = await getPractitionerProfile();

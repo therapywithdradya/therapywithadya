@@ -20,7 +20,8 @@ import {
 import { getMetadataBase } from "@/lib/env.public";
 import { clockMs } from "@/lib/format";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+
 
 const homeTitle = wordmark();
 

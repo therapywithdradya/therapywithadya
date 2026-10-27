@@ -1156,9 +1156,64 @@ export default function AdminDashboardPage() {
 
             {/* Gallery Grid */}
             <div className="rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">
-              <h3 className="font-heading text-lg font-bold text-ink">
-                Current Gallery ({gallery.length} Photos)
-              </h3>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3">
+                <h3 className="font-heading text-lg font-bold text-ink">
+                  Current Gallery ({gallery.length} Photos)
+                </h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={isSaving}
+                    onClick={async () => {
+                      if (!confirm("Load the standard clinic photos into your gallery and clean up dummy cards?")) return;
+                      setIsSaving(true);
+                      try {
+                        const res = await fetch("/api/admin/gallery", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ action: "seed_real_photos" }),
+                        });
+                        const data = await res.json();
+                        if (data.items) setGallery(data.items);
+                        showToast("success", "Practice photos loaded successfully!");
+                      } catch {
+                        showToast("error", "Failed to load photos.");
+                      } finally {
+                        setIsSaving(false);
+                      }
+                    }}
+                    className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-50"
+                  >
+                    ✨ Load Practice Photos
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isSaving}
+                    onClick={async () => {
+                      if (!confirm("Clean up and remove dummy placeholder SVGs from seed.sql?")) return;
+                      setIsSaving(true);
+                      try {
+                        const res = await fetch("/api/admin/gallery", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ action: "clean_placeholders" }),
+                        });
+                        const data = await res.json();
+                        if (data.items) setGallery(data.items);
+                        showToast("success", "Dummy placeholders removed!");
+                      } catch {
+                        showToast("error", "Failed to clean placeholders.");
+                      } finally {
+                        setIsSaving(false);
+                      }
+                    }}
+                    className="rounded-lg border border-red-900/50 bg-red-950/40 px-3 py-1.5 text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors disabled:opacity-50"
+                  >
+                    Remove Dummy Placeholders
+                  </button>
+                </div>
+              </div>
+
 
               {gallery.length === 0 ? (
                 <p className="mt-4 text-sm text-muted">

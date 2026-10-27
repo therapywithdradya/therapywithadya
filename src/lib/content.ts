@@ -133,6 +133,8 @@ export async function getEventsAndWorkshops(): Promise<EventWorkshopRow[]> {
 }
 
 export async function getGalleryItems(): Promise<GalleryItemRow[]> {
+  const defaultItems = getDummyGalleryItems();
+
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -143,12 +145,19 @@ export async function getGalleryItems(): Promise<GalleryItemRow[]> {
       .order("created_at", { ascending: false });
 
     if (!error && data && data.length > 0) {
-      return data;
+      // If database items already contain /images/ practice photos, use them directly
+      const hasPracticePhotos = data.some((item) => item.image_path.startsWith("/images/"));
+      if (hasPracticePhotos) {
+        return data;
+      }
+      // If user uploaded new photos, show them alongside the standard practice photos
+      return [...data, ...defaultItems];
     }
   } catch {
     // fallback
   }
 
-  return getDummyGalleryItems();
+  return defaultItems;
 }
+
 

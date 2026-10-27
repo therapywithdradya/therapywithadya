@@ -13,8 +13,8 @@ import type { EventWorkshopRow } from "@/types/database";
 // Time-based ISR: the upcoming/past split depends on the current time.
 // The page is regenerated at most once per hour (same mechanism as the home page).
 // An event that ends will remain in "Upcoming" until the next regeneration.
-// Logged in DECISIONS.md row for Phase 4c.
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+
 
 export const metadata = marketingMetadata({
   title: site.pages.events.title,
