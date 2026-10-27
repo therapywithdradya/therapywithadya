@@ -26,10 +26,10 @@
 | **Phase 7** — Integration end-to-end | ⬜ Waiting on Razorpay live keys |
 | **Phase 8** — Notifications | ✅ Done — Resend email templates & dispatcher (175 tests passing) |
 | **Phase 9** — Client policy sign-off | ⬜ Ready for final client confirmation |
-| **Phase 10** — SEO & Structured Data | ⬜ Not started |
-| **Phase 11** — Security review & CSP | ⬜ Not started |
-| **Phase 12** — Comprehensive testing phase | ⬜ Not started |
-| **Phase 13** — Production deployment | ⬜ Not started |
+| **Phase 10** — SEO & Structured Data | ✅ Done — Dynamic sitemap.xml, robots.txt, Schema.org JSON-LD |
+| **Phase 11** — Security review & CSP | ✅ Done — Hardened CSP, HSTS, Permissions-Policy in next.config.ts |
+| **Phase 12** — Comprehensive testing phase | ✅ Done — 175/175 tests passing, 0 lint/type errors, build verified |
+| **Phase 13** — Production deployment | 🟡 Live on therapywithdradya.com (waiting for Razorpay live keys for payment) |
 
 > See [`docs/PROJECT_STATUS.md`](file:///d:/Major%20Project/adyas-project/docs/PROJECT_STATUS.md) for the complete roadmap, testing phase details, and feature specifications.
 
