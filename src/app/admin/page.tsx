@@ -66,6 +66,15 @@ type BookingItem = {
   created_at: string;
 };
 
+const inputClass =
+  "mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40 [color-scheme:dark]";
+
+const selectClass =
+  "mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40 [color-scheme:dark]";
+
+const textareaClass =
+  "mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40";
+
 export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [passwordInput, setPasswordInput] = useState("");
@@ -74,7 +83,6 @@ export default function AdminDashboardPage() {
     "profile" | "events" | "gallery" | "reviews" | "bookings"
   >("profile");
   const [currentTimestamp] = useState(() => Date.now());
-
 
   // Notifications
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(
@@ -436,7 +444,7 @@ export default function AdminDashboardPage() {
   // 1. Loading state check
   if (isAuthenticated === null) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center bg-background">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
@@ -445,10 +453,10 @@ export default function AdminDashboardPage() {
   // 2. Not Authenticated: Render Login Box
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-[75vh] items-center justify-center px-4 py-12">
+      <div className="flex min-h-[75vh] items-center justify-center bg-background px-4 py-12">
         <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 shadow-card">
           <div className="text-center">
-            <span className="inline-block rounded-full bg-surface-alt px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+            <span className="inline-block rounded-full border border-border bg-background px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
               Practitioner Portal
             </span>
             <h1 className="mt-3 font-heading text-2xl font-bold text-ink">
@@ -471,12 +479,12 @@ export default function AdminDashboardPage() {
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 placeholder="••••••••••••"
-                className="mt-1.5 w-full rounded-lg border border-border bg-white px-3.5 py-2.5 text-ink shadow-xs focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="mt-1.5 w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40"
               />
             </div>
 
             {loginError && (
-              <p className="rounded-md bg-red-50 p-2 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400">
+              <p className="rounded-md border border-red-800 bg-red-950/60 p-2 text-sm text-red-300">
                 {loginError}
               </p>
             )}
@@ -484,7 +492,7 @@ export default function AdminDashboardPage() {
             <button
               type="submit"
               disabled={isSaving}
-              className="w-full rounded-lg bg-primary py-2.5 text-center font-medium text-white shadow-soft transition-all hover:bg-primary-hover disabled:opacity-50"
+              className="w-full rounded-lg bg-primary py-2.5 text-center font-semibold text-on-primary shadow-soft transition-all hover:bg-primary-hover disabled:opacity-50"
             >
               {isSaving ? "Verifying..." : "Unlock Dashboard"}
             </button>
@@ -509,9 +517,8 @@ export default function AdminDashboardPage() {
     return Date.parse(endOrStart) < currentTimestamp;
   });
 
-
   return (
-    <div className="min-h-screen bg-canvas pb-20 pt-8">
+    <div className="min-h-screen bg-background pb-20 pt-8">
       <Container>
         {/* Top Header */}
         <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
@@ -520,7 +527,7 @@ export default function AdminDashboardPage() {
               <h1 className="font-heading text-2xl font-bold text-ink sm:text-3xl">
                 Dr. Adya Practice Console
               </h1>
-              <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              <span className="rounded-full border border-emerald-800/60 bg-emerald-950/80 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">
                 Connected
               </span>
             </div>
@@ -533,13 +540,13 @@ export default function AdminDashboardPage() {
             <Link
               href="/"
               target="_blank"
-              className="rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-medium text-ink shadow-xs hover:bg-surface-alt"
+              className="rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-medium text-ink shadow-xs hover:border-primary/50 hover:text-primary transition-colors"
             >
               View Live Website ↗
             </Link>
             <button
               onClick={handleLogout}
-              className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400"
+              className="rounded-lg border border-red-900/50 bg-red-950/40 px-3.5 py-2 text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors"
             >
               Log Out
             </button>
@@ -551,8 +558,8 @@ export default function AdminDashboardPage() {
           <div
             className={`mt-4 rounded-xl p-4 text-sm font-medium transition-all shadow-card ${
               feedback.type === "success"
-                ? "bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-800"
-                : "bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/80 dark:text-red-300 dark:border-red-800"
+                ? "border border-emerald-800 bg-[#0f2417] text-emerald-300"
+                : "border border-red-800 bg-[#2a1215] text-red-300"
             }`}
           >
             {feedback.text}
@@ -573,10 +580,10 @@ export default function AdminDashboardPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-all ${
                 activeTab === tab.key
-                  ? "bg-primary text-white shadow-soft"
-                  : "bg-surface text-muted hover:bg-surface-alt hover:text-ink"
+                  ? "bg-primary text-on-primary font-semibold shadow-soft"
+                  : "border border-border bg-surface text-muted hover:border-primary/40 hover:text-ink"
               }`}
             >
               <span>{tab.label}</span>
@@ -584,8 +591,8 @@ export default function AdminDashboardPage() {
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs ${
                     activeTab === tab.key
-                      ? "bg-white/20 text-white"
-                      : "bg-surface-alt text-muted"
+                      ? "bg-on-primary/15 text-on-primary font-bold"
+                      : "border border-border bg-background text-muted"
                   }`}
                 >
                   {tab.count}
@@ -611,7 +618,7 @@ export default function AdminDashboardPage() {
               {/* Media Uploads Grid */}
               <div className="grid gap-6 sm:grid-cols-2">
                 {/* Profile Photo */}
-                <div className="rounded-xl border border-border bg-surface-alt/50 p-4">
+                <div className="rounded-xl border border-border bg-background p-4">
                   <span className="block text-sm font-semibold text-ink">Profile Portrait</span>
                   <p className="text-xs text-muted">Displayed on About Dr. Adya and Hero section</p>
 
@@ -640,7 +647,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="button"
                         onClick={() => profilePicInputRef.current?.click()}
-                        className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink shadow-xs hover:bg-surface-alt"
+                        className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink shadow-xs hover:border-primary/50 hover:text-primary transition-colors"
                       >
                         Change Photo
                       </button>
@@ -650,7 +657,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 {/* Hero / Space Image */}
-                <div className="rounded-xl border border-border bg-surface-alt/50 p-4">
+                <div className="rounded-xl border border-border bg-background p-4">
                   <span className="block text-sm font-semibold text-ink">
                     Practice / Sanctuary Photo
                   </span>
@@ -681,7 +688,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="button"
                         onClick={() => heroPicInputRef.current?.click()}
-                        className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink shadow-xs hover:bg-surface-alt"
+                        className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink shadow-xs hover:border-primary/50 hover:text-primary transition-colors"
                       >
                         Change Photo
                       </button>
@@ -699,7 +706,7 @@ export default function AdminDashboardPage() {
                     type="text"
                     value={profile.name}
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={inputClass}
                   />
                 </div>
 
@@ -709,7 +716,7 @@ export default function AdminDashboardPage() {
                     type="email"
                     value={profile.email}
                     onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={inputClass}
                   />
                 </div>
 
@@ -719,7 +726,7 @@ export default function AdminDashboardPage() {
                     type="text"
                     value={profile.tagline}
                     onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={inputClass}
                   />
                 </div>
 
@@ -731,7 +738,7 @@ export default function AdminDashboardPage() {
                     rows={4}
                     value={profile.about_intro}
                     onChange={(e) => setProfile({ ...profile, about_intro: e.target.value })}
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={textareaClass}
                   />
                 </div>
 
@@ -743,7 +750,7 @@ export default function AdminDashboardPage() {
                     type="text"
                     value={profile.location}
                     onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={inputClass}
                   />
                 </div>
 
@@ -756,12 +763,12 @@ export default function AdminDashboardPage() {
                     value={profile.phone || ""}
                     onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                     placeholder="+91 98765 43210"
-                    className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs focus:border-primary focus:outline-none"
+                    className={inputClass}
                   />
                 </div>
 
                 {/* Session Fees */}
-                <div className="rounded-xl border border-border bg-surface-alt/40 p-4 sm:col-span-2">
+                <div className="rounded-xl border border-border bg-background p-4 sm:col-span-2">
                   <h3 className="text-sm font-semibold text-ink">Session Fees Configuration</h3>
                   <p className="text-xs text-muted">
                     Controls fee display and booking checkout calculations.
@@ -779,7 +786,7 @@ export default function AdminDashboardPage() {
                         onChange={(e) =>
                           setProfile({ ...profile, fee_60_min: Number(e.target.value) })
                         }
-                        className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs"
+                        className={inputClass}
                       />
                     </div>
                     <div>
@@ -794,7 +801,7 @@ export default function AdminDashboardPage() {
                         onChange={(e) =>
                           setProfile({ ...profile, fee_90_min: Number(e.target.value) })
                         }
-                        className="mt-1.5 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink shadow-xs"
+                        className={inputClass}
                       />
                     </div>
                   </div>
@@ -805,7 +812,7 @@ export default function AdminDashboardPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="rounded-lg bg-primary px-6 py-2.5 font-medium text-white shadow-soft transition-all hover:bg-primary-hover disabled:opacity-50"
+                  className="rounded-lg bg-primary px-6 py-2.5 font-semibold text-on-primary shadow-soft transition-all hover:bg-primary-hover disabled:opacity-50"
                 >
                   {isSaving ? "Saving changes..." : "Save Profile & Settings"}
                 </button>
@@ -835,7 +842,7 @@ export default function AdminDashboardPage() {
                       value={newEvent.title}
                       onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                       placeholder="e.g. Navigating Burnout Workshop"
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
 
@@ -846,10 +853,10 @@ export default function AdminDashboardPage() {
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, kind: e.target.value as "workshop" | "event" })
                       }
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={selectClass}
                     >
-                      <option value="workshop">Workshop</option>
-                      <option value="event">Event / Talk</option>
+                      <option value="workshop" className="bg-background text-ink">Workshop</option>
+                      <option value="event" className="bg-background text-ink">Event / Talk</option>
                     </select>
                   </div>
 
@@ -860,7 +867,7 @@ export default function AdminDashboardPage() {
                       required
                       value={newEvent.starts_at}
                       onChange={(e) => setNewEvent({ ...newEvent, starts_at: e.target.value })}
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
 
@@ -872,7 +879,7 @@ export default function AdminDashboardPage() {
                       type="datetime-local"
                       value={newEvent.ends_at}
                       onChange={(e) => setNewEvent({ ...newEvent, ends_at: e.target.value })}
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
 
@@ -883,19 +890,19 @@ export default function AdminDashboardPage() {
                       value={newEvent.location}
                       onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                       placeholder="Online (Google Meet) or In-Person Venue"
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-medium text-ink">Event Banner Image</label>
-                    <div className="mt-1 flex items-center gap-2">
+                    <div className="mt-1.5 flex items-center gap-2">
                       <input
                         type="text"
                         value={newEvent.image_path}
                         onChange={(e) => setNewEvent({ ...newEvent, image_path: e.target.value })}
                         placeholder="Image URL or upload"
-                        className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40"
                       />
                       <input
                         type="file"
@@ -914,7 +921,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="button"
                         onClick={() => eventPicInputRef.current?.click()}
-                        className="whitespace-nowrap rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium hover:bg-surface-alt"
+                        className="whitespace-nowrap rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors"
                       >
                         Upload
                       </button>
@@ -928,7 +935,7 @@ export default function AdminDashboardPage() {
                       value={newEvent.description}
                       onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                       placeholder="Details about who this workshop is for, key learnings, and registration info."
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={textareaClass}
                     />
                   </div>
                 </div>
@@ -937,7 +944,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white shadow-soft hover:bg-primary-hover disabled:opacity-50"
+                    className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
                     + Publish Event
                   </button>
@@ -974,13 +981,13 @@ export default function AdminDashboardPage() {
                             className="h-14 w-20 rounded-md object-cover border border-border"
                           />
                         ) : (
-                          <div className="flex h-14 w-20 items-center justify-center rounded-md bg-surface-alt text-xs text-muted">
+                          <div className="flex h-14 w-20 items-center justify-center rounded-md border border-border bg-background text-xs text-muted">
                             No photo
                           </div>
                         )}
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary capitalize">
+                            <span className="rounded border border-primary/40 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary capitalize">
                               {item.kind}
                             </span>
                             <h4 className="font-semibold text-ink text-sm sm:text-base">
@@ -1002,7 +1009,7 @@ export default function AdminDashboardPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleDeleteEvent(item.id)}
-                          className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100"
+                          className="rounded-lg border border-red-900/50 bg-red-950/40 px-3 py-1.5 text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors"
                         >
                           Delete
                         </button>
@@ -1043,7 +1050,7 @@ export default function AdminDashboardPage() {
                       </div>
                       <button
                         onClick={() => handleDeleteEvent(item.id)}
-                        className="self-start sm:self-center rounded border border-border px-2.5 py-1 text-xs text-red-600 hover:bg-red-50"
+                        className="self-start sm:self-center rounded-lg border border-red-900/50 bg-red-950/40 px-2.5 py-1 text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors"
                       >
                         Remove
                       </button>
@@ -1068,7 +1075,7 @@ export default function AdminDashboardPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label className="block text-xs font-medium text-ink">Image File</label>
-                    <div className="mt-1 flex items-center gap-2">
+                    <div className="mt-1.5 flex items-center gap-2">
                       <input
                         type="text"
                         required
@@ -1077,7 +1084,7 @@ export default function AdminDashboardPage() {
                           setNewGalleryPhoto({ ...newGalleryPhoto, image_path: e.target.value })
                         }
                         placeholder="Upload an image or paste URL"
-                        className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40"
                       />
                       <input
                         type="file"
@@ -1096,7 +1103,7 @@ export default function AdminDashboardPage() {
                       <button
                         type="button"
                         onClick={() => galleryPicInputRef.current?.click()}
-                        className="whitespace-nowrap rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium hover:bg-surface-alt"
+                        className="whitespace-nowrap rounded-lg border border-border bg-surface px-3.5 py-2 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors"
                       >
                         Choose File
                       </button>
@@ -1110,12 +1117,12 @@ export default function AdminDashboardPage() {
                       onChange={(e) =>
                         setNewGalleryPhoto({ ...newGalleryPhoto, category: e.target.value })
                       }
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={selectClass}
                     >
-                      <option value="practice">Therapy Space & Practice</option>
-                      <option value="workshops">Workshops & Speaking</option>
-                      <option value="credentials">Credentials & Degrees</option>
-                      <option value="other">General</option>
+                      <option value="practice" className="bg-background text-ink">Therapy Space & Practice</option>
+                      <option value="workshops" className="bg-background text-ink">Workshops & Speaking</option>
+                      <option value="credentials" className="bg-background text-ink">Credentials & Degrees</option>
+                      <option value="other" className="bg-background text-ink">General</option>
                     </select>
                   </div>
 
@@ -1130,7 +1137,7 @@ export default function AdminDashboardPage() {
                         setNewGalleryPhoto({ ...newGalleryPhoto, caption: e.target.value })
                       }
                       placeholder="e.g. Tranquil counseling corner in Delhi"
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
                 </div>
@@ -1139,7 +1146,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white shadow-soft hover:bg-primary-hover disabled:opacity-50"
+                    className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
                     + Add to Gallery
                   </button>
@@ -1162,7 +1169,7 @@ export default function AdminDashboardPage() {
                   {gallery.map((item) => (
                     <div
                       key={item.id}
-                      className="group relative overflow-hidden rounded-xl border border-border bg-surface shadow-xs"
+                      className="group relative overflow-hidden rounded-xl border border-border bg-background shadow-xs"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -1171,7 +1178,7 @@ export default function AdminDashboardPage() {
                         className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
                       />
                       <div className="p-2.5">
-                        <span className="rounded bg-surface-alt px-1.5 py-0.5 text-[10px] font-semibold text-muted uppercase">
+                        <span className="rounded border border-border bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-muted uppercase">
                           {item.category || "practice"}
                         </span>
                         {item.caption && (
@@ -1179,7 +1186,7 @@ export default function AdminDashboardPage() {
                         )}
                         <button
                           onClick={() => handleDeleteGallery(item.id)}
-                          className="mt-2 w-full rounded border border-red-200 bg-red-50 py-1 text-center text-xs font-medium text-red-600 hover:bg-red-100"
+                          className="mt-2 w-full rounded border border-red-900/50 bg-red-950/40 py-1 text-center text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors"
                         >
                           Delete
                         </button>
@@ -1213,7 +1220,7 @@ export default function AdminDashboardPage() {
                         setNewReview({ ...newReview, display_name: e.target.value })
                       }
                       placeholder="e.g. Ananya S., 26 or Client Reflection"
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={inputClass}
                     />
                   </div>
 
@@ -1224,11 +1231,11 @@ export default function AdminDashboardPage() {
                       onChange={(e) =>
                         setNewReview({ ...newReview, rating: Number(e.target.value) })
                       }
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={selectClass}
                     >
-                      <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
-                      <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
-                      <option value="3">⭐⭐⭐ (3 Stars)</option>
+                      <option value="5" className="bg-background text-ink">⭐⭐⭐⭐⭐ (5 Stars)</option>
+                      <option value="4" className="bg-background text-ink">⭐⭐⭐⭐ (4 Stars)</option>
+                      <option value="3" className="bg-background text-ink">⭐⭐⭐ (3 Stars)</option>
                     </select>
                   </div>
 
@@ -1240,7 +1247,7 @@ export default function AdminDashboardPage() {
                       value={newReview.quote}
                       onChange={(e) => setNewReview({ ...newReview, quote: e.target.value })}
                       placeholder="Dr. Adya created such a welcoming and grounded space..."
-                      className="mt-1 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm shadow-xs"
+                      className={textareaClass}
                     />
                   </div>
                 </div>
@@ -1249,7 +1256,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white shadow-soft hover:bg-primary-hover disabled:opacity-50"
+                    className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
                     + Publish Review
                   </button>
@@ -1279,11 +1286,11 @@ export default function AdminDashboardPage() {
                           <span className="font-semibold text-ink text-sm">
                             {item.display_name}
                           </span>
-                          <span className="text-amber-500 text-xs">
+                          <span className="text-primary text-xs">
                             {"★".repeat(item.rating || 5)}
                           </span>
                           {!item.is_approved && (
-                            <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                            <span className="rounded border border-amber-800/60 bg-amber-950/80 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
                               Hidden
                             </span>
                           )}
@@ -1294,13 +1301,13 @@ export default function AdminDashboardPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleToggleReviewApproval(item)}
-                          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium hover:bg-surface-alt"
+                          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors"
                         >
                           {item.is_approved ? "Hide from Site" : "Approve & Show"}
                         </button>
                         <button
                           onClick={() => handleDeleteReview(item.id)}
-                          className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100"
+                          className="rounded-lg border border-red-900/50 bg-red-950/40 px-3 py-1.5 text-xs font-medium text-red-300 hover:bg-red-900/60 transition-colors"
                         >
                           Delete
                         </button>
@@ -1344,7 +1351,7 @@ export default function AdminDashboardPage() {
                   </thead>
                   <tbody className="divide-y divide-border">
                     {bookings.map((b) => (
-                      <tr key={b.id} className="hover:bg-surface-alt/30">
+                      <tr key={b.id} className="hover:bg-background/40 transition-colors">
                         <td className="py-3">
                           <span className="font-semibold text-ink block">{b.customer_name}</span>
                           <span className="text-muted text-[11px] block">{b.customer_email}</span>
@@ -1370,10 +1377,10 @@ export default function AdminDashboardPage() {
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
                               b.booking_status === "confirmed"
-                                ? "bg-emerald-100 text-emerald-800"
+                                ? "border border-emerald-800 bg-emerald-950 text-emerald-300"
                                 : b.booking_status === "pending"
-                                ? "bg-amber-100 text-amber-800"
-                                : "bg-red-100 text-red-800"
+                                ? "border border-amber-800 bg-amber-950 text-amber-300"
+                                : "border border-red-800 bg-red-950 text-red-300"
                             }`}
                           >
                             {b.booking_status}
