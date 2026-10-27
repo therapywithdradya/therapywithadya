@@ -14,9 +14,9 @@ This project is a bespoke, privacy-first web application for Dr. Adya’s clinic
 ### Current System Health
 - **Typecheck (`npm run typecheck`)**: 100% clean (0 TypeScript errors).
 - **Linter (`npm run lint`)**: 100% clean (0 ESLint warnings/errors).
-- **Unit Test Suite (`npm test`)**: 135/135 tests passing across 8 test suites.
+- **Unit Test Suite (`npm test`)**: 170/170 tests passing across 16 test suites.
 - **Placeholder Audit (`npm run check:placeholders`)**: 0 placeholders remaining (practitioner bio, photos, session options, and fees populated from reference docs).
-- **Build Status (`npm run build`)**: 14/14 static marketing routes compile successfully with ISR.
+- **Build Status (`npm run build`)**: 19/19 routes compile successfully (static marketing routes with ISR + dynamic booking API routes).
 
 ---
 
@@ -429,8 +429,8 @@ Perform a live verification check:
 | **Content** | Practitioner Content | Real bio, portraits, gallery, session pricing | ✅ Complete (`adc3389`) |
 | **5b** | Google Calendar Client | Free/busy provider & event writer | ✅ Complete |
 | **5c** | Availability API Route | `/api/availability` endpoint with rate-limiting | ✅ Complete |
-| **6** | Booking Flow & Payments | `/book` wizard, Razorpay checkout, webhooks | ⬜ **Next Step** |
-| **7** | Concurrency Integration | Double-booking race tests, late payment recovery | ⬜ Pending 6 |
+| **6** | Booking Flow & Payments | `/book` wizard, Razorpay checkout, webhooks | ✅ Complete |
+| **7** | Concurrency Integration | Double-booking race tests, late payment recovery | ⬜ **Next Step** |
 | **8** | Transactional Emails | Email receipts (if requested by client) | ⏸️ On Hold (per decisions) |
 | **9** | Policy Final Sign-Off | Client confirmation of cancellation rules | ⬜ Ready for client |
 | **10** | SEO & Structured Data | Sitemap, robots.txt, OpenGraph, Schema.org | ⬜ Pending 6 |

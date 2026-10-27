@@ -20,10 +20,10 @@
 | **Phase 4** — All public pages (home → terms) | ✅ Done (`6d80dca` → `d4e9b4d`) |
 | **Phase 5a** — Availability engine + tests | ✅ Done (`b8260a2`) — 97 tests passing |
 | **Practitioner Content** — Bio, imagery & fees | ✅ Populated (`adc3389`) — 0 placeholders |
-| **Phase 5b** — Google Calendar free/busy + event sync | ⬜ Next step |
-| **Phase 5c** — Availability API route | ⬜ Pending 5b |
-| **Phase 6** — Razorpay + booking flow | ⬜ Not started |
-| **Phase 7** — Integration end-to-end | ⬜ Not started |
+| **Phase 5b** — Google Calendar free/busy + event sync | ✅ Done (`0ad0389`) — 20 tests passing |
+| **Phase 5c** — Availability API route | ✅ Done (`0ad0389`) — rate limited, cached, 18 tests passing |
+| **Phase 6** — Razorpay + booking flow | ✅ Done — `/book` wizard, orders, verification, webhooks, confirm |
+| **Phase 7** — Integration end-to-end | ⬜ Next step |
 | **Phase 8** — Notifications | ⏸️ On hold until client requests |
 | **Phase 9** — Client policy sign-off | ⬜ Ready for final client confirmation |
 | **Phase 10** — SEO & Structured Data | ⬜ Not started |

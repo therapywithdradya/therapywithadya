@@ -128,3 +128,15 @@ export function formatEventDateRange(
     return dateUnavailable;
   }
 }
+
+/**
+ * Formats an integer amount in paise as an Indian Rupee string (e.g. 150000 -> ₹1,500).
+ */
+export function formatPriceFromPaise(amountPaise: number): string {
+  const rupees = amountPaise / 100;
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(rupees);
+}
