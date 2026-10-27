@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 
@@ -75,6 +76,18 @@ const selectClass =
 const textareaClass =
   "mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40";
 
+function getCategoryDisplay(cat: string): string {
+  const map: Record<string, string> = {
+    space: "Therapy Space & Sanctuary (space)",
+    workshop: "Workshops & Speaking (workshop)",
+    modalities: "Therapeutic Modalities & Tools (modalities)",
+    practice: "Clinical Practice (practice)",
+    credentials: "Credentials & Certifications (credentials)",
+  };
+  return map[cat.toLowerCase()] || `${cat.charAt(0).toUpperCase() + cat.slice(1)} (${cat})`;
+}
+
+
 export default function AdminDashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [passwordInput, setPasswordInput] = useState("");
@@ -119,13 +132,30 @@ export default function AdminDashboardPage() {
   });
 
   // Gallery State
+  const defaultPreexistingCategories = useMemo(
+    () => ["space", "workshop", "modalities", "practice", "credentials"],
+    [],
+  );
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [newGalleryPhoto, setNewGalleryPhoto] = useState({
     image_path: "",
     caption: "",
-    category: "practice",
+    category: "space",
     alt_text: "Dr. Adya clinical practice photo",
   });
+
+  // Pure derived categories: combines default preexisting categories, custom added, and any in gallery
+  const categories = useMemo(() => {
+    const fromItems = gallery
+      .map((item) => (item.category || "").trim().toLowerCase())
+      .filter(Boolean);
+    return Array.from(new Set([...defaultPreexistingCategories, ...customCategories, ...fromItems]));
+  }, [defaultPreexistingCategories, customCategories, gallery]);
+
+
 
   // Reviews State
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
@@ -1065,11 +1095,111 @@ export default function AdminDashboardPage() {
         {/* TAB 3: GALLERY MANAGER */}
         {activeTab === "gallery" && (
           <div className="mt-8 space-y-8">
+            {/* OPTION 1: MANAGE CATEGORIES & REFRESH */}
             <div className="rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">
-              <h2 className="font-heading text-xl font-bold text-ink">Upload Photo to Gallery</h2>
-              <p className="mt-1 text-sm text-muted">
-                Add photos of your therapy room, workshop moments, or certifications to show on your /gallery page.
-              </p>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-4">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Option 1</span>
+                  <h2 className="font-heading text-xl font-bold text-ink mt-0.5">Manage Categories</h2>
+                  <p className="mt-1 text-xs text-muted">
+                    Preexisting categories from the site and any custom categories you add will be selectable in Option 2 below.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSaving(true);
+                    fetch("/api/admin/gallery")
+                      .then((res) => res.json())
+                      .then((data) => {
+                        if (data.items) {
+                          setGallery(data.items);
+                          showToast("success", "Categories refreshed successfully!");
+                        }
+                      })
+                      .catch(() => showToast("error", "Failed to refresh categories."))
+                      .finally(() => setIsSaving(false));
+                  }}
+                  disabled={isSaving}
+                  className="self-start sm:self-center flex items-center gap-1.5 rounded-lg border border-border bg-background px-3.5 py-1.5 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-50"
+                >
+                  🔄 Refresh Categories
+                </button>
+              </div>
+
+              {/* Active Categories Pills */}
+              <div className="mt-4">
+                <label className="block text-xs font-medium text-muted mb-2">
+                  All Preexisting & Active Categories ({categories.length})
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => (
+                    <button
+                      type="button"
+                      key={cat}
+                      onClick={() => {
+                        setNewGalleryPhoto((prev) => ({ ...prev, category: cat }));
+                        showToast("success", `Selected category "${cat}" for next photo upload!`);
+                      }}
+                      className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                        newGalleryPhoto.category === cat
+                          ? "border-primary bg-primary/20 text-primary font-semibold ring-1 ring-primary/40"
+                          : "border-border bg-background text-ink hover:border-primary/40 hover:text-primary"
+                      }`}
+                      title="Click to select this category for photo upload"
+                    >
+                      🏷️ {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add Category Input */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const trimmed = newCategoryName.trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
+                  if (!trimmed) {
+                    showToast("error", "Please enter a valid category name.");
+                    return;
+                  }
+                  if (!categories.includes(trimmed)) {
+                    setCustomCategories((prev) => [...prev, trimmed]);
+                  }
+                  setNewGalleryPhoto((prev) => ({ ...prev, category: trimmed }));
+                  setNewCategoryName("");
+                  showToast("success", `Category "${trimmed}" added! Now selected in dropdown below.`);
+                }}
+
+                className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4 border-t border-border"
+              >
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    placeholder="Enter new category name (e.g. mindfulness-circle, retreats, art-therapy)"
+                    className={inputClass}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover transition-all whitespace-nowrap mt-1.5"
+                >
+                  + Add Category
+                </button>
+              </form>
+            </div>
+
+            {/* OPTION 2: ADD IMAGES TO ANY CATEGORY */}
+            <div className="rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">Option 2</span>
+                <h2 className="font-heading text-xl font-bold text-ink mt-0.5">Add Images to Any Category</h2>
+                <p className="mt-1 text-xs text-muted">
+                  Upload an image and choose which category it belongs to. Preexisting categories and new categories are in the dropdown.
+                </p>
+              </div>
 
               <form onSubmit={handleAddGalleryPhoto} className="mt-6 space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -1111,7 +1241,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-ink">Category</label>
+                    <label className="block text-xs font-medium text-ink">Category (Preexisting & Added)</label>
                     <select
                       value={newGalleryPhoto.category}
                       onChange={(e) =>
@@ -1119,11 +1249,15 @@ export default function AdminDashboardPage() {
                       }
                       className={selectClass}
                     >
-                      <option value="practice" className="bg-background text-ink">Therapy Space & Practice</option>
-                      <option value="workshops" className="bg-background text-ink">Workshops & Speaking</option>
-                      <option value="credentials" className="bg-background text-ink">Credentials & Degrees</option>
-                      <option value="other" className="bg-background text-ink">General</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat} className="bg-background text-ink">
+                          {getCategoryDisplay(cat)}
+                        </option>
+                      ))}
                     </select>
+                    <p className="mt-1 text-[11px] text-muted">
+                      Select any existing category above, or add a custom one in Option 1.
+                    </p>
                   </div>
 
                   <div className="sm:col-span-2">
@@ -1136,7 +1270,7 @@ export default function AdminDashboardPage() {
                       onChange={(e) =>
                         setNewGalleryPhoto({ ...newGalleryPhoto, caption: e.target.value })
                       }
-                      placeholder="e.g. Tranquil counseling corner in Delhi"
+                      placeholder="e.g. Sisyphus Discussion Poster or Tranquil Counseling Corner"
                       className={inputClass}
                     />
                   </div>
@@ -1148,11 +1282,12 @@ export default function AdminDashboardPage() {
                     disabled={isSaving}
                     className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
-                    + Add to Gallery
+                    + Add to &ldquo;{newGalleryPhoto.category}&rdquo; Category
                   </button>
                 </div>
               </form>
             </div>
+
 
             {/* Gallery Grid */}
             <div className="rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">

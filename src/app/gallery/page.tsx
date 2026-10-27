@@ -16,6 +16,20 @@ export const metadata = marketingMetadata({
 });
 
 
+function formatCategoryTitle(category: string): string {
+  if (!category) return "Photos";
+  const normalized = category.trim().toLowerCase();
+  const titleMap: Record<string, string> = {
+    space: "Therapy Space & Sanctuary",
+    workshop: "Workshops & Speaking",
+    workshops: "Workshops & Speaking",
+    modalities: "Therapeutic Modalities & Tools",
+    practice: "Clinical Practice",
+    credentials: "Credentials & Certifications",
+  };
+  return titleMap[normalized] || category.charAt(0).toUpperCase() + category.slice(1);
+}
+
 /** Group gallery items by category. Items without a category go under "More photos". */
 function groupByCategory(
   items: GalleryItemRow[],
@@ -31,9 +45,11 @@ function groupByCategory(
 
   for (const item of items) {
     if (item.category) {
-      const existing = groups.get(item.category) ?? [];
+      const norm = item.category.trim().toLowerCase();
+      const unifiedKey = norm === "workshops" ? "workshop" : norm;
+      const existing = groups.get(unifiedKey) ?? [];
       existing.push(item);
-      groups.set(item.category, existing);
+      groups.set(unifiedKey, existing);
     } else {
       uncategorised.push(item);
     }
@@ -46,6 +62,7 @@ function groupByCategory(
   if (uncategorised.length > 0) {
     result.push({ category: "More photos", items: uncategorised });
   }
+
 
   return result;
 }
@@ -126,8 +143,9 @@ export default async function GalleryPage() {
                     : "font-heading text-heading text-ink [overflow-wrap:anywhere]"
                 }
               >
-                {group.category || "Photos"}
+                {formatCategoryTitle(group.category)}
               </h2>
+
               <ul
                 className="mt-8 grid list-none grid-cols-2 gap-3 p-0 sm:gap-4 lg:grid-cols-3"
                 role="list"
