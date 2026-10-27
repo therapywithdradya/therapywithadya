@@ -6,6 +6,8 @@ import { SiteImage } from "@/components/ui/SiteImage";
 import { filled, site, wordmark } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
 
+import { getPractitionerProfile } from "@/lib/content";
+
 const pageCopy = site.pages.about;
 
 export const metadata = marketingMetadata({
@@ -14,13 +16,17 @@ export const metadata = marketingMetadata({
   path: "/about",
 });
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const profile = await getPractitionerProfile();
   const paragraphs = site.about.bioParagraphs.filter((paragraph) => filled(paragraph));
-  const photos = site.about.aboutPhotos;
+  const photos = site.about.aboutPhotos.map((photo, index) =>
+    index === 0 && profile.profile_image_url ? { ...photo, src: profile.profile_image_url } : photo,
+  );
   const qualifications = site.about.qualifications.filter((item) => filled(item.title));
   const background = filled(site.about.background) ? site.about.background.trim() : undefined;
   const approach = filled(site.about.approach) ? site.about.approach.trim() : undefined;
-  const intro = filled(site.about.aboutIntro) ? site.about.aboutIntro.trim() : undefined;
+  const intro = profile.about_intro || (filled(site.about.aboutIntro) ? site.about.aboutIntro.trim() : undefined);
+
 
   return (
     <>

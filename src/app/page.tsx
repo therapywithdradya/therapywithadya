@@ -12,9 +12,11 @@ import { positioningLine, site, visibleClientCount, wordmark } from "@/content/s
 import {
   getEventsAndWorkshops,
   getGalleryItems,
+  getPractitionerProfile,
   getSessions,
   getTestimonials,
 } from "@/lib/content";
+
 import { getMetadataBase } from "@/lib/env.public";
 import { clockMs } from "@/lib/format";
 
@@ -54,11 +56,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [sessions, testimonials, events, gallery] = await Promise.all([
+  const [sessions, testimonials, events, gallery, profile] = await Promise.all([
     getSessions(),
     getTestimonials(),
     getEventsAndWorkshops(),
     getGalleryItems(),
+    getPractitionerProfile(),
   ]);
   const nowMs = clockMs();
   const approvedReviews = testimonials
@@ -78,7 +81,12 @@ export default async function Home() {
           </h1>
         }
       />
-      <AboutPreview />
+      <AboutPreview
+        intro={profile.about_intro}
+        portraitSrc={profile.profile_image_url}
+        title={profile.about_title}
+      />
+
       <ServicesOverview />
       <SessionOptions sessions={sessions} />
       <BookingCta />

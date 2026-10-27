@@ -261,6 +261,38 @@ export type EventWorkshopInsert = WithOptional<
   "id" | "ends_at" | "location" | "image_path" | "is_published" | "created_at"
 >;
 
+export type PractitionerProfileRow = {
+  id: string;
+  name: string;
+  tagline: string;
+  about_title: string;
+  about_intro: string;
+  profile_image_url: string;
+  hero_image_url: string;
+  email: string;
+  phone: string | null;
+  location: string;
+  fee_60_min: number;
+  fee_90_min: number;
+  updated_at: string;
+};
+
+export type PractitionerProfileInsert = WithOptional<
+  PractitionerProfileRow,
+  | "name"
+  | "tagline"
+  | "about_title"
+  | "about_intro"
+  | "profile_image_url"
+  | "hero_image_url"
+  | "email"
+  | "phone"
+  | "location"
+  | "fee_60_min"
+  | "fee_90_min"
+  | "updated_at"
+>;
+
 export type GalleryItemInsert = WithOptional<
   GalleryItemRow,
   "id" | "caption" | "category" | "sort_order" | "is_published" | "created_at"
@@ -282,7 +314,13 @@ export type Database = {
       testimonials: Table<TestimonialRow, TestimonialInsert>;
       events_workshops: Table<EventWorkshopRow, EventWorkshopInsert>;
       gallery_items: Table<GalleryItemRow, GalleryItemInsert>;
+      practitioner_profile: Table<
+        PractitionerProfileRow,
+        PractitionerProfileInsert,
+        Partial<PractitionerProfileRow>
+      >;
     };
+
     Views: Record<string, never>;
     Functions: {
       expire_stale_pending_bookings: {

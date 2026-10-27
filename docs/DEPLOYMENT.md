@@ -81,17 +81,20 @@ Go to Supabase dashboard → **SQL Editor**. Run each file as a **separate query
 | 1 | `supabase/migrations/0001_core_tables.sql` | Creates all tables and the exclusion constraint |
 | 2 | `supabase/migrations/0002_booking_functions.sql` | PL/pgSQL functions for booking and expiry |
 | 3 | `supabase/migrations/0003_rls_and_grants.sql` | RLS + grants — needs Supabase roles `anon`, `authenticated`, `service_role` |
-| 4 | `supabase/seed.sql` | Dummy rows for development only |
-| 5 | `supabase/tests/verify.sql` | Runs as one script — read the NOTICE output |
+| 4 | `supabase/migrations/0004_practitioner_profile.sql` | Practitioner profile table & media storage policies for Admin Dashboard |
+| 5 | `supabase/seed.sql` | Dummy rows for development only |
+| 6 | `supabase/tests/verify.sql` | Runs as one script — read the NOTICE output |
 
 After seed, confirm row counts:
 
 ```sql
+select count(*) as profile      from public.practitioner_profile; -- 1
 select count(*) as testimonials from public.testimonials;     -- 3
 select count(*) as events       from public.events_workshops; -- 4
 select count(*) as gallery      from public.gallery_items;    -- 6
 select count(*) as bookings     from public.bookings;         -- 0
 ```
+
 
 After `verify.sql`, look for: `VERIFICATION PASSED` then `ROLLBACK`. If you see `VERIFICATION FAILED`, it lists what did not match. Run `rollback;` if the editor shows an open transaction.
 

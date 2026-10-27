@@ -113,7 +113,9 @@ export function SiteFooter() {
         <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-2">
           <SiteLink href="/privacy">Privacy</SiteLink>
           <SiteLink href="/terms-and-cancellation">Terms and cancellation</SiteLink>
+          <SiteLink href="/admin">Practitioner Login</SiteLink>
         </nav>
+
       </Container>
     </footer>
   );

@@ -5,10 +5,14 @@ import {
   getDummyGalleryItems,
   getDummyTestimonials,
 } from "@/content/dummy-data";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sessions } from "@/lib/booking/session-config";
+import { site } from "@/content/site";
+
 import type {
   EventWorkshopRow,
   GalleryItemRow,
+  PractitionerProfileRow,
   TestimonialRow,
 } from "@/types/database";
 
@@ -56,29 +60,95 @@ export async function getSessions(): Promise<PublicSession[]> {
   }));
 }
 
+export async function getPractitionerProfile(): Promise<PractitionerProfileRow> {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("practitioner_profile")
+      .select("*")
+      .eq("id", "primary")
+      .maybeSingle();
+
+    if (!error && data) {
+      return data;
+    }
+  } catch {
+    // fallback below
+  }
+
+  return {
+    id: "primary",
+    name: site.practitionerName,
+    tagline: site.tagline,
+    about_title: site.home.aboutTitle,
+    about_intro: site.home.aboutIntro,
+    profile_image_url: site.home.portrait.src,
+    hero_image_url: site.home.heroImage.src,
+    email: site.email,
+    phone: site.phone || null,
+    location: site.location,
+    fee_60_min: 1500,
+    fee_90_min: 2500,
+    updated_at: new Date().toISOString(),
+  };
+}
+
 export async function getTestimonials(): Promise<TestimonialRow[]> {
-  // TODO(content-db): Replace this dummy return with a server read of
-  // public.testimonials through getSupabaseAdmin() (service role).
-  // Never query Supabase from the browser.
-  // TODO(approved-filter): approved filtering belongs in this getter —
-  // add `.eq('is_approved', true)` when the database read replaces the dummy data.
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*")
+      .eq("is_approved", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      return data;
+    }
+  } catch {
+    // fallback
+  }
+
   return getDummyTestimonials();
 }
 
 export async function getEventsAndWorkshops(): Promise<EventWorkshopRow[]> {
-  // TODO(content-db): Replace this dummy return with a server read of
-  // public.events_workshops through getSupabaseAdmin() (service role).
-  // Never query Supabase from the browser.
-  // TODO(published-filter): published/approved filtering belongs in this getter —
-  // add `.eq('is_published', true)` when the database read replaces the dummy data.
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("events_workshops")
+      .select("*")
+      .eq("is_published", true)
+      .order("starts_at", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      return data;
+    }
+  } catch {
+    // fallback
+  }
+
   return getDummyEventsAndWorkshops();
 }
 
 export async function getGalleryItems(): Promise<GalleryItemRow[]> {
-  // TODO(content-db): Replace this dummy return with a server read of
-  // public.gallery_items through getSupabaseAdmin() (service role).
-  // Never query Supabase from the browser.
-  // TODO(published-filter): published/approved filtering belongs in this getter —
-  // add `.eq('is_published', true)` when the database read replaces the dummy data.
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from("gallery_items")
+      .select("*")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      return data;
+    }
+  } catch {
+    // fallback
+  }
+
   return getDummyGalleryItems();
 }
+
