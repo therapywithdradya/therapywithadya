@@ -18,15 +18,20 @@
 | **Phase 2** — Database schema, RLS, booking functions | ✅ SQL written (`c98545c`) — **not yet applied to any remote database** |
 | **Phase 3** — Design system, layout shell | ✅ Done (`b376d4e`, `806e650`) |
 | **Phase 4** — All public pages (home → terms) | ✅ Done (`6d80dca` → `d4e9b4d`) |
-| **Phase 5a** — Availability engine + tests | ✅ Done (`b8260a2`) |
-| **Phase 5b** — Google Calendar free/busy + API route | ⬜ Not started |
+| **Phase 5a** — Availability engine + tests | ✅ Done (`b8260a2`) — 97 tests passing |
+| **Practitioner Content** — Bio, imagery & fees | ✅ Populated (`adc3389`) — 0 placeholders |
+| **Phase 5b** — Google Calendar free/busy + event sync | ⬜ Next step |
+| **Phase 5c** — Availability API route | ⬜ Pending 5b |
 | **Phase 6** — Razorpay + booking flow | ⬜ Not started |
 | **Phase 7** — Integration end-to-end | ⬜ Not started |
-| **Phase 8** — Notifications | ⬜ Skipped until client requests |
-| **Phase 9** — Real content | ⬜ Waiting for client copy |
-| **Phase 10** — SEO | ⬜ Not started |
-| **Phase 11** — Security review | ⬜ Not started |
-| **Phase 12** — Production deployment | ⬜ Not started |
+| **Phase 8** — Notifications | ⏸️ On hold until client requests |
+| **Phase 9** — Client policy sign-off | ⬜ Ready for final client confirmation |
+| **Phase 10** — SEO & Structured Data | ⬜ Not started |
+| **Phase 11** — Security review & CSP | ⬜ Not started |
+| **Phase 12** — Comprehensive testing phase | ⬜ Not started |
+| **Phase 13** — Production deployment | ⬜ Not started |
+
+> See [`docs/PROJECT_STATUS.md`](file:///d:/Major%20Project/adyas-project/docs/PROJECT_STATUS.md) for the complete roadmap, testing phase details, and feature specifications.
 
 ---
 
@@ -526,6 +531,7 @@ Complete all items before going live:
 
 | Document | What it covers |
 |---|---|
+| `docs/PROJECT_STATUS.md` | Full project completion status, roadmap, testing phase, and deployment plan |
 | `docs/ARCHITECTURE.md` | Full system design, state machine, security checklist |
 | `docs/DECISIONS.md` | All decisions with status; PROVISIONAL items need human confirmation |
 | `supabase/README.md` | Migration run order and operator runbook (cancel, refund, review) |

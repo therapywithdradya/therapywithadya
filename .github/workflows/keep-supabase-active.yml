@@ -11,24 +11,59 @@ jobs:
     name: Ping Supabase Database
     runs-on: ubuntu-latest
     steps:
+      - name: Validate secrets are configured
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "${SUPABASE_URL}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY}" ]; then
+            echo "::error::Missing repository secrets. Go to Settings → Secrets and variables → Actions and add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+            exit 1
+          fi
+
       - name: Send keep-alive query to Supabase REST API
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          echo "Pinging Supabase at: ${SUPABASE_URL}"
+          echo "Pinging Supabase REST API..."
+
+          # Capture both the HTTP status and curl's own exit code separately.
+          # This prevents 'set -e' from killing the script when curl can't connect
+          # (exit code 6 = couldn't resolve host, which happens when the project is paused).
+          CURL_EXIT=0
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --connect-timeout 15 --max-time 30 \
             -X GET "${SUPABASE_URL}/rest/v1/" \
             -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")
-          
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}") || CURL_EXIT=$?
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "::error::curl failed with exit code ${CURL_EXIT}."
+            if [ "$CURL_EXIT" -eq 6 ]; then
+              echo "::error::Could not resolve host. The Supabase project is likely PAUSED."
+              echo "::error::Go to https://supabase.com/dashboard → open the project → click 'Restore project', then re-run this workflow."
+            elif [ "$CURL_EXIT" -eq 28 ]; then
+              echo "::error::Connection timed out. Supabase may be paused or experiencing an outage."
+            fi
+            exit 1
+          fi
+
           echo "Response HTTP Status: ${HTTP_STATUS}"
-          
+
           if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
-            echo "Successfully pinged Supabase. 7-day inactivity timer reset."
+            echo "✅ Successfully pinged Supabase. 7-day inactivity timer reset."
           else
-            echo "Warning: Received HTTP status ${HTTP_STATUS}. Attempting schema query..."
-            curl -s -f -X GET "${SUPABASE_URL}/rest/v1/?select=*" \
+            echo "::warning::Received HTTP ${HTTP_STATUS}. Attempting fallback schema query..."
+            FALLBACK_EXIT=0
+            curl -s -o /dev/null --connect-timeout 15 --max-time 30 \
+              -X GET "${SUPABASE_URL}/rest/v1/?select=*" \
               -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-              -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" > /dev/null || true
+              -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" || FALLBACK_EXIT=$?
+
+            if [ "$FALLBACK_EXIT" -ne 0 ]; then
+              echo "::error::Fallback query also failed (exit code ${FALLBACK_EXIT}). The project may be paused — restore it from the Supabase dashboard."
+              exit 1
+            fi
+            echo "✅ Fallback query succeeded. Inactivity timer should be reset."
           fi
