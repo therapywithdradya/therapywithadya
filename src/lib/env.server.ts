@@ -120,3 +120,20 @@ export function getRateLimitEnv(): RateLimitEnv {
     bookingWindowSeconds: 10 * 60,
   };
 }
+
+export type EmailEnv = {
+  RESEND_API_KEY: string;
+  EMAIL_FROM: string;
+};
+
+export function getEmailEnv(): EmailEnv | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey.trim().length === 0) {
+    return null;
+  }
+  return {
+    RESEND_API_KEY: apiKey.trim(),
+    EMAIL_FROM: process.env.EMAIL_FROM || "Dr. Adya Vats <appointments@therapywithdradya.com>",
+  };
+}
+

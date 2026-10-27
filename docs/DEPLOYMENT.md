@@ -23,8 +23,8 @@
 | **Phase 5b** — Google Calendar free/busy + event sync | ✅ Done (`0ad0389`) — 20 tests passing |
 | **Phase 5c** — Availability API route | ✅ Done (`0ad0389`) — rate limited, cached, 18 tests passing |
 | **Phase 6** — Razorpay + booking flow | ✅ Done — `/book` wizard, orders, verification, webhooks, confirm |
-| **Phase 7** — Integration end-to-end | ⬜ Next step |
-| **Phase 8** — Notifications | ⏸️ On hold until client requests |
+| **Phase 7** — Integration end-to-end | ⬜ Waiting on Razorpay live keys |
+| **Phase 8** — Notifications | ✅ Done — Resend email templates & dispatcher (175 tests passing) |
 | **Phase 9** — Client policy sign-off | ⬜ Ready for final client confirmation |
 | **Phase 10** — SEO & Structured Data | ⬜ Not started |
 | **Phase 11** — Security review & CSP | ⬜ Not started |

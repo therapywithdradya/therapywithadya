@@ -3,6 +3,7 @@ import "server-only";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { fetchRazorpayPayment } from "@/lib/razorpay/client";
 import { createCalendarBookingEvent } from "@/lib/calendar/google";
+import { sendBookingNotificationEmails } from "@/lib/notifications/email";
 import type { ConfirmBookingPaymentResult } from "@/types/database";
 
 export type ConfirmBookingParams = {
@@ -90,9 +91,10 @@ export async function confirmBooking({
 
   const result = dbResult as ConfirmBookingPaymentResult;
 
-  // 3. If newly confirmed, trigger Google Calendar event creation
+  // 3. If newly confirmed, trigger Google Calendar event creation and email notifications
   if (result.ok && result.code === "confirmed" && result.booking_id) {
     await syncCalendarEvent(result.booking_id);
+    await dispatchConfirmationEmails(result.booking_id);
   }
 
   return {
@@ -151,3 +153,45 @@ async function syncCalendarEvent(bookingId: string): Promise<void> {
     });
   }
 }
+
+/**
+ * Dispatches email notifications for confirmed booking.
+ * Fail-safe: errors do not bubble up or affect the booking confirmation.
+ */
+async function dispatchConfirmationEmails(bookingId: string): Promise<void> {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data: booking, error: fetchError } = await supabase
+      .from("bookings")
+      .select(
+        "id, session_name, customer_name, customer_email, customer_phone, customer_note, duration_minutes, amount_paise, starts_at, ends_at, timezone",
+      )
+      .eq("id", bookingId)
+      .single();
+
+    if (fetchError || !booking) {
+      console.error(
+        "[Notifications] Failed to load booking for email dispatch:",
+        fetchError?.message ?? "not found",
+      );
+      return;
+    }
+
+    await sendBookingNotificationEmails({
+      bookingId: booking.id,
+      customerName: booking.customer_name,
+      customerEmail: booking.customer_email,
+      customerPhone: booking.customer_phone,
+      customerNote: booking.customer_note,
+      sessionName: booking.session_name,
+      durationMinutes: booking.duration_minutes,
+      amountPaise: booking.amount_paise,
+      startsAt: new Date(booking.starts_at),
+      endsAt: new Date(booking.ends_at),
+      timezone: booking.timezone,
+    });
+  } catch (err) {
+    console.error("[Notifications] Unexpected error dispatching emails:", err);
+  }
+}
+
