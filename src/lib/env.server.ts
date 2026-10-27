@@ -133,7 +133,7 @@ export function getEmailEnv(): EmailEnv | null {
   }
   return {
     RESEND_API_KEY: apiKey.trim(),
-    EMAIL_FROM: process.env.EMAIL_FROM || "Dr. Adya Vats <appointments@therapywithdradya.com>",
+    EMAIL_FROM: process.env.EMAIL_FROM || "Dr. Adya Vats <onboarding@resend.dev>",
   };
 }
 
