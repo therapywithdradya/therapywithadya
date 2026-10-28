@@ -8,6 +8,11 @@ import {
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { sessions } from "@/lib/booking/session-config";
 import { site } from "@/content/site";
+import {
+  DEFAULT_GALLERY_CATEGORIES,
+  getPersistedCategories,
+  type GalleryCategoryRecord,
+} from "@/lib/gallery-categories";
 
 import type {
   EventWorkshopRow,
@@ -132,40 +137,17 @@ export async function getEventsAndWorkshops(): Promise<EventWorkshopRow[]> {
   return getDummyEventsAndWorkshops();
 }
 
-export interface PublicGalleryCategory {
-  slug: string;
-  label: string;
-  sort_order: number;
-}
-
-export const DEFAULT_GALLERY_CATEGORIES: PublicGalleryCategory[] = [
-  { slug: "space", label: "Therapy Space & Sanctuary", sort_order: 1 },
-  { slug: "workshop", label: "Workshops & Speaking", sort_order: 2 },
-  { slug: "modalities", label: "Therapeutic Modalities & Tools", sort_order: 3 },
-  { slug: "practice", label: "Clinical Practice", sort_order: 4 },
-  { slug: "credentials", label: "Credentials & Certifications", sort_order: 5 },
-];
+export type PublicGalleryCategory = GalleryCategoryRecord;
 
 export async function getGalleryCategories(): Promise<PublicGalleryCategory[]> {
   try {
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase
-      .from("gallery_categories")
-      .select("*")
-      .order("sort_order", { ascending: true });
-
-    if (!error && data && data.length > 0) {
-      return data.map((c) => ({
-        slug: c.slug,
-        label: c.label,
-        sort_order: c.sort_order,
-      }));
-    }
+    return await getPersistedCategories(supabase);
   } catch {
     // fallback
   }
 
-  return DEFAULT_GALLERY_CATEGORIES;
+  return [...DEFAULT_GALLERY_CATEGORIES];
 }
 
 export async function getGalleryItems(): Promise<GalleryItemRow[]> {
@@ -177,17 +159,21 @@ export async function getGalleryItems(): Promise<GalleryItemRow[]> {
       .from("gallery_items")
       .select("*")
       .eq("is_published", true)
+      .neq("category", "category_config")
+      .neq("category", "placeholder")
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true });
 
     if (!error && data && data.length > 0) {
-      // If database items already contain /images/ practice photos, use them directly
-      const hasPracticePhotos = data.some((item) => item.image_path.startsWith("/images/"));
+      const userPhotos = data.filter(
+        (item) => item.category !== "category_config" && !item.image_path.startsWith("config://"),
+      );
+      const hasPracticePhotos = userPhotos.some((item) => item.image_path.startsWith("/images/"));
       if (hasPracticePhotos) {
-        return data;
+        return userPhotos;
       }
       // Keep standard practice photos first, and append newly uploaded photos
-      return [...defaultItems, ...data];
+      return [...defaultItems, ...userPhotos];
     }
   } catch {
     // fallback

@@ -131,7 +131,7 @@ export function getDummyGalleryItems(): GalleryItemRow[] {
       image_path: "/images/dr-adya-portrait.jpg",
       alt_text: "Dr. Adya Vats - Psychologist, Hypnotherapist and Trauma-Informed Counselor.",
       caption: "Dr. Adya Vats, Psychologist & Counselor.",
-      category: "practitioner",
+      category: "practice",
     },
     {
       image_path: "/images/hero-space.jpg",

@@ -456,17 +456,21 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add category");
 
-      const newCat: GalleryCategoryItem = data.category || {
-        slug,
-        label: raw,
-        sort_order: categoriesList.length + 1,
-      };
-
-      setCategoriesList((prev) => {
-        const without = prev.filter((c) => c.slug !== newCat.slug);
-        return [...without, newCat];
-      });
-      setNewGalleryPhoto((prev) => ({ ...prev, category: newCat.slug }));
+      if (data.categories) {
+        setCategoriesList(data.categories);
+      } else {
+        const newCat: GalleryCategoryItem = data.category || {
+          slug,
+          label: raw,
+          sort_order: categoriesList.length + 1,
+        };
+        setCategoriesList((prev) => {
+          const without = prev.filter((c) => c.slug !== newCat.slug);
+          return [...without, newCat];
+        });
+      }
+      setIsCategoryOrderChanged(false);
+      setNewGalleryPhoto((prev) => ({ ...prev, category: slug }));
       setNewCategoryName("");
       showToast(
         "success",
@@ -501,9 +505,14 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to rename category");
 
-      setCategoriesList((prev) =>
-        prev.map((c) => (c.slug === oldSlug ? { ...c, label: trimmed } : c)),
-      );
+      if (data.categories) {
+        setCategoriesList(data.categories);
+      } else {
+        setCategoriesList((prev) =>
+          prev.map((c) => (c.slug === oldSlug ? { ...c, label: trimmed } : c)),
+        );
+      }
+      setIsCategoryOrderChanged(false);
       setEditingCategorySlug(null);
       showToast("success", `Category renamed to "${trimmed}"!`);
     } catch (err) {
@@ -530,7 +539,12 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete category");
 
-      setCategoriesList((prev) => prev.filter((c) => c.slug !== cat.slug));
+      if (data.categories) {
+        setCategoriesList(data.categories);
+      } else {
+        setCategoriesList((prev) => prev.filter((c) => c.slug !== cat.slug));
+      }
+      setIsCategoryOrderChanged(false);
       setGallery((prev) => prev.filter((p) => p.category?.toLowerCase() !== cat.slug.toLowerCase()));
       if (newGalleryPhoto.category === cat.slug) {
         setNewGalleryPhoto((prev) => ({
@@ -1296,40 +1310,18 @@ export default function AdminDashboardPage() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={handleSaveCategoryOrder}
-                    disabled={isSaving}
-                    className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold shadow-soft transition-all disabled:opacity-50 ${
-                      isCategoryOrderChanged
-                        ? "bg-primary text-on-primary hover:bg-primary-hover ring-2 ring-primary/50"
-                        : "border border-border bg-background text-ink hover:border-primary/50 hover:text-primary"
+                    disabled={!isCategoryOrderChanged || isSaving}
+                    className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold shadow-soft transition-all ${
+                      isCategoryOrderChanged && !isSaving
+                        ? "bg-primary text-on-primary hover:bg-primary-hover ring-2 ring-primary/50 cursor-pointer"
+                        : "border border-border bg-background/50 text-muted/60 cursor-not-allowed opacity-50"
                     }`}
                   >
-                    💾 Save Category Order
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsSaving(true);
-                      fetch("/api/admin/gallery/categories")
-                        .then((res) => res.json())
-                        .then((data) => {
-                          if (data.categories) {
-                            setCategoriesList(data.categories);
-                            setIsCategoryOrderChanged(false);
-                            showToast("success", "Categories refreshed from database!");
-                          }
-                        })
-                        .catch(() => showToast("error", "Failed to reload categories."))
-                        .finally(() => setIsSaving(false));
-                    }}
-                    disabled={isSaving}
-                    className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-50"
-                  >
-                    🔄 Refresh
+                    💾 {isCategoryOrderChanged ? "Save Category Order" : "Order Saved"}
                   </button>
                 </div>
               </div>
