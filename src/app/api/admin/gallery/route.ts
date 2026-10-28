@@ -110,6 +110,17 @@ export async function POST(request: Request): Promise<Response> {
       return NextResponse.json({ error: "Image URL or path is required." }, { status: 400 });
     }
 
+    // Ensure new items are appended at the bottom by default instead of sort_order: 0 jumping to top
+    let sortOrder = Number(body.sort_order);
+    if (isNaN(sortOrder) || body.sort_order === undefined || body.sort_order === null || body.sort_order === "") {
+      const { data: maxItem } = await supabase
+        .from("gallery_items")
+        .select("sort_order")
+        .order("sort_order", { ascending: false })
+        .limit(1);
+      sortOrder = (maxItem?.[0]?.sort_order ?? 10) + 1;
+    }
+
     const { data, error } = await supabase
       .from("gallery_items")
       .insert({
@@ -117,7 +128,7 @@ export async function POST(request: Request): Promise<Response> {
         alt_text: (body.alt_text || "Dr. Adya Vats gallery photo").trim(),
         caption: body.caption ? body.caption.trim() : null,
         category: body.category ? body.category.trim() : "practice",
-        sort_order: Number(body.sort_order) || 0,
+        sort_order: sortOrder,
         is_published: body.is_published ?? true,
       })
       .select()

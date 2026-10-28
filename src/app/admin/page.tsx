@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
@@ -42,6 +42,12 @@ type GalleryItem = {
   is_published: boolean;
 };
 
+type GalleryCategoryItem = {
+  slug: string;
+  label: string;
+  sort_order: number;
+};
+
 type TestimonialItem = {
   id: string;
   display_name: string;
@@ -76,16 +82,6 @@ const selectClass =
 const textareaClass =
   "mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-muted/60 shadow-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40";
 
-function getCategoryDisplay(cat: string): string {
-  const map: Record<string, string> = {
-    space: "Therapy Space & Sanctuary (space)",
-    workshop: "Workshops & Speaking (workshop)",
-    modalities: "Therapeutic Modalities & Tools (modalities)",
-    practice: "Clinical Practice (practice)",
-    credentials: "Credentials & Certifications (credentials)",
-  };
-  return map[cat.toLowerCase()] || `${cat.charAt(0).toUpperCase() + cat.slice(1)} (${cat})`;
-}
 
 
 export default function AdminDashboardPage() {
@@ -132,11 +128,17 @@ export default function AdminDashboardPage() {
   });
 
   // Gallery State
-  const defaultPreexistingCategories = useMemo(
-    () => ["space", "workshop", "modalities", "practice", "credentials"],
-    [],
-  );
-  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [categoriesList, setCategoriesList] = useState<GalleryCategoryItem[]>([
+    { slug: "space", label: "Therapy Space & Sanctuary", sort_order: 1 },
+    { slug: "workshop", label: "Workshops & Speaking", sort_order: 2 },
+    { slug: "modalities", label: "Therapeutic Modalities & Tools", sort_order: 3 },
+    { slug: "practice", label: "Clinical Practice", sort_order: 4 },
+    { slug: "credentials", label: "Credentials & Certifications", sort_order: 5 },
+  ]);
+  const [isCategoryOrderChanged, setIsCategoryOrderChanged] = useState<boolean>(false);
+  const [editingCategorySlug, setEditingCategorySlug] = useState<string | null>(null);
+  const [editCategoryLabel, setEditCategoryLabel] = useState<string>("");
+  const [draggedCategoryIndex, setDraggedCategoryIndex] = useState<number | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
 
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
@@ -146,16 +148,6 @@ export default function AdminDashboardPage() {
     category: "space",
     alt_text: "Dr. Adya clinical practice photo",
   });
-
-  // Pure derived categories: combines default preexisting categories, custom added, and any in gallery
-  const categories = useMemo(() => {
-    const fromItems = gallery
-      .map((item) => (item.category || "").trim().toLowerCase())
-      .filter(Boolean);
-    return Array.from(new Set([...defaultPreexistingCategories, ...customCategories, ...fromItems]));
-  }, [defaultPreexistingCategories, customCategories, gallery]);
-
-
 
   // Reviews State
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
@@ -203,6 +195,16 @@ export default function AdminDashboardPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.events) setEvents(data.events);
+      })
+      .catch(() => {});
+
+    // Load Gallery Categories
+    fetch("/api/admin/gallery/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.categories && data.categories.length > 0) {
+          setCategoriesList(data.categories);
+        }
       })
       .catch(() => {});
 
@@ -367,6 +369,183 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Reorder category (Move Up / Move Down)
+  const handleMoveCategory = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= categoriesList.length) return;
+    const next = [...categoriesList];
+    const moved = next[index];
+    if (!moved) return;
+    next.splice(index, 1);
+    next.splice(targetIndex, 0, moved);
+    const reindexed = next.map((c, i) => ({ ...c, sort_order: i + 1 }));
+    setCategoriesList(reindexed);
+    setIsCategoryOrderChanged(true);
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (index: number) => {
+    setDraggedCategoryIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (dropIndex: number) => {
+    if (draggedCategoryIndex === null || draggedCategoryIndex === dropIndex) {
+      setDraggedCategoryIndex(null);
+      return;
+    }
+    const next = [...categoriesList];
+    const moved = next[draggedCategoryIndex];
+    if (!moved) {
+      setDraggedCategoryIndex(null);
+      return;
+    }
+    next.splice(draggedCategoryIndex, 1);
+    next.splice(dropIndex, 0, moved);
+    const reindexed = next.map((c, i) => ({ ...c, sort_order: i + 1 }));
+    setCategoriesList(reindexed);
+    setIsCategoryOrderChanged(true);
+    setDraggedCategoryIndex(null);
+  };
+
+  // Save Category Order ("Save Format")
+  const handleSaveCategoryOrder = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/admin/gallery/categories", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ categories: categoriesList }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save category order");
+      if (data.categories) {
+        setCategoriesList(data.categories);
+      }
+      setIsCategoryOrderChanged(false);
+      showToast(
+        "success",
+        "Category order saved! The website gallery now renders in this exact format.",
+      );
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Error saving category order");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Add Category (Default added to bottom)
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const raw = newCategoryName.trim();
+    if (!raw) {
+      showToast("error", "Please enter a category name.");
+      return;
+    }
+    const slug = raw.toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/admin/gallery/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ label: raw, slug }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to add category");
+
+      const newCat: GalleryCategoryItem = data.category || {
+        slug,
+        label: raw,
+        sort_order: categoriesList.length + 1,
+      };
+
+      setCategoriesList((prev) => {
+        const without = prev.filter((c) => c.slug !== newCat.slug);
+        return [...without, newCat];
+      });
+      setNewGalleryPhoto((prev) => ({ ...prev, category: newCat.slug }));
+      setNewCategoryName("");
+      showToast(
+        "success",
+        `Category "${raw}" added at the bottom! Drag or move to change position.`,
+      );
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Error adding category");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Rename Category
+  const handleStartEditCategory = (cat: GalleryCategoryItem) => {
+    setEditingCategorySlug(cat.slug);
+    setEditCategoryLabel(cat.label);
+  };
+
+  const handleSaveRenameCategory = async (oldSlug: string) => {
+    const trimmed = editCategoryLabel.trim();
+    if (!trimmed) {
+      showToast("error", "Category name cannot be empty.");
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/admin/gallery/categories", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oldSlug, newLabel: trimmed }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to rename category");
+
+      setCategoriesList((prev) =>
+        prev.map((c) => (c.slug === oldSlug ? { ...c, label: trimmed } : c)),
+      );
+      setEditingCategorySlug(null);
+      showToast("success", `Category renamed to "${trimmed}"!`);
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Error renaming category");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Delete Category
+  const handleDeleteCategory = async (cat: GalleryCategoryItem) => {
+    if (
+      !confirm(
+        `Are you sure you want to delete category "${cat.label}"?\nAll gallery photos in this category will also be deleted from the website.`,
+      )
+    ) {
+      return;
+    }
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/admin/gallery/categories?slug=${encodeURIComponent(cat.slug)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete category");
+
+      setCategoriesList((prev) => prev.filter((c) => c.slug !== cat.slug));
+      setGallery((prev) => prev.filter((p) => p.category?.toLowerCase() !== cat.slug.toLowerCase()));
+      if (newGalleryPhoto.category === cat.slug) {
+        setNewGalleryPhoto((prev) => ({
+          ...prev,
+          category: categoriesList[0]?.slug || "space",
+        }));
+      }
+      showToast("success", `Category "${cat.label}" deleted.`);
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Error deleting category");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Add Gallery Photo
   const handleAddGalleryPhoto = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -384,13 +563,13 @@ export default function AdminDashboardPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add photo");
       setGallery((prev) => [data.item, ...prev]);
-      setNewGalleryPhoto({
+      setNewGalleryPhoto((prev) => ({
         image_path: "",
         caption: "",
-        category: "practice",
+        category: prev.category,
         alt_text: "Dr. Adya clinical practice photo",
-      });
-      showToast("success", "Photo added to gallery!");
+      }));
+      showToast("success", "Photo added to category!");
     } catch (err) {
       showToast("error", err instanceof Error ? err.message : "Error adding photo");
     } finally {
@@ -1095,98 +1274,242 @@ export default function AdminDashboardPage() {
         {/* TAB 3: GALLERY MANAGER */}
         {activeTab === "gallery" && (
           <div className="mt-8 space-y-8">
-            {/* OPTION 1: MANAGE CATEGORIES & REFRESH */}
+            {/* OPTION 1: CUSTOMIZE CATEGORY SEQUENCE & MANAGE CATEGORIES */}
             <div className="rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-5">
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">Option 1</span>
-                  <h2 className="font-heading text-xl font-bold text-ink mt-0.5">Manage Categories</h2>
-                  <p className="mt-1 text-xs text-muted">
-                    Preexisting categories from the site and any custom categories you add will be selectable in Option 2 below.
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                      Option 1
+                    </span>
+                    {isCategoryOrderChanged && (
+                      <span className="animate-pulse rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
+                        Unsaved Sequence
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="font-heading text-xl font-bold text-ink mt-1">
+                    Customize Category Sequence &amp; Format
+                  </h2>
+                  <p className="mt-1 text-xs text-muted max-w-[70ch]">
+                    Drag or use ▲ / ▼ to set where each category appears on the website. New categories are added to the bottom by default. Click <strong className="text-primary font-medium">Save Category Order</strong> to render the updated sequence on the live gallery. Preexisting categories can also be edited or deleted.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSaving(true);
-                    fetch("/api/admin/gallery")
-                      .then((res) => res.json())
-                      .then((data) => {
-                        if (data.items) {
-                          setGallery(data.items);
-                          showToast("success", "Categories refreshed successfully!");
-                        }
-                      })
-                      .catch(() => showToast("error", "Failed to refresh categories."))
-                      .finally(() => setIsSaving(false));
-                  }}
-                  disabled={isSaving}
-                  className="self-start sm:self-center flex items-center gap-1.5 rounded-lg border border-border bg-background px-3.5 py-1.5 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-50"
-                >
-                  🔄 Refresh Categories
-                </button>
-              </div>
 
-              {/* Active Categories Pills */}
-              <div className="mt-4">
-                <label className="block text-xs font-medium text-muted mb-2">
-                  All Preexisting & Active Categories ({categories.length})
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => (
-                    <button
-                      type="button"
-                      key={cat}
-                      onClick={() => {
-                        setNewGalleryPhoto((prev) => ({ ...prev, category: cat }));
-                        showToast("success", `Selected category "${cat}" for next photo upload!`);
-                      }}
-                      className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
-                        newGalleryPhoto.category === cat
-                          ? "border-primary bg-primary/20 text-primary font-semibold ring-1 ring-primary/40"
-                          : "border-border bg-background text-ink hover:border-primary/40 hover:text-primary"
-                      }`}
-                      title="Click to select this category for photo upload"
-                    >
-                      🏷️ {cat}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSaveCategoryOrder}
+                    disabled={isSaving}
+                    className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold shadow-soft transition-all disabled:opacity-50 ${
+                      isCategoryOrderChanged
+                        ? "bg-primary text-on-primary hover:bg-primary-hover ring-2 ring-primary/50"
+                        : "border border-border bg-background text-ink hover:border-primary/50 hover:text-primary"
+                    }`}
+                  >
+                    💾 Save Category Order
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSaving(true);
+                      fetch("/api/admin/gallery/categories")
+                        .then((res) => res.json())
+                        .then((data) => {
+                          if (data.categories) {
+                            setCategoriesList(data.categories);
+                            setIsCategoryOrderChanged(false);
+                            showToast("success", "Categories refreshed from database!");
+                          }
+                        })
+                        .catch(() => showToast("error", "Failed to reload categories."))
+                        .finally(() => setIsSaving(false));
+                    }}
+                    disabled={isSaving}
+                    className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-50"
+                  >
+                    🔄 Refresh
+                  </button>
                 </div>
               </div>
 
-              {/* Add Category Input */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const trimmed = newCategoryName.trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
-                  if (!trimmed) {
-                    showToast("error", "Please enter a valid category name.");
-                    return;
-                  }
-                  if (!categories.includes(trimmed)) {
-                    setCustomCategories((prev) => [...prev, trimmed]);
-                  }
-                  setNewGalleryPhoto((prev) => ({ ...prev, category: trimmed }));
-                  setNewCategoryName("");
-                  showToast("success", `Category "${trimmed}" added! Now selected in dropdown below.`);
-                }}
+              {/* Order Alert Banner if Changed */}
+              {isCategoryOrderChanged && (
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-amber-500/40 bg-amber-950/30 p-3.5 text-xs text-amber-200">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">⚠️</span>
+                    <span>
+                      You rearranged the category sequence! Click <strong>&quot;Save Category Order&quot;</strong> to apply this new layout to the public gallery page.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSaveCategoryOrder}
+                    disabled={isSaving}
+                    className="self-end sm:self-center whitespace-nowrap rounded-md bg-amber-500 px-3 py-1 font-semibold text-black hover:bg-amber-400 transition-colors"
+                  >
+                    Save Format
+                  </button>
+                </div>
+              )}
 
-                className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4 border-t border-border"
+              {/* Ordered Categories List with Drag & Drop and Controls */}
+              <div className="mt-5 space-y-2.5">
+                <div className="flex items-center justify-between text-xs text-muted px-1">
+                  <span>Display Sequence (Top of Page to Bottom)</span>
+                  <span>Position &amp; Actions</span>
+                </div>
+
+                {categoriesList.map((cat, index) => {
+                  const isEditing = editingCategorySlug === cat.slug;
+                  const isDragged = draggedCategoryIndex === index;
+
+                  return (
+                    <div
+                      key={cat.slug}
+                      draggable={!isEditing}
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={handleDragOver}
+                      onDrop={() => handleDrop(index)}
+                      className={`flex flex-col gap-3 rounded-xl border p-3.5 transition-all sm:flex-row sm:items-center sm:justify-between ${
+                        isDragged
+                          ? "opacity-50 border-primary border-dashed bg-primary/10"
+                          : "border-border bg-background/80 hover:border-border/80"
+                      }`}
+                    >
+                      {/* Left: Position handle + Title / Edit mode */}
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* Drag Handle */}
+                        <div
+                          className="flex h-8 w-8 cursor-grab items-center justify-center rounded-lg border border-border bg-surface text-muted hover:text-ink active:cursor-grabbing select-none"
+                          title="Click and drag to reorder category"
+                        >
+                          ⠿
+                        </div>
+
+                        {/* Order Number Badge */}
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface border border-border text-xs font-bold text-primary shrink-0">
+                          #{index + 1}
+                        </span>
+
+                        {isEditing ? (
+                          <div className="flex items-center gap-2 flex-1">
+                            <input
+                              type="text"
+                              value={editCategoryLabel}
+                              onChange={(e) => setEditCategoryLabel(e.target.value)}
+                              className="w-full rounded-lg border border-primary bg-surface px-3 py-1.5 text-sm text-ink shadow-xs focus:outline-none"
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleSaveRenameCategory(cat.slug);
+                                } else if (e.key === "Escape") {
+                                  setEditingCategorySlug(null);
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleSaveRenameCategory(cat.slug)}
+                              disabled={isSaving}
+                              className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-on-primary hover:bg-primary-hover transition-colors"
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingCategorySlug(null)}
+                              className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-muted hover:text-ink transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex flex-wrap items-center gap-2 min-w-0">
+                            <span className="font-semibold text-sm text-ink truncate">
+                              {cat.label}
+                            </span>
+                            <span className="rounded-md border border-border bg-surface px-2 py-0.5 text-[10px] text-muted font-mono">
+                              {cat.slug}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right: Reorder & Edit / Delete Buttons */}
+                      <div className="flex items-center gap-1.5 self-end sm:self-center">
+                        {/* Up Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleMoveCategory(index, "up")}
+                          disabled={index === 0}
+                          title="Move category up on page"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
+                        >
+                          ▲
+                        </button>
+
+                        {/* Down Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleMoveCategory(index, "down")}
+                          disabled={index === categoriesList.length - 1}
+                          title="Move category down on page"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-ink hover:border-primary/50 hover:text-primary transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
+                        >
+                          ▼
+                        </button>
+
+                        {/* Rename / Edit Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditCategory(cat)}
+                          title="Rename this category"
+                          className="flex h-8 items-center gap-1 rounded-lg border border-border bg-surface px-2.5 text-xs font-medium text-ink hover:border-primary/50 hover:text-primary transition-colors"
+                        >
+                          ✏️ Edit
+                        </button>
+
+                        {/* Delete Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCategory(cat)}
+                          title="Delete this category and its photos"
+                          className="flex h-8 items-center gap-1 rounded-lg border border-red-900/40 bg-red-950/30 px-2.5 text-xs font-medium text-red-300 hover:bg-red-900/50 transition-colors"
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Add New Category Form (Appends to bottom by default) */}
+              <form
+                onSubmit={handleAddCategory}
+                className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-5 border-t border-border"
               >
                 <div className="flex-1">
                   <input
                     type="text"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
-                    placeholder="Enter new category name (e.g. mindfulness-circle, retreats, art-therapy)"
+                    placeholder="Enter new category name (e.g. Mindfulness Retreats, Youth Seminars, Art Therapy)"
                     className={inputClass}
                   />
+                  <p className="mt-1 text-[11px] text-muted">
+                    New categories are added to the bottom by default. You can drag or move them up to any desired position.
+                  </p>
                 </div>
                 <button
                   type="submit"
-                  className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover transition-all whitespace-nowrap mt-1.5"
+                  disabled={isSaving}
+                  className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover transition-all whitespace-nowrap mt-1.5 disabled:opacity-50"
                 >
-                  + Add Category
+                  + Add to Bottom
                 </button>
               </form>
             </div>
@@ -1197,7 +1520,7 @@ export default function AdminDashboardPage() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-primary">Option 2</span>
                 <h2 className="font-heading text-xl font-bold text-ink mt-0.5">Add Images to Any Category</h2>
                 <p className="mt-1 text-xs text-muted">
-                  Upload an image and choose which category it belongs to. Preexisting categories and new categories are in the dropdown.
+                  Upload an image and choose which category it belongs to. Images added to preexisting categories will append cleanly to that section without changing category order.
                 </p>
               </div>
 
@@ -1241,7 +1564,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-ink">Category (Preexisting & Added)</label>
+                    <label className="block text-xs font-medium text-ink">Category</label>
                     <select
                       value={newGalleryPhoto.category}
                       onChange={(e) =>
@@ -1249,15 +1572,32 @@ export default function AdminDashboardPage() {
                       }
                       className={selectClass}
                     >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat} className="bg-background text-ink">
-                          {getCategoryDisplay(cat)}
+                      {categoriesList.map((cat) => (
+                        <option key={cat.slug} value={cat.slug} className="bg-background text-ink">
+                          {cat.label} ({cat.slug})
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-[11px] text-muted">
-                      Select any existing category above, or add a custom one in Option 1.
-                    </p>
+                    {/* Quick selection pills */}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {categoriesList.map((cat) => (
+                        <button
+                          type="button"
+                          key={cat.slug}
+                          onClick={() => {
+                            setNewGalleryPhoto((prev) => ({ ...prev, category: cat.slug }));
+                            showToast("success", `Selected category "${cat.label}"`);
+                          }}
+                          className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-all ${
+                            newGalleryPhoto.category === cat.slug
+                              ? "border-primary bg-primary/20 text-primary font-semibold"
+                              : "border-border bg-background text-muted hover:border-primary/40 hover:text-ink"
+                          }`}
+                        >
+                          {cat.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="sm:col-span-2">
@@ -1282,7 +1622,7 @@ export default function AdminDashboardPage() {
                     disabled={isSaving}
                     className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-soft hover:bg-primary-hover disabled:opacity-50 transition-all"
                   >
-                    + Add to &ldquo;{newGalleryPhoto.category}&rdquo; Category
+                    + Add to &ldquo;{categoriesList.find((c) => c.slug === newGalleryPhoto.category)?.label || newGalleryPhoto.category}&rdquo; Category
                   </button>
                 </div>
               </form>

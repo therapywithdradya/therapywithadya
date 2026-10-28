@@ -3,7 +3,7 @@ import { SiteImage } from "@/components/ui/SiteImage";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { site } from "@/content/site";
-import { getGalleryItems } from "@/lib/content";
+import { getGalleryCategories, getGalleryItems, type PublicGalleryCategory } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
 import type { GalleryItemRow } from "@/types/database";
 
@@ -14,7 +14,6 @@ export const metadata = marketingMetadata({
   description: site.pages.gallery.description,
   path: "/gallery",
 });
-
 
 function formatCategoryTitle(category: string): string {
   if (!category) return "Photos";
@@ -30,47 +29,86 @@ function formatCategoryTitle(category: string): string {
   return titleMap[normalized] || category.charAt(0).toUpperCase() + category.slice(1);
 }
 
-/** Group gallery items by category. Items without a category go under "More photos". */
+interface GalleryGroup {
+  category: string;
+  label: string;
+  items: GalleryItemRow[];
+}
+
+/**
+ * Group gallery items by category in the strict order specified by the customized categories list.
+ * Items added to preexisting categories will not displace other categories or jump to top.
+ */
 function groupByCategory(
   items: GalleryItemRow[],
-): { category: string; items: GalleryItemRow[] }[] {
+  categories: PublicGalleryCategory[],
+): GalleryGroup[] {
   const hasAnyCategory = items.some((item) => item.category);
 
   if (!hasAnyCategory) {
-    return [{ category: "", items }];
+    return [{ category: "", label: "Photos", items }];
   }
 
-  const groups = new Map<string, GalleryItemRow[]>();
+  const categoryMap = new Map<string, GalleryItemRow[]>();
   const uncategorised: GalleryItemRow[] = [];
 
   for (const item of items) {
     if (item.category) {
       const norm = item.category.trim().toLowerCase();
       const unifiedKey = norm === "workshops" ? "workshop" : norm;
-      const existing = groups.get(unifiedKey) ?? [];
+      const existing = categoryMap.get(unifiedKey) ?? [];
       existing.push(item);
-      groups.set(unifiedKey, existing);
+      categoryMap.set(unifiedKey, existing);
     } else {
       uncategorised.push(item);
     }
   }
 
-  const result: { category: string; items: GalleryItemRow[] }[] = [];
-  for (const [cat, catItems] of groups.entries()) {
-    result.push({ category: cat, items: catItems });
-  }
-  if (uncategorised.length > 0) {
-    result.push({ category: "More photos", items: uncategorised });
+  const result: GalleryGroup[] = [];
+  const processedKeys = new Set<string>();
+
+  // 1. Follow the saved category order from database / custom sequence
+  for (const cat of categories) {
+    const key = cat.slug.toLowerCase();
+    const itemsInCat = categoryMap.get(key);
+    if (itemsInCat && itemsInCat.length > 0) {
+      result.push({
+        category: cat.slug,
+        label: cat.label || formatCategoryTitle(cat.slug),
+        items: itemsInCat,
+      });
+      processedKeys.add(key);
+    }
   }
 
+  // 2. Any extra categories present in items not yet in categories list
+  for (const [key, itemsInCat] of categoryMap.entries()) {
+    if (!processedKeys.has(key) && itemsInCat.length > 0) {
+      result.push({
+        category: key,
+        label: formatCategoryTitle(key),
+        items: itemsInCat,
+      });
+    }
+  }
+
+  // 3. Uncategorised items go to "More photos" at the end
+  if (uncategorised.length > 0) {
+    result.push({
+      category: "more",
+      label: "More photos",
+      items: uncategorised,
+    });
+  }
 
   return result;
 }
 
 export default async function GalleryPage() {
-  const raw = await getGalleryItems();
-  // Sort by sort_order (same as home page).
-  const items = [...raw].sort((a, b) => a.sort_order - b.sort_order);
+  const [items, categories] = await Promise.all([
+    getGalleryItems(),
+    getGalleryCategories(),
+  ]);
 
   if (items.length === 0) {
     return (
@@ -103,7 +141,7 @@ export default async function GalleryPage() {
     );
   }
 
-  const groups = groupByCategory(items);
+  const groups = groupByCategory(items, categories);
   const hasAnyCategory = items.some((item) => item.category);
 
   return (
@@ -143,7 +181,7 @@ export default async function GalleryPage() {
                     : "font-heading text-heading text-ink [overflow-wrap:anywhere]"
                 }
               >
-                {formatCategoryTitle(group.category)}
+                {group.label}
               </h2>
 
               <ul

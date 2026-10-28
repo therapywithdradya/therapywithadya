@@ -305,6 +305,15 @@ type Table<Row, Insert = Row, Update = Partial<Row>> = {
   Relationships: [];
 };
 
+export type GalleryCategoryRow = {
+  slug: string;
+  label: string;
+  sort_order: number;
+  created_at: string;
+};
+
+export type GalleryCategoryInsert = WithOptional<GalleryCategoryRow, "sort_order" | "created_at">;
+
 export type Database = {
   public: {
     Tables: {
@@ -314,12 +323,18 @@ export type Database = {
       testimonials: Table<TestimonialRow, TestimonialInsert>;
       events_workshops: Table<EventWorkshopRow, EventWorkshopInsert>;
       gallery_items: Table<GalleryItemRow, GalleryItemInsert>;
+      gallery_categories: Table<
+        GalleryCategoryRow,
+        GalleryCategoryInsert,
+        Partial<GalleryCategoryRow>
+      >;
       practitioner_profile: Table<
         PractitionerProfileRow,
         PractitionerProfileInsert,
         Partial<PractitionerProfileRow>
       >;
     };
+
 
     Views: Record<string, never>;
     Functions: {
