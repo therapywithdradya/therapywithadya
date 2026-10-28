@@ -776,7 +776,7 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="mt-8 flex flex-wrap gap-2 border-b border-border pb-3">
+        <div className="mt-6 flex items-center gap-2 border-b border-border pb-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap">
           {(
             [
               { key: "profile", label: "👤 Profile & Fees", count: null },
@@ -789,7 +789,7 @@ export default function AdminDashboardPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-all ${
+              className={`flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm transition-all whitespace-nowrap ${
                 activeTab === tab.key
                   ? "bg-primary text-on-primary font-semibold shadow-soft"
                   : "border border-border bg-surface text-muted hover:border-primary/40 hover:text-ink"
@@ -1852,12 +1852,12 @@ export default function AdminDashboardPage() {
 
         {/* TAB 5: APPOINTMENTS & BOOKINGS */}
         {activeTab === "bookings" && (
-          <div className="mt-8 rounded-2xl border border-border bg-surface p-6 shadow-card sm:p-8">
+          <div className="mt-8 rounded-2xl border border-border bg-surface p-4 shadow-card sm:p-6 md:p-8">
             <div className="border-b border-border pb-4">
               <h2 className="font-heading text-xl font-bold text-ink">
-                Appointments & Booking Ledger
+                Appointments &amp; Booking Ledger
               </h2>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-xs sm:text-sm text-muted">
                 Recent sessions scheduled through the website booking wizard. All sessions automatically sync to your connected Google Calendar.
               </p>
             </div>
@@ -1867,66 +1867,149 @@ export default function AdminDashboardPage() {
                 No bookings recorded yet. Once a client books a session, it will show up here.
               </p>
             ) : (
-              <div className="mt-6 overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-border text-muted uppercase">
-                      <th className="pb-3 font-semibold">Client</th>
-                      <th className="pb-3 font-semibold">Session</th>
-                      <th className="pb-3 font-semibold">Date & Time</th>
-                      <th className="pb-3 font-semibold">Status</th>
-                      <th className="pb-3 font-semibold">Amount</th>
-                      <th className="pb-3 font-semibold">Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {bookings.map((b) => (
-                      <tr key={b.id} className="hover:bg-background/40 transition-colors">
-                        <td className="py-3">
-                          <span className="font-semibold text-ink block">{b.customer_name}</span>
-                          <span className="text-muted text-[11px] block">{b.customer_email}</span>
-                          <span className="text-muted text-[11px] block">{b.customer_phone}</span>
-                        </td>
-                        <td className="py-3 text-ink">{b.session_name}</td>
-                        <td className="py-3">
-                          <span className="block text-ink">
+              <>
+                {/* Mobile Card View (< md) */}
+                <div className="mt-5 space-y-3.5 md:hidden">
+                  {bookings.map((b) => (
+                    <div
+                      key={b.id}
+                      className="rounded-xl border border-border bg-background/90 p-4 shadow-xs"
+                    >
+                      <div className="flex items-start justify-between gap-2 border-b border-border pb-3">
+                        <div className="min-w-0 flex-1">
+                          <span className="font-semibold text-ink text-sm block truncate">
+                            {b.customer_name}
+                          </span>
+                          <a
+                            href={`mailto:${b.customer_email}`}
+                            className="text-muted text-xs block truncate hover:text-primary transition-colors"
+                          >
+                            {b.customer_email}
+                          </a>
+                          <a
+                            href={`tel:${b.customer_phone}`}
+                            className="text-muted text-xs block hover:text-primary transition-colors"
+                          >
+                            {b.customer_phone}
+                          </a>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                            b.booking_status === "confirmed"
+                              ? "border border-emerald-800 bg-emerald-950 text-emerald-300"
+                              : b.booking_status === "pending"
+                              ? "border border-amber-800 bg-amber-950 text-amber-300"
+                              : "border border-red-800 bg-red-950 text-red-300"
+                          }`}
+                        >
+                          {b.booking_status}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 space-y-2 text-xs">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-muted">Session:</span>
+                          <span className="font-medium text-ink text-right truncate">
+                            {b.session_name}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-muted">Date &amp; Time:</span>
+                          <span className="font-medium text-ink text-right">
                             {new Date(b.starts_at).toLocaleDateString("en-IN", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
-                            })}
-                          </span>
-                          <span className="block text-muted text-[11px]">
+                            })}{" "}
+                            •{" "}
                             {new Date(b.starts_at).toLocaleTimeString("en-IN", {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
                           </span>
-                        </td>
-                        <td className="py-3">
-                          <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
-                              b.booking_status === "confirmed"
-                                ? "border border-emerald-800 bg-emerald-950 text-emerald-300"
-                                : b.booking_status === "pending"
-                                ? "border border-amber-800 bg-amber-950 text-amber-300"
-                                : "border border-red-800 bg-red-950 text-red-300"
-                            }`}
-                          >
-                            {b.booking_status}
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-muted">Amount:</span>
+                          <span className="font-bold text-primary text-sm">
+                            ₹{(b.amount_paise / 100).toLocaleString("en-IN")}
                           </span>
-                        </td>
-                        <td className="py-3 font-medium text-ink">
-                          ₹{(b.amount_paise / 100).toLocaleString("en-IN")}
-                        </td>
-                        <td className="py-3 max-w-[200px] truncate text-muted">
-                          {b.customer_note || "—"}
-                        </td>
+                        </div>
+
+                        {b.customer_note && (
+                          <div className="mt-2.5 rounded-lg border border-border bg-surface p-2.5 text-[11px] text-muted">
+                            <span className="font-semibold text-ink block mb-0.5">Note:</span>
+                            <p className="whitespace-pre-wrap">{b.customer_note}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table View (>= md) */}
+                <div className="mt-6 hidden md:block overflow-x-auto">
+                  <table className="w-full min-w-[700px] text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-border text-muted uppercase">
+                        <th className="pb-3 font-semibold">Client</th>
+                        <th className="pb-3 font-semibold">Session</th>
+                        <th className="pb-3 font-semibold whitespace-nowrap">Date &amp; Time</th>
+                        <th className="pb-3 font-semibold">Status</th>
+                        <th className="pb-3 font-semibold whitespace-nowrap">Amount</th>
+                        <th className="pb-3 font-semibold">Notes</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {bookings.map((b) => (
+                        <tr key={b.id} className="hover:bg-background/40 transition-colors">
+                          <td className="py-3">
+                            <span className="font-semibold text-ink block">{b.customer_name}</span>
+                            <span className="text-muted text-[11px] block">{b.customer_email}</span>
+                            <span className="text-muted text-[11px] block">{b.customer_phone}</span>
+                          </td>
+                          <td className="py-3 text-ink">{b.session_name}</td>
+                          <td className="py-3 whitespace-nowrap">
+                            <span className="block text-ink font-medium">
+                              {new Date(b.starts_at).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </span>
+                            <span className="block text-muted text-[11px]">
+                              {new Date(b.starts_at).toLocaleTimeString("en-IN", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </td>
+                          <td className="py-3">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
+                                b.booking_status === "confirmed"
+                                  ? "border border-emerald-800 bg-emerald-950 text-emerald-300"
+                                  : b.booking_status === "pending"
+                                  ? "border border-amber-800 bg-amber-950 text-amber-300"
+                                  : "border border-red-800 bg-red-950 text-red-300"
+                              }`}
+                            >
+                              {b.booking_status}
+                            </span>
+                          </td>
+                          <td className="py-3 font-medium text-ink whitespace-nowrap">
+                            ₹{(b.amount_paise / 100).toLocaleString("en-IN")}
+                          </td>
+                          <td className="py-3 max-w-[200px] truncate text-muted">
+                            {b.customer_note || "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         )}
