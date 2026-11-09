@@ -42,7 +42,11 @@ export default async function AboutPage() {
             {wordmark()}
           </h1>
           {intro ? (
-            <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">{intro}</p>
+            <div className="mt-4 max-w-[70ch] space-y-4 text-lead text-muted [overflow-wrap:anywhere]">
+              {intro.split(/\n\n+/).map((para, i) => (
+                <p key={i}>{para.trim()}</p>
+              ))}
+            </div>
           ) : null}
         </Container>
       </Section>

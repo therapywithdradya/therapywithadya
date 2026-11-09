@@ -41,7 +41,11 @@ export function AboutPreview({
             className="aspect-[4/5] w-full rounded-[1.25rem] object-cover shadow-card"
           />
           <div className="min-w-0 border-l-2 border-primary pl-5">
-            <p className="text-muted [overflow-wrap:anywhere]">{displayIntro}</p>
+            <div className="space-y-3 text-muted [overflow-wrap:anywhere]">
+              {displayIntro.split(/\n\n+/).map((para, i) => (
+                <p key={i}>{para.trim()}</p>
+              ))}
+            </div>
             <Link href="/about" className={`mt-4 ${textLinkClass}`}>
               Read more about me
             </Link>
