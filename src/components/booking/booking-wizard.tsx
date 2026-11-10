@@ -22,25 +22,35 @@ type SessionOption = {
   name: string;
   description: string;
   durationMinutes: number;
+  durationLabel?: string;
   pricePaise: number;
 };
 
 const SESSIONS: SessionOption[] = [
   {
-    slug: "session-a-60",
-    name: "Individual Therapy Session (60 min)",
+    slug: "individual-therapy-30",
+    name: "Individual Therapy (30 min)",
     description:
-      "A compassionate, trauma-informed 1-on-1 therapy session tailored to your emotional and psychological needs. Focuses on anxiety, depression, stress, self-doubt, relationship challenges, and coping strategies.",
-    durationMinutes: 60,
-    pricePaise: 150000,
+      "A focused, compassionate session tailored to your immediate concerns — helping you understand what you’re experiencing, gain clarity, and take meaningful steps forward.",
+    durationMinutes: 30,
+    pricePaise: 100000,
   },
   {
-    slug: "session-b-90",
-    name: "Integrative Therapy & Modality Deep-Dive (90 min)",
+    slug: "individual-therapy-60",
+    name: "Individual Therapy (60 min)",
     description:
-      "An intensive extended session combining psychotherapy with specialized modalities such as Hypnotherapy, Art Therapy, or Graphology (handwriting analysis).",
-    durationMinutes: 90,
-    pricePaise: 220000,
+      "A deeper therapeutic space to explore your emotions, experiences, patterns, and challenges at your own pace.",
+    durationMinutes: 60,
+    pricePaise: 200000,
+  },
+  {
+    slug: "couples-therapy",
+    name: "Couples Therapy (60–75 min)",
+    description:
+      "A supportive space for couples to communicate openly, understand each other better, work through recurring challenges, and build a healthier, more connected relationship.",
+    durationMinutes: 75,
+    durationLabel: "60–75 minutes",
+    pricePaise: 300000,
   },
 ];
 
@@ -409,7 +419,7 @@ export function BookingWizard() {
                     <div className="flex items-center justify-between">
                       <span className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1 text-xs font-medium text-accent">
                         <Clock className="size-3" />
-                        {session.durationMinutes} minutes
+                        {session.durationLabel ?? `${session.durationMinutes} minutes`}
                       </span>
                       <span className="text-lg font-semibold text-primary">
                         {formatPriceFromPaise(session.pricePaise)}
@@ -702,7 +712,7 @@ export function BookingWizard() {
               <div>
                 <span className="text-xs uppercase font-medium tracking-wider text-accent">Session Offering</span>
                 <h3 className="text-lg font-serif font-medium text-ink mt-0.5">{selectedSession.name}</h3>
-                <span className="text-xs text-muted">Duration: {selectedSession.durationMinutes} minutes</span>
+                <span className="text-xs text-muted">Duration: {selectedSession.durationLabel ?? `${selectedSession.durationMinutes} minutes`}</span>
               </div>
               <div className="text-right">
                 <span className="text-xs uppercase font-medium tracking-wider text-muted">Total Fee</span>

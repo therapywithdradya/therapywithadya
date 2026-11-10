@@ -59,10 +59,10 @@ describe("POST /api/bookings", () => {
             ok: true,
             booking: {
               id: "book-uuid-999",
-              session_name: "Individual Therapy Session (60 min)",
+              session_name: "Individual Therapy (60 min)",
               start_at: "2026-11-05T04:30:00.000Z",
               end_at: "2026-11-05T05:30:00.000Z",
-              price_paise: 150000,
+              price_paise: 200000,
               currency: "INR",
               hold_expires_at: "2026-11-05T04:45:00.000Z",
             },
@@ -78,7 +78,7 @@ describe("POST /api/bookings", () => {
 
     mockCreateRazorpayOrder.mockResolvedValue({
       id: "order_rzp_12345",
-      amount: 150000,
+      amount: 200000,
       currency: "INR",
     });
 
@@ -95,19 +95,19 @@ describe("POST /api/bookings", () => {
     expect(body.ok).toBe(true);
     expect(body.bookingId).toBe("book-uuid-999");
     expect(body.orderId).toBe("order_rzp_12345");
-    expect(body.amountPaise).toBe(150000);
+    expect(body.amountPaise).toBe(200000);
     expect(body.currency).toBe("INR");
     expect(body.keyId).toBe("rzp_test_key_123");
     expect(typeof body.publicToken).toBe("string");
     expect(body.publicToken.length).toBeGreaterThan(20);
 
     expect(mockCreateRazorpayOrder).toHaveBeenCalledWith({
-      amountPaise: 150000,
+      amountPaise: 200000,
       currency: "INR",
       receipt: "book-uuid-999",
       notes: {
         booking_id: "book-uuid-999",
-        session_slug: "session-a-60",
+        session_slug: "individual-therapy-60",
       },
     });
   });

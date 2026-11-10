@@ -44,9 +44,11 @@ export default function ServicesPage() {
                     >
                       {service.title}
                     </h2>
-                    <p className="mt-3 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
-                      {service.longDescription}
-                    </p>
+                    <div className="mt-3 max-w-[70ch] space-y-3 text-muted [overflow-wrap:anywhere]">
+                      {service.longDescription.split(/\n\n+/).map((para, i) => (
+                        <p key={i}>{para.trim()}</p>
+                      ))}
+                    </div>
                     {service.href ? (
                       <Link href={service.href} className={`mt-4 ${textLinkClass}`}>
                         {service.linkLabel ?? `View ${service.title}`}

@@ -105,14 +105,14 @@ export default function AdminDashboardPage() {
     tagline: "A safe, compassionate, and trauma-informed space to heal.",
     about_title: "About Dr. Adya Vats",
     about_intro:
-      "I am a trauma-informed psychologist with over 3+ years of clinical practice and 5+ years of dedicated academic study and research.",
+      "Hi, I’m Dr. Adya Vats.\nA space where you can come as you are.\n\nWith 5 years of experience, I believe therapy begins with acknowledging what you’re going through, understanding yourself with greater compassion, and finding a way forward with clarity and self-awareness.\n\nMy work is trauma-informed, compassionate, and tailored to you — helping you navigate life’s challenges, understand your patterns, and create meaningful change.\n\nYou don’t have to figure it out alone. Together, we’ll take it one step at a time.",
     profile_image_url: "/images/dr-adya-portrait.jpg",
     hero_image_url: "/images/hero-space.jpg",
     email: "adyavats13@gmail.com",
     phone: "",
     location: "Online Sessions (Worldwide) & In-Person by Appointment",
-    fee_60_min: 1500,
-    fee_90_min: 2500,
+    fee_60_min: 2000,
+    fee_90_min: 3000,
   });
 
   // Events State

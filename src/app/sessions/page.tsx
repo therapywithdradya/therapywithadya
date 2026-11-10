@@ -33,12 +33,12 @@ export default async function SessionsPage() {
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
             {pageCopy.intro}
           </p>
-          <ul className="mt-10 grid list-none gap-6 p-0 lg:grid-cols-2">
+          <ul className="mt-10 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
             {sessions.map((session) => (
               <li key={session.slug} className="min-w-0">
                 <Card className="flex h-full flex-col">
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <h2 className="min-w-0 flex-1 font-heading text-[clamp(1.35rem,3vw,2rem)] text-ink [overflow-wrap:anywhere]">
+                    <h2 className="min-w-0 flex-1 font-heading text-[clamp(1.25rem,2.5vw,1.6rem)] text-ink [overflow-wrap:anywhere]">
                       {session.name}
                     </h2>
                     {session.mode === "online" ? <Badge>Online</Badge> : null}
@@ -49,15 +49,21 @@ export default async function SessionsPage() {
                   <dl className="mt-4 space-y-3">
                     <div className="min-w-0">
                       <dt className="font-semibold text-ink">Duration</dt>
-                      <dd className="text-muted">{formatDuration(session.durationMinutes)}</dd>
+                      <dd className="text-muted">{session.durationLabel ?? formatDuration(session.durationMinutes)}</dd>
                     </div>
+                    {session.approaches ? (
+                      <div className="min-w-0">
+                        <dt className="font-semibold text-ink">Approaches may include</dt>
+                        <dd className="text-muted [overflow-wrap:anywhere]">{session.approaches}</dd>
+                      </div>
+                    ) : null}
                     <div className="min-w-0">
                       <dt className="font-semibold text-ink">Who it is for</dt>
                       <dd className="text-muted [overflow-wrap:anywhere]">{session.whoItFor}</dd>
                     </div>
                   </dl>
                   {session.priceLabel ? (
-                    <p className="mt-4 text-ink [overflow-wrap:anywhere]">{session.priceLabel}</p>
+                    <p className="mt-4 text-xl font-bold text-primary [overflow-wrap:anywhere]">{session.priceLabel}</p>
                   ) : null}
                   <Button
                     href={`/book?session=${encodeURIComponent(session.slug)}`}

@@ -14,28 +14,68 @@ insert into public.testimonials (
   sort_order
 ) values
   (
-    '11111111-1111-4111-8111-111111111111',
-    'Dummy Client A',
-    '[PLACEHOLDER] This is dummy review text for layout only. It is not a real client testimonial.',
+    '11111111-1111-4111-8111-111111111101',
+    'Anonymous',
+    'Regarding the feedback, I must say I was in the right place when I needed it the most. All your efforts are clearly reflected in my progress, and your ability to deeply understand and listen to someone in need is remarkable. Every session I had with you was very calming at that time, and it helped me a lot in overcoming that phase. I would rate every session 10 on 10. Thank you for helping me and making me believe that I could do it. In short, I would recommend you to anyone without a second thought 💫',
     5,
     true,
     1
   ),
   (
-    '11111111-1111-4111-8111-111111111112',
-    'Dummy Client B',
-    '[PLACEHOLDER] This is dummy review text for layout only. It is not a real client testimonial.',
-    4,
+    '11111111-1111-4111-8111-111111111102',
+    'Anonymous',
+    'Therapy sessions bahut helpful rahe. Therapist ne meri baat patience aur understanding ke saath suni. Unki guidance se mujhe anxiety aur fear ko better handle karne mein help mili. Sessions comfortable aur supportive feel hote hain. Main emotionally kaafi better feel kar rahi hoon. Highly recommended.',
+    5,
     true,
     2
   ),
   (
-    '11111111-1111-4111-8111-111111111113',
-    'Dummy Client C',
-    '[PLACEHOLDER] This is dummy review text for layout only. It is not a real client testimonial.',
-    null,
+    '11111111-1111-4111-8111-111111111103',
+    'Anonymous',
+    'Adya Vats is an amazing psychologist. She is sensitive, caring and judgement free. She is a good listener. She has great understanding of one’s feelings, she can understand whatever you are feeling. I will strongly recommend her therapy sessions, if you ever feel lonely and unworthy of your life. Please reach out to her. As a patient I have experienced that.',
+    5,
     true,
     3
+  ),
+  (
+    '11111111-1111-4111-8111-111111111104',
+    'Anonymous',
+    'My experience with Adya Vats has been truly wonderful. I started my sessions with her during one of the most difficult phases of my life, when I was dealing with a lot of emotional pain and personal challenges. She listened to me patiently, understood my feelings without judgment, and helped me feel lighter, calmer, and emotionally stronger. I am especially grateful for her kindness and support when I was facing financial difficulties. She even reduced her fees by half so I could continue my sessions. Thank you, Adya, for your empathy, kindness, and support. You made a real difference in my life.',
+    5,
+    true,
+    4
+  ),
+  (
+    '11111111-1111-4111-8111-111111111105',
+    'Anonymous',
+    'I''ve been seeing Adya for a long time and I can honestly say it''s been a life-changing experience. She created a safe, non-judgmental space for me to explore my thoughts, emotions, and concerns. Adya is an exceptional listener, empathetic, and insightful. She helped me identify emotional patterns, gain new perspectives, and develop coping strategies to manage stress, anxiety, and relationships. What I appreciate most is her warm, compassionate, and genuine approach. She is knowledgeable, experienced, and up-to-date with the latest techniques. If you''re struggling with mental health issues or simply seeking personal growth, I highly recommend Adya.',
+    5,
+    true,
+    5
+  ),
+  (
+    '11111111-1111-4111-8111-111111111106',
+    'Anonymous',
+    'I had an incredible experience with Adya Vats, a highly skilled psychologist and tarot reader. She provided exceptional guidance during a pivotal career decision, helping me weigh the pros and cons of choosing between a high-paying role and one offering better growth opportunities. Her insights were thoughtful, accurate, and deeply resonated with my situation. Adya''s empathetic and professional approach made me feel confident and clear-headed about my choice. I highly recommend her to anyone seeking clarity and guidance in life''s important decisions.',
+    5,
+    true,
+    6
+  ),
+  (
+    '11111111-1111-4111-8111-111111111107',
+    'Anonymous',
+    'It''s been a truly transformative experience. I want to express my heartfelt gratitude for your time and unwavering support. Through this journey, I learned to love myself more deeply, forgive others for their shortcomings, and embrace life''s challenges with resilience and grace. Thank you once again for being a guiding light on this incredible path of self-discovery. Your support has made all the difference!',
+    5,
+    true,
+    7
+  ),
+  (
+    '11111111-1111-4111-8111-111111111108',
+    'Anonymous',
+    'I wanted to take a moment to express my deepest appreciation for the incredible support and guidance you''ve provided me during our time together. Your unwavering dedication to my well-being has made an immeasurable difference in my life. Your compassionate listening, insightful feedback, and gentle encouragement have helped me navigate through some of the most challenging moments I''ve faced. Your expertise and professionalism shine through in every session, creating a safe and nurturing space for me to explore and grow. Your commitment to my mental health journey has been truly inspiring, and I am profoundly grateful for your presence in my life. Thank you for being the beacon of light during times of darkness and for empowering me to cultivate resilience and self-understanding. Please know that your work is immensely valued and appreciated. I am forever grateful for your kindness, empathy, and expertise.',
+    5,
+    true,
+    8
   )
 on conflict (id) do nothing;
 

@@ -26,7 +26,9 @@ export type PublicSession = {
   name: string;
   description: string;
   whoItFor: string;
+  approaches?: string;
   durationMinutes: number;
+  durationLabel?: string;
   mode: "online";
   priceLabel: string | null;
 };
@@ -42,6 +44,9 @@ function formatInrFromPaise(pricePaise: number): string {
     maximumFractionDigits: 0,
   }).format(rupees);
 
+  if (paise === 0) {
+    return `${sign}₹${grouped}`;
+  }
   return `${sign}₹${grouped}.${String(paise).padStart(2, "0")}`;
 }
 
@@ -59,7 +64,9 @@ export async function getSessions(): Promise<PublicSession[]> {
     name: session.name,
     description: session.description,
     whoItFor: session.whoItFor,
+    approaches: session.approaches,
     durationMinutes: session.durationMinutes,
+    durationLabel: session.durationLabel,
     mode: "online",
     priceLabel: priceLabelFor(session.pricePaise),
   }));

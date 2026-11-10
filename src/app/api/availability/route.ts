@@ -154,7 +154,7 @@ export async function GET(request: Request): Promise<Response> {
     return NextResponse.json(
       {
         timezone: bookingRules.timezone,
-        sessionTypeId: sessionConfig.slug,
+        sessionTypeId: sessionSlug,
         slots: slotStarts,
       },
       {

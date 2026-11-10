@@ -22,7 +22,7 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
           title={site.home.sessionsTitle}
           intro={site.home.sessionsIntro}
         />
-        <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2">
+        <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
           {sessions.map((session) => (
             <li key={session.slug} className="min-w-0">
               <Card className="flex h-full flex-col">
@@ -38,8 +38,14 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
                 <dl className="mt-4 space-y-3">
                   <div className="min-w-0">
                     <dt className="font-semibold text-ink">Duration</dt>
-                    <dd className="text-muted">{formatDuration(session.durationMinutes)}</dd>
+                    <dd className="text-muted">{session.durationLabel ?? formatDuration(session.durationMinutes)}</dd>
                   </div>
+                  {session.approaches ? (
+                    <div className="min-w-0">
+                      <dt className="font-semibold text-ink">Approaches</dt>
+                      <dd className="line-clamp-2 text-muted [overflow-wrap:anywhere]">{session.approaches}</dd>
+                    </div>
+                  ) : null}
                   <div className="min-w-0">
                     <dt className="font-semibold text-ink">Who it is for</dt>
                     <dd className="line-clamp-3 text-muted [overflow-wrap:anywhere]">
@@ -48,7 +54,7 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
                   </div>
                 </dl>
                 {session.priceLabel ? (
-                  <p className="mt-4 text-ink [overflow-wrap:anywhere]">{session.priceLabel}</p>
+                  <p className="mt-4 text-lg font-bold text-primary [overflow-wrap:anywhere]">{session.priceLabel}</p>
                 ) : null}
                 <Button
                   href={`/book?session=${encodeURIComponent(session.slug)}`}

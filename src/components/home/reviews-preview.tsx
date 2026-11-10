@@ -22,9 +22,7 @@ export function ReviewsPreview({
   const countLabel =
     clientCount === undefined || clientCount <= 0
       ? undefined
-      : clientCount === 1
-        ? "1 client"
-        : `${clientCount} clients`;
+      : `Over ${clientCount.toLocaleString("en-IN")}+ clients supported`;
 
   return (
     <Section aria-labelledby="home-reviews-title">

@@ -6,14 +6,14 @@ create table if not exists public.practitioner_profile (
   name text not null default 'Dr. Adya Vats',
   tagline text not null default 'A safe, compassionate, and trauma-informed space to heal, feel empowered, and connect with your truest self.',
   about_title text not null default 'About Dr. Adya Vats',
-  about_intro text not null default 'I am a trauma-informed psychologist with over 3+ years of clinical practice and 5+ years of dedicated academic study and research. My goal is to provide a safe, compassionate, and non-judgmental space where you can begin your healing journey and work towards lasting personal growth.',
+  about_intro text not null default 'Hi, I’m Dr. Adya Vats. A space where you can come as you are. With 5 years of experience, I believe therapy begins with acknowledging what you’re going through, understanding yourself with greater compassion, and finding a way forward with clarity and self-awareness.',
   profile_image_url text not null default '/images/dr-adya-portrait.jpg',
   hero_image_url text not null default '/images/hero-space.jpg',
   email text not null default 'adyavats13@gmail.com',
   phone text null,
   location text not null default 'Online Sessions (Worldwide) & In-Person by Appointment',
-  fee_60_min integer not null default 1500,
-  fee_90_min integer not null default 2500,
+  fee_60_min integer not null default 2000,
+  fee_90_min integer not null default 3000,
   updated_at timestamptz not null default now()
 );
 

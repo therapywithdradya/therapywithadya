@@ -82,8 +82,8 @@ export default async function ReviewsPage() {
           </p>
           {/* Show client count only when visibleClientCount() returns a positive number */}
           {clientCount !== undefined && clientCount > 0 ? (
-            <p className="mt-4 text-muted">
-              {clientCount === 1 ? "1 client" : `${clientCount} clients`}
+            <p className="mt-4 font-medium text-primary">
+              Over {clientCount.toLocaleString("en-IN")}+ clients supported
             </p>
           ) : null}
         </Container>
