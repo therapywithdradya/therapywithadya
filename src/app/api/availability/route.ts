@@ -6,24 +6,7 @@ import { createGoogleBusyProvider } from "@/lib/calendar/google";
 import { bookingRules } from "@/lib/booking/booking-rules";
 import { resolveDynamicSessionBySlug } from "@/lib/site-content.server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-
-// ---------------------------------------------------------------------------
-// In-memory response cache (TTL 30 seconds per ARCHITECTURE.md)
-// ---------------------------------------------------------------------------
-
-const CACHE_TTL_MS = 30_000;
-
-type CacheEntry = {
-  slots: string[];
-  expiresAt: number;
-};
-
-const availabilityCache = new Map<string, CacheEntry>();
-
-/** @internal Reset cache — for testing only */
-export function _resetAvailabilityCacheForTesting(): void {
-  availabilityCache.clear();
-}
+import { getCachedAvailability, setCachedAvailability } from "@/lib/availability/cache";
 
 // Maximum query range in days per ARCHITECTURE.md line 108/182
 const MAX_QUERY_DAYS = 42;
@@ -108,13 +91,13 @@ export async function GET(request: Request): Promise<Response> {
 
   // 4. In-memory TTL Cache check
   const cacheKey = `${sessionSlug}:${fromDate}:${toDate}`;
-  const cached = availabilityCache.get(cacheKey);
-  if (cached && Date.now() < cached.expiresAt) {
+  const cachedSlots = getCachedAvailability(cacheKey);
+  if (cachedSlots) {
     return NextResponse.json(
       {
         timezone: bookingRules.timezone,
         sessionTypeId: sessionConfig.slug,
-        slots: cached.slots,
+        slots: cachedSlots,
       },
       {
         status: 200,
@@ -146,10 +129,7 @@ export async function GET(request: Request): Promise<Response> {
     const slotStarts = slots.map((s) => s.start);
 
     // Cache successful response (do not cache errors)
-    availabilityCache.set(cacheKey, {
-      slots: slotStarts,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    });
+    setCachedAvailability(cacheKey, slotStarts);
 
     return NextResponse.json(
       {

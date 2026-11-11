@@ -27,7 +27,8 @@ vi.mock("@/lib/availability/supabase", () => ({
   createSupabaseBookedProvider: () => ({ getBookedRanges: vi.fn() }),
 }));
 
-import { GET, _resetAvailabilityCacheForTesting } from "./route";
+import { GET } from "./route";
+import { _resetAvailabilityCacheForTesting } from "@/lib/availability/cache";
 import { AvailabilityInputError, AvailabilityUnavailableError } from "@/lib/availability/types";
 
 describe("GET /api/availability", () => {

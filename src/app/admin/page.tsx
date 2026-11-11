@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import Link from "next/link";
 import { AboutEditorTab } from "@/components/admin/about-editor-tab";
+import { SessionOfferingsEditor } from "@/components/admin/editor-shared";
 import { HeroHomeTab } from "@/components/admin/hero-home-tab";
 import { PoliciesPagesTab } from "@/components/admin/policies-pages-tab";
 import { ServicesSessionsTab } from "@/components/admin/services-sessions-tab";
@@ -330,48 +331,34 @@ export default function AdminDashboardPage() {
     setIsAuthenticated(false);
   };
 
-  // Save Profile
+  // Save Profile, Hero & Session Offerings together
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
-    try {
-      const res = await fetch("/api/admin/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to update profile");
-      setSiteContent((prev) => ({
-        ...prev,
-        brand: {
-          ...prev.brand,
-          practitionerName: profile.name || prev.brand.practitionerName,
-        },
-        contact: {
-          ...prev.contact,
-          email: profile.email ?? prev.contact.email,
-          phone: profile.phone ?? "",
-          location: profile.location ?? prev.contact.location,
-        },
-        hero: {
-          ...prev.hero,
-          tagline: profile.tagline || prev.hero.tagline,
-          imageUrl: profile.hero_image_url || prev.hero.imageUrl,
-        },
-        homeSections: {
-          ...prev.homeSections,
-          aboutTitle: profile.about_title || prev.homeSections.aboutTitle,
-          aboutIntro: profile.about_intro || prev.homeSections.aboutIntro,
-          portraitUrl: profile.profile_image_url || prev.homeSections.portraitUrl,
-        },
-      }));
-      showToast("success", "Practice Profile & Fees saved successfully!");
-    } catch (err) {
-      showToast("error", err instanceof Error ? err.message : "Error saving");
-    } finally {
-      setIsSaving(false);
-    }
+    const nextContent: EditableSiteContent = {
+      ...siteContent,
+      brand: {
+        ...siteContent.brand,
+        practitionerName: profile.name || siteContent.brand.practitionerName,
+      },
+      contact: {
+        ...siteContent.contact,
+        email: profile.email ?? siteContent.contact.email,
+        phone: profile.phone ?? "",
+        location: profile.location ?? siteContent.contact.location,
+      },
+      hero: {
+        ...siteContent.hero,
+        tagline: profile.tagline || siteContent.hero.tagline,
+        imageUrl: profile.hero_image_url || siteContent.hero.imageUrl,
+      },
+      homeSections: {
+        ...siteContent.homeSections,
+        aboutTitle: profile.about_title || siteContent.homeSections.aboutTitle,
+        aboutIntro: profile.about_intro || siteContent.homeSections.aboutIntro,
+        portraitUrl: profile.profile_image_url || siteContent.homeSections.portraitUrl,
+      },
+    };
+    await handleSaveSiteContent(nextContent);
   };
 
   // Save Full Site Content (Hero, Homepage, About, Services, Sessions, Policies, Subpages)
@@ -879,47 +866,49 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="mt-6 flex items-center gap-2 border-b border-border pb-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap">
-          {(
-            [
-              { key: "profile", label: "👤 Profile & Fees", count: null },
-              { key: "hero_home", label: "🏠 Hero & Homepage", count: null },
-              { key: "about", label: "📖 About Page", count: null },
-              {
-                key: "services_sessions",
-                label: "🩺 Services & Sessions",
-                count: siteContent.services.length + siteContent.sessions.length,
-              },
-              { key: "policies_pages", label: "⚖️ Policies & Subpages", count: null },
-              { key: "events", label: "📅 Events & Workshops", count: events.length },
-              { key: "gallery", label: "🖼️ Photo Gallery", count: gallery.length },
-              { key: "reviews", label: "💬 Client Reviews", count: testimonials.length },
-              { key: "bookings", label: "📋 Appointments", count: bookings.length },
-            ] as const
-          ).map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm transition-all whitespace-nowrap ${
-                activeTab === tab.key
-                  ? "bg-primary text-on-primary font-semibold shadow-soft"
-                  : "border border-border bg-surface text-muted hover:border-primary/40 hover:text-ink"
-              }`}
-            >
-              <span>{tab.label}</span>
-              {tab.count !== null && (
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs ${
-                    activeTab === tab.key
-                      ? "bg-on-primary/15 text-on-primary font-bold"
-                      : "border border-border bg-background text-muted"
-                  }`}
-                >
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="sticky top-[64px] z-20 -mx-4 mt-6 border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
+          <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap">
+            {(
+              [
+                { key: "profile", label: "👤 Profile & Fees", count: null },
+                { key: "hero_home", label: "🏠 Hero & Homepage", count: null },
+                { key: "about", label: "📖 About Page", count: null },
+                {
+                  key: "services_sessions",
+                  label: "🩺 Services & Sessions",
+                  count: siteContent.services.length + siteContent.sessions.length,
+                },
+                { key: "policies_pages", label: "⚖️ Policies & Subpages", count: null },
+                { key: "events", label: "📅 Events & Workshops", count: events.length },
+                { key: "gallery", label: "🖼️ Photo Gallery", count: gallery.length },
+                { key: "reviews", label: "💬 Client Reviews", count: testimonials.length },
+                { key: "bookings", label: "📋 Appointments", count: bookings.length },
+              ] as const
+            ).map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs sm:text-sm transition-all whitespace-nowrap ${
+                  activeTab === tab.key
+                    ? "bg-primary text-on-primary font-semibold shadow-soft"
+                    : "border border-border bg-surface text-muted hover:border-primary/40 hover:text-ink"
+                }`}
+              >
+                <span>{tab.label}</span>
+                {tab.count !== null && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${
+                      activeTab === tab.key
+                        ? "bg-on-primary/15 text-on-primary font-bold"
+                        : "border border-border bg-background text-muted"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* TAB 1: PROFILE & FEES */}
@@ -1041,11 +1030,77 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-ink">Tagline / Mission</label>
+                  <label className="block text-sm font-medium text-ink">
+                    Hero Main Headline (H1 / Tagline)
+                  </label>
+                  <p className="text-xs text-muted">
+                    Displayed as the main headline at the top of the homepage.
+                  </p>
+                  <textarea
+                    rows={2}
+                    value={profile.tagline}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setProfile({ ...profile, tagline: val });
+                      setSiteContent((prev) => ({
+                        ...prev,
+                        hero: { ...prev.hero, tagline: val },
+                      }));
+                    }}
+                    className={textareaClass}
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-ink">
+                    Hero Support Paragraph (Below Headline)
+                  </label>
+                  <p className="text-xs text-muted">
+                    Supporting sentence displayed right beneath the hero headline on the homepage.
+                  </p>
+                  <textarea
+                    rows={2}
+                    value={siteContent.hero.support}
+                    onChange={(e) =>
+                      setSiteContent((prev) => ({
+                        ...prev,
+                        hero: { ...prev.hero, support: e.target.value },
+                      }))
+                    }
+                    className={textareaClass}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-ink">
+                    Hero Primary CTA Button Label
+                  </label>
                   <input
                     type="text"
-                    value={profile.tagline}
-                    onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
+                    value={siteContent.hero.primaryCtaLabel}
+                    onChange={(e) =>
+                      setSiteContent((prev) => ({
+                        ...prev,
+                        hero: { ...prev.hero, primaryCtaLabel: e.target.value },
+                      }))
+                    }
+                    className={inputClass}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-ink">
+                    Hero Secondary CTA Button Label
+                  </label>
+                  <input
+                    type="text"
+                    value={siteContent.hero.secondaryCtaLabel}
+                    onChange={(e) =>
+                      setSiteContent((prev) => ({
+                        ...prev,
+                        hero: { ...prev.hero, secondaryCtaLabel: e.target.value },
+                      }))
+                    }
                     className={inputClass}
                   />
                 </div>
@@ -1087,44 +1142,14 @@ export default function AdminDashboardPage() {
                   />
                 </div>
 
-                {/* Session Fees */}
-                <div className="rounded-xl border border-border bg-background p-4 sm:col-span-2">
-                  <h3 className="text-sm font-semibold text-ink">Session Fees Configuration</h3>
-                  <p className="text-xs text-muted">
-                    Controls fee display and booking checkout calculations.
-                  </p>
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-medium text-ink">
-                        60-Minute Session Fee (₹)
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        step="50"
-                        value={profile.fee_60_min}
-                        onChange={(e) =>
-                          setProfile({ ...profile, fee_60_min: Number(e.target.value) })
-                        }
-                        className={inputClass}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-ink">
-                        90-Minute Session Fee (₹)
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        step="50"
-                        value={profile.fee_90_min}
-                        onChange={(e) =>
-                          setProfile({ ...profile, fee_90_min: Number(e.target.value) })
-                        }
-                        className={inputClass}
-                      />
-                    </div>
-                  </div>
+                {/* Elaborated Session Offerings & Fees */}
+                <div className="rounded-xl border border-border bg-surface/60 p-4 sm:col-span-2 sm:p-5">
+                  <SessionOfferingsEditor
+                    sessions={siteContent.sessions}
+                    onChange={(sessions) => setSiteContent((prev) => ({ ...prev, sessions }))}
+                    inputClass={inputClass}
+                    textareaClass={textareaClass}
+                  />
                 </div>
               </div>
 
@@ -1134,7 +1159,7 @@ export default function AdminDashboardPage() {
                   disabled={isSaving}
                   className="rounded-lg bg-primary px-6 py-2.5 font-semibold text-on-primary shadow-soft transition-all hover:bg-primary-hover disabled:opacity-50"
                 >
-                  {isSaving ? "Saving changes..." : "Save Profile & Settings"}
+                  {isSaving ? "Saving changes..." : "Save Profile, Hero & Session Fees"}
                 </button>
               </div>
             </form>
