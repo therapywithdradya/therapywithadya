@@ -3,7 +3,15 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Link from "next/link";
+import { AboutEditorTab } from "@/components/admin/about-editor-tab";
+import { HeroHomeTab } from "@/components/admin/hero-home-tab";
+import { PoliciesPagesTab } from "@/components/admin/policies-pages-tab";
+import { ServicesSessionsTab } from "@/components/admin/services-sessions-tab";
 import { Container } from "@/components/ui/container";
+import {
+  DEFAULT_SITE_CONTENT,
+  type EditableSiteContent,
+} from "@/lib/site-content-types";
 
 type ProfileData = {
   name: string;
@@ -89,8 +97,19 @@ export default function AdminDashboardPage() {
   const [passwordInput, setPasswordInput] = useState("");
   const [loginError, setLoginError] = useState("");
   const [activeTab, setActiveTab] = useState<
-    "profile" | "events" | "gallery" | "reviews" | "bookings"
+    | "profile"
+    | "hero_home"
+    | "about"
+    | "services_sessions"
+    | "policies_pages"
+    | "events"
+    | "gallery"
+    | "reviews"
+    | "bookings"
   >("profile");
+  const [siteContent, setSiteContent] = useState<EditableSiteContent>(
+    DEFAULT_SITE_CONTENT,
+  );
   const [currentTimestamp] = useState(() => Date.now());
 
   // Notifications
@@ -231,6 +250,16 @@ export default function AdminDashboardPage() {
         if (data.bookings) setBookings(data.bookings);
       })
       .catch(() => {});
+
+    // Load Editable Site Content
+    fetch("/api/admin/site-content")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.content) {
+          setSiteContent(data.content);
+        }
+      })
+      .catch(() => {});
   }, [isAuthenticated]);
 
   const showToast = (type: "success" | "error", text: string) => {
@@ -313,9 +342,69 @@ export default function AdminDashboardPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update profile");
+      setSiteContent((prev) => ({
+        ...prev,
+        brand: {
+          ...prev.brand,
+          practitionerName: profile.name || prev.brand.practitionerName,
+        },
+        contact: {
+          ...prev.contact,
+          email: profile.email ?? prev.contact.email,
+          phone: profile.phone ?? "",
+          location: profile.location ?? prev.contact.location,
+        },
+        hero: {
+          ...prev.hero,
+          tagline: profile.tagline || prev.hero.tagline,
+          imageUrl: profile.hero_image_url || prev.hero.imageUrl,
+        },
+        homeSections: {
+          ...prev.homeSections,
+          aboutTitle: profile.about_title || prev.homeSections.aboutTitle,
+          aboutIntro: profile.about_intro || prev.homeSections.aboutIntro,
+          portraitUrl: profile.profile_image_url || prev.homeSections.portraitUrl,
+        },
+      }));
       showToast("success", "Practice Profile & Fees saved successfully!");
     } catch (err) {
       showToast("error", err instanceof Error ? err.message : "Error saving");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Save Full Site Content (Hero, Homepage, About, Services, Sessions, Policies, Subpages)
+  const handleSaveSiteContent = async (override?: EditableSiteContent) => {
+    setIsSaving(true);
+    const payload = override ?? siteContent;
+    try {
+      const res = await fetch("/api/admin/site-content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: payload }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save site content");
+      if (data.content) {
+        const saved: EditableSiteContent = data.content;
+        setSiteContent(saved);
+        setProfile((prev) => ({
+          ...prev,
+          name: saved.brand.practitionerName,
+          tagline: saved.hero.tagline,
+          about_title: saved.homeSections.aboutTitle,
+          about_intro: saved.homeSections.aboutIntro,
+          profile_image_url: saved.homeSections.portraitUrl,
+          hero_image_url: saved.hero.imageUrl,
+          email: saved.contact.email,
+          phone: saved.contact.phone || "",
+          location: saved.contact.location,
+        }));
+      }
+      showToast("success", "Website content saved and published!");
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "Error saving content");
     } finally {
       setIsSaving(false);
     }
@@ -794,6 +883,14 @@ export default function AdminDashboardPage() {
           {(
             [
               { key: "profile", label: "👤 Profile & Fees", count: null },
+              { key: "hero_home", label: "🏠 Hero & Homepage", count: null },
+              { key: "about", label: "📖 About Page", count: null },
+              {
+                key: "services_sessions",
+                label: "🩺 Services & Sessions",
+                count: siteContent.services.length + siteContent.sessions.length,
+              },
+              { key: "policies_pages", label: "⚖️ Policies & Subpages", count: null },
               { key: "events", label: "📅 Events & Workshops", count: events.length },
               { key: "gallery", label: "🖼️ Photo Gallery", count: gallery.length },
               { key: "reviews", label: "💬 Client Reviews", count: testimonials.length },
@@ -2004,6 +2101,55 @@ export default function AdminDashboardPage() {
               </>
             )}
           </div>
+        )}
+
+        {/* TAB: HERO & HOMEPAGE */}
+        {activeTab === "hero_home" && (
+          <HeroHomeTab
+            content={siteContent}
+            setContent={setSiteContent}
+            onSave={handleSaveSiteContent}
+            isSaving={isSaving}
+            inputClass={inputClass}
+            textareaClass={textareaClass}
+            onUploadFile={handleFileUpload}
+          />
+        )}
+
+        {/* TAB: ABOUT PAGE */}
+        {activeTab === "about" && (
+          <AboutEditorTab
+            content={siteContent}
+            setContent={setSiteContent}
+            onSave={handleSaveSiteContent}
+            isSaving={isSaving}
+            inputClass={inputClass}
+            textareaClass={textareaClass}
+          />
+        )}
+
+        {/* TAB: SERVICES & SESSIONS */}
+        {activeTab === "services_sessions" && (
+          <ServicesSessionsTab
+            content={siteContent}
+            setContent={setSiteContent}
+            onSave={handleSaveSiteContent}
+            isSaving={isSaving}
+            inputClass={inputClass}
+            textareaClass={textareaClass}
+          />
+        )}
+
+        {/* TAB: POLICIES & SUBPAGES */}
+        {activeTab === "policies_pages" && (
+          <PoliciesPagesTab
+            content={siteContent}
+            setContent={setSiteContent}
+            onSave={handleSaveSiteContent}
+            isSaving={isSaving}
+            inputClass={inputClass}
+            textareaClass={textareaClass}
+          />
         )}
       </Container>
     </div>

@@ -63,12 +63,17 @@ declare global {
   }
 }
 
-export function BookingWizard() {
+export function BookingWizard({
+  initialSessions,
+}: {
+  initialSessions?: SessionOption[];
+} = {}) {
   const router = useRouter();
+  const sessionsList = initialSessions && initialSessions.length > 0 ? initialSessions : SESSIONS;
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Step 1: Session
-  const [selectedSession, setSelectedSession] = useState<SessionOption>(SESSIONS[0]!);
+  const [selectedSession, setSelectedSession] = useState<SessionOption>(sessionsList[0]!);
 
   // Step 2: Date & Slot
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -397,7 +402,7 @@ export function BookingWizard() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {SESSIONS.map((session) => {
+            {sessionsList.map((session) => {
               const isSelected = selectedSession.slug === session.slug;
               return (
                 <div

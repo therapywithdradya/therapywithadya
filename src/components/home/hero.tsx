@@ -5,32 +5,57 @@ import { Section } from "@/components/ui/section";
 import { SiteImage } from "@/components/ui/SiteImage";
 import { site, wordmark } from "@/content/site";
 
-export function Hero({ heading }: { heading: ReactNode }) {
+export function Hero({
+  heading,
+  siteName,
+  support,
+  primaryCtaLabel,
+  secondaryCtaLabel,
+  bookHref,
+  imageUrl,
+  imageAlt,
+}: {
+  heading: ReactNode;
+  siteName?: string;
+  support?: string;
+  primaryCtaLabel?: string;
+  secondaryCtaLabel?: string;
+  bookHref?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}) {
   const image = site.home.heroImage;
+  const resolvedBrand = siteName?.trim() || wordmark();
+  const resolvedSupport = support ?? site.home.support;
+  const resolvedPrimaryLabel = primaryCtaLabel?.trim() || site.bookLabel;
+  const resolvedSecondaryLabel = secondaryCtaLabel?.trim() || "View session options";
+  const resolvedBookHref = bookHref?.trim() || site.bookHref;
+  const resolvedImageUrl = imageUrl?.trim() || image.src;
+  const resolvedImageAlt = imageAlt?.trim() || image.alt;
 
   return (
     <Section aria-labelledby="home-hero-title">
       <Container className="grid min-w-0 items-center gap-10 lg:grid-cols-2">
         <div className="min-w-0">
           <p className="max-w-full font-heading text-sm font-semibold tracking-[0.18em] text-primary uppercase [overflow-wrap:anywhere]">
-            {wordmark()}
+            {resolvedBrand}
           </p>
           <div className="mt-4 min-w-0">{heading}</div>
           <p className="mt-4 max-w-xl text-lead text-muted [overflow-wrap:anywhere]">
-            {site.home.support}
+            {resolvedSupport}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Button href={site.bookHref} className="w-full sm:w-auto">
-              {site.bookLabel}
+            <Button href={resolvedBookHref} className="w-full sm:w-auto">
+              {resolvedPrimaryLabel}
             </Button>
             <Button href="#sessions" variant="secondary" className="w-full sm:w-auto">
-              View session options
+              {resolvedSecondaryLabel}
             </Button>
           </div>
         </div>
         <SiteImage
-          src={image.src}
-          alt={image.alt}
+          src={resolvedImageUrl}
+          alt={resolvedImageAlt}
           width={image.width}
           height={image.height}
           sizes="(min-width: 1024px) 36rem, 100vw"

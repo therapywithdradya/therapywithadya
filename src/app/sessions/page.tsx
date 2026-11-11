@@ -9,8 +9,11 @@ import { site } from "@/content/site";
 import { getSessions } from "@/lib/content";
 import { formatDuration } from "@/lib/format";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 
 const pageCopy = site.pages.sessions;
+
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: pageCopy.title,
@@ -19,23 +22,24 @@ export const metadata = marketingMetadata({
 });
 
 export default async function SessionsPage() {
-  const sessions = await getSessions();
+  const [sessions, content] = await Promise.all([getSessions(), getSiteContent()]);
+  const copy = content.sessionsPage;
 
   return (
     <>
       <Section aria-labelledby="sessions-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Online Counseling &amp; Therapy
+            {copy.eyebrow}
           </p>
           <h1
             id="sessions-page-title"
             className="mt-3 max-w-[70ch] font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {pageCopy.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {pageCopy.intro}
+            {copy.intro}
           </p>
 
           <ul className="mt-10 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
@@ -96,12 +100,12 @@ export default async function SessionsPage() {
         <Container>
           <SectionHeading
             id="booking-steps-title"
-            eyebrow="Booking Flow"
-            title="How booking works"
-            intro="Reserving a confidential online consultation takes four simple steps."
+            eyebrow={copy.bookingStepsEyebrow}
+            title={copy.bookingStepsTitle}
+            intro={copy.bookingStepsIntro}
           />
           <ol className="mt-8 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
-            {site.bookingSteps.map((step, index) => (
+            {copy.bookingSteps.map((step, index) => (
               <li key={step} className="min-w-0">
                 <Card className="h-full bg-background/70 p-5">
                   <span className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
@@ -117,7 +121,10 @@ export default async function SessionsPage() {
 
       <Section aria-labelledby="sessions-policy-title">
         <Container>
-          <PolicySummary headingId="sessions-policy-title" />
+          <PolicySummary
+            headingId="sessions-policy-title"
+            policies={content.legalAndSafety.policies}
+          />
         </Container>
       </Section>
     </>

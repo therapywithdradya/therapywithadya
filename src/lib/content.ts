@@ -6,8 +6,9 @@ import {
   getDummyTestimonials,
 } from "@/content/dummy-data";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { sessions } from "@/lib/booking/session-config";
+import { sessions as defaultSessions } from "@/lib/booking/session-config";
 import { site } from "@/content/site";
+import { getSiteContent } from "@/lib/site-content.server";
 import {
   DEFAULT_GALLERY_CATEGORIES,
   getPersistedCategories,
@@ -59,7 +60,17 @@ function priceLabelFor(pricePaise: number): string | null {
 }
 
 export async function getSessions(): Promise<PublicSession[]> {
-  return sessions.map((session) => ({
+  let activeSessions = [...defaultSessions];
+  try {
+    const content = await getSiteContent();
+    if (content.sessions && content.sessions.length > 0) {
+      activeSessions = content.sessions;
+    }
+  } catch {
+    // fallback to defaults
+  }
+
+  return activeSessions.map((session) => ({
     slug: session.slug,
     name: session.name,
     description: session.description,

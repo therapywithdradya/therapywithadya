@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
 import { getGalleryCategories, getGalleryItems, type PublicGalleryCategory } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 import type { GalleryItemRow } from "@/types/database";
 
 export const revalidate = 60;
@@ -99,24 +100,29 @@ function groupByCategory(
 }
 
 export default async function GalleryPage() {
-  const [items, categories] = await Promise.all([
+  const [items, categories, content] = await Promise.all([
     getGalleryItems(),
     getGalleryCategories(),
+    getSiteContent(),
   ]);
+  const copy = content.pagesCopy.gallery;
 
   if (items.length === 0 && categories.length === 0) {
     return (
       <>
         <Section aria-labelledby="gallery-page-title">
           <Container>
+            <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+              {copy.eyebrow}
+            </p>
             <h1
               id="gallery-page-title"
-              className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+              className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
             >
-              {site.pages.gallery.title}
+              {copy.title}
             </h1>
             <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-              {site.pages.gallery.intro}
+              {copy.intro}
             </p>
           </Container>
         </Section>
@@ -144,16 +150,16 @@ export default async function GalleryPage() {
       <Section aria-labelledby="gallery-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Visual Journal
+            {copy.eyebrow}
           </p>
           <h1
             id="gallery-page-title"
             className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.gallery.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.gallery.intro}
+            {copy.intro}
           </p>
         </Container>
       </Section>

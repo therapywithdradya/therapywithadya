@@ -1,4 +1,7 @@
 import { filled, site } from "@/content/site";
+import type { EditableSiteContent } from "@/lib/site-content-types";
+
+type PolicyConfig = EditableSiteContent["legalAndSafety"]["policies"];
 
 type PolicyRow = {
   key: string;
@@ -19,12 +22,7 @@ function yesNo(value: boolean): string {
   return value ? "Available on this site" : "Not available on this site";
 }
 
-/**
- * Add a policy field by appending one row here. Empty strings are omitted.
- * Boolean fields are shown when the policy is confirmed, including false.
- */
-function confirmedPolicyRows(): PolicyRow[] {
-  const policies = site.policies;
+function confirmedPolicyRows(policies: PolicyConfig): PolicyRow[] {
   const rows: PolicyRow[] = [
     {
       key: "paymentTerms",
@@ -51,14 +49,10 @@ function confirmedPolicyRows(): PolicyRow[] {
   return rows.filter((row) => row.value !== undefined);
 }
 
-/**
- * Sections definition for /terms-and-cancellation.
- * Adding another policy later means adding one field to site.policies and one row here.
- */
 type PolicySectionDef = {
   key: string;
   heading: string;
-  getValue: (policies: typeof site.policies) => string | undefined;
+  getValue: (policies: PolicyConfig) => string | undefined;
 };
 
 const policySections: PolicySectionDef[] = [
@@ -93,11 +87,14 @@ const policySections: PolicySectionDef[] = [
 export function PolicySummary({
   headingId = "policy-summary-title",
   mode = "table",
+  policies,
 }: {
   headingId?: string;
   mode?: "table" | "sections";
+  policies?: PolicyConfig;
 }) {
-  const confirmed = site.policies.confirmed;
+  const resolvedPolicies: PolicyConfig = policies ?? { ...site.policies };
+  const confirmed = resolvedPolicies.confirmed;
 
   if (mode === "sections") {
     return (
@@ -121,7 +118,7 @@ export function PolicySummary({
             );
           }
 
-          const val = section.getValue(site.policies);
+          const val = section.getValue(resolvedPolicies);
           if (!val) {
             return null;
           }
@@ -144,8 +141,7 @@ export function PolicySummary({
     );
   }
 
-  // mode === "table" (kept untouched for /sessions)
-  const rows = confirmed ? confirmedPolicyRows() : [];
+  const rows = confirmed ? confirmedPolicyRows(resolvedPolicies) : [];
 
   return (
     <div>

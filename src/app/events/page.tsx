@@ -4,11 +4,10 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
-import {
-  getEventsAndWorkshops,
-} from "@/lib/content";
+import { getEventsAndWorkshops } from "@/lib/content";
 import { clockMs, formatEventDateRange } from "@/lib/format";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 import type { EventWorkshopRow } from "@/types/database";
 
 // ISR with 60s revalidation plus on-demand purge from admin handlers.
@@ -116,7 +115,11 @@ function EventCard({ event }: { event: EventWorkshopRow }) {
 }
 
 export default async function EventsPage() {
-  const events = await getEventsAndWorkshops();
+  const [events, content] = await Promise.all([
+    getEventsAndWorkshops(),
+    getSiteContent(),
+  ]);
+  const copy = content.pagesCopy.events;
   const nowMs = clockMs();
   const { upcoming, past } = splitEvents(events, nowMs);
   const hasAny = upcoming.length > 0 || past.length > 0;
@@ -127,16 +130,16 @@ export default async function EventsPage() {
       <Section aria-labelledby="events-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Workshops &amp; Programs
+            {copy.eyebrow}
           </p>
           <h1
             id="events-page-title"
             className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.events.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.events.intro}
+            {copy.intro}
           </p>
         </Container>
       </Section>
@@ -146,10 +149,10 @@ export default async function EventsPage() {
         <Section aria-labelledby="events-none-title" background="surface">
           <Container>
             <h2 id="events-none-title" className="font-heading text-heading text-ink [overflow-wrap:anywhere]">
-              Events and Workshops
+              {copy.title}
             </h2>
             <p className="mt-6 text-muted">
-              No events or workshops are scheduled right now. Check back soon or contact Dr. Adya for custom bookings.
+              No events or workshops are scheduled right now. Check back soon or contact {content.brand.practitionerName} for custom bookings.
             </p>
           </Container>
         </Section>
@@ -160,8 +163,8 @@ export default async function EventsPage() {
             <Container>
               <SectionHeading
                 id="events-upcoming-title"
-                eyebrow="Schedule"
-                title="Upcoming"
+                eyebrow={copy.upcomingEyebrow}
+                title={copy.upcomingTitle}
               />
               {upcoming.length === 0 ? (
                 <p className="mt-6 text-muted">No upcoming events right now.</p>
@@ -183,8 +186,8 @@ export default async function EventsPage() {
               <Container>
                 <SectionHeading
                   id="events-past-title"
-                  eyebrow="Archive"
-                  title="Past"
+                  eyebrow={copy.pastEyebrow}
+                  title={copy.pastTitle}
                 />
                 <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3" role="list">
                   {past.map((event) => (
@@ -204,11 +207,11 @@ export default async function EventsPage() {
         <Container>
           <SectionHeading
             id="events-cta-title"
-            eyebrow="Institutional Inquiries"
-            title="Get in touch"
+            eyebrow={copy.ctaEyebrow}
+            title={copy.ctaTitle}
           />
           <p className="mt-4 max-w-[60ch] text-muted [overflow-wrap:anywhere]">
-            Interested in organizing a workshop for your school, college, or organization? Reach out to coordinate custom topics and dates.
+            {copy.ctaText}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -219,11 +222,11 @@ export default async function EventsPage() {
               Enquire about events and workshops
             </Link>
             <Link
-              href="/book"
+              href={content.brand.bookHref}
               className={textLinkClass}
               id="events-cta-book"
             >
-              Book a session
+              {content.brand.bookLabel}
             </Link>
           </div>
         </Container>

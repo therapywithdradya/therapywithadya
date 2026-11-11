@@ -9,15 +9,31 @@ import type { GalleryItemRow } from "@/types/database";
 const textLinkClass =
   "inline-flex min-h-11 max-w-full items-center rounded-sm font-semibold text-primary underline-offset-4 [overflow-wrap:anywhere] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-export function GalleryPreview({ items }: { items: GalleryItemRow[] }) {
+export function GalleryPreview({
+  items,
+  eyebrow,
+  title,
+  emptyText,
+  linkLabel,
+}: {
+  items: GalleryItemRow[];
+  eyebrow?: string;
+  title?: string;
+  emptyText?: string;
+  linkLabel?: string;
+}) {
   const preview = [...items].sort((left, right) => left.sort_order - right.sort_order).slice(0, 6);
 
   return (
     <Section aria-labelledby="home-gallery-title">
       <Container>
-        <SectionHeading id="home-gallery-title" eyebrow="Gallery" title={site.home.galleryTitle} />
+        <SectionHeading
+          id="home-gallery-title"
+          eyebrow={eyebrow || "Gallery"}
+          title={title || site.home.galleryTitle}
+        />
         {preview.length === 0 ? (
-          <p className="mt-6 text-muted">{site.home.galleryEmpty}</p>
+          <p className="mt-6 text-muted">{emptyText ?? site.home.galleryEmpty}</p>
         ) : (
           <ul className="mt-8 grid list-none grid-cols-2 gap-3 p-0 sm:gap-4 lg:grid-cols-3">
             {preview.map((item) => (
@@ -40,7 +56,7 @@ export function GalleryPreview({ items }: { items: GalleryItemRow[] }) {
           </ul>
         )}
         <Link href="/gallery" className={`mt-8 ${textLinkClass}`}>
-          View the gallery
+          {linkLabel || "View the gallery"}
         </Link>
       </Container>
     </Section>

@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { site, visibleClientCount } from "@/content/site";
+import { site } from "@/content/site";
 import { getTestimonials } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 import type { TestimonialRow } from "@/types/database";
 
 export const revalidate = 60;
@@ -59,13 +60,17 @@ function TestimonialCard({ item }: { item: TestimonialRow }) {
 }
 
 export default async function ReviewsPage() {
-  const all = await getTestimonials();
+  const [all, content] = await Promise.all([
+    getTestimonials(),
+    getSiteContent(),
+  ]);
+  const copy = content.pagesCopy.reviews;
   // Testimonials ARE filtered by is_approved (same as on the home page).
   const approved = all
     .filter((item) => item.is_approved)
     .sort((a, b) => a.sort_order - b.sort_order);
 
-  const clientCount = visibleClientCount();
+  const clientCount = content.brand.clientCount;
 
   return (
     <>
@@ -73,19 +78,19 @@ export default async function ReviewsPage() {
       <Section aria-labelledby="reviews-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Client Reflections
+            {copy.eyebrow}
           </p>
           <h1
             id="reviews-page-title"
             className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.reviews.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.reviews.intro}
+            {copy.intro}
           </p>
-          {/* Show client count only when visibleClientCount() returns a positive number */}
-          {clientCount !== undefined && clientCount > 0 ? (
+          {/* Show client count when set to a positive number */}
+          {clientCount > 0 ? (
             <p className="mt-4 font-medium text-primary">
               Over {clientCount.toLocaleString("en-IN")}+ clients supported
             </p>
@@ -101,14 +106,14 @@ export default async function ReviewsPage() {
               id="reviews-empty-title"
               className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
             >
-              Testimonials
+              {copy.listEyebrow}
             </h2>
             <p className="mt-6 text-muted">
               No reviews are published yet. Be the first to book a session.
             </p>
             <div className="mt-8">
-              <Button href="/book" id="reviews-empty-book-btn">
-                Book a session
+              <Button href={content.brand.bookHref} id="reviews-empty-book-btn">
+                {content.brand.bookLabel}
               </Button>
             </div>
           </Container>
@@ -118,8 +123,8 @@ export default async function ReviewsPage() {
           <Container>
             <SectionHeading
               id="reviews-list-title"
-              eyebrow="Testimonials"
-              title="What clients say"
+              eyebrow={copy.listEyebrow}
+              title={copy.listTitle}
             />
             <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3" role="list">
               {approved.map((item) => (
@@ -137,14 +142,14 @@ export default async function ReviewsPage() {
             id="reviews-cta-title"
             className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
           >
-            Ready to book?
+            {copy.ctaTitle}
           </h2>
           <p className="mt-4 max-w-[60ch] text-muted [overflow-wrap:anywhere]">
-            Take the first step towards emotional well-being and personal growth. Book your confidential session today.
+            {copy.ctaText}
           </p>
           <div className="mt-8">
-            <Button href="/book" id="reviews-cta-book-btn">
-              Book a session
+            <Button href={content.brand.bookHref} id="reviews-cta-book-btn">
+              {content.brand.bookLabel}
             </Button>
           </div>
         </Container>

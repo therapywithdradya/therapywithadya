@@ -5,6 +5,9 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
+
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: site.pages.termsAndCancellation.title,
@@ -12,7 +15,10 @@ export const metadata = marketingMetadata({
   path: "/terms-and-cancellation",
 });
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const content = await getSiteContent();
+  const copy = content.pagesCopy.termsAndCancellation;
+
   return (
     <>
       {/* Intro section — single h1 */}
@@ -22,10 +28,10 @@ export default function TermsPage() {
             id="terms-page-title"
             className="font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.termsAndCancellation.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.termsAndCancellation.intro}
+            {copy.intro}
           </p>
         </Container>
       </Section>
@@ -40,7 +46,7 @@ export default function TermsPage() {
             Practice policies
           </h2>
           <div className="max-w-[70ch]">
-            <PolicySummary mode="sections" />
+            <PolicySummary mode="sections" policies={content.legalAndSafety.policies} />
           </div>
         </Container>
       </Section>
@@ -125,7 +131,13 @@ export default function TermsPage() {
       <Section aria-labelledby="terms-safety-title" background="surface">
         <Container>
           <div className="max-w-[70ch]">
-            <SafetyNotice id="terms-safety-title" headingLevel="h2" />
+            <SafetyNotice
+              id="terms-safety-title"
+              headingLevel="h2"
+              heading={content.legalAndSafety.safetyHeading}
+              text={content.legalAndSafety.safetyText}
+              resources={content.legalAndSafety.safetyResources}
+            />
           </div>
         </Container>
       </Section>
@@ -138,7 +150,7 @@ export default function TermsPage() {
               Document updates
             </h2>
             <p className="text-sm text-muted">
-              Last updated: {site.legalLastUpdated}
+              Last updated: {content.legalAndSafety.legalLastUpdated}
             </p>
           </div>
         </Container>

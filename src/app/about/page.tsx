@@ -6,9 +6,9 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SiteImage } from "@/components/ui/SiteImage";
-import { filled, site, visibleClientCount, wordmark } from "@/content/site";
-import { getPractitionerProfile } from "@/lib/content";
+import { filled, site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 
 const pageCopy = site.pages.about;
 
@@ -21,19 +21,19 @@ export const metadata = marketingMetadata({
 });
 
 export default async function AboutPage() {
-  const profile = await getPractitionerProfile();
-  const paragraphs = site.about.bioParagraphs.filter((paragraph) => filled(paragraph));
-  const portraitPhoto = site.about.aboutPhotos[0];
-  const portraitSrc = profile.profile_image_url || portraitPhoto?.src || site.home.portrait.src;
-  const extraPhotos = site.about.aboutPhotos.slice(1);
-  const qualifications = site.about.qualifications.filter((item) => filled(item.title));
-  const approach = filled(site.about.approach) ? site.about.approach.trim() : undefined;
-  const intro = profile.about_intro || (filled(site.about.aboutIntro) ? site.about.aboutIntro.trim() : undefined);
-  const professionalWork = site.about.professionalWork;
-  const researchPapers = site.about.researchPapers;
-  const concernsSupported = site.about.concernsSupported;
-  const approaches = site.about.approaches;
-  const clientCount = visibleClientCount();
+  const content = await getSiteContent();
+  const about = content.aboutPage;
+  const paragraphs = about.bioParagraphs.filter((paragraph) => filled(paragraph));
+  const portraitSrc = content.homeSections.portraitUrl || site.home.portrait.src;
+  const portraitAlt = content.homeSections.portraitAlt || site.home.portrait.alt;
+  const qualifications = about.qualifications.filter((item) => filled(item.title));
+  const approach = filled(about.approach) ? about.approach.trim() : undefined;
+  const intro = content.homeSections.aboutIntro?.trim();
+  const professionalWork = about.professionalWork;
+  const researchPapers = about.researchPapers;
+  const concernsSupported = about.concernsSupported;
+  const approaches = about.approaches;
+  const clientCount = content.brand.clientCount;
 
   return (
     <>
@@ -41,13 +41,13 @@ export default async function AboutPage() {
         <Container className="grid min-w-0 items-center gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
           <div className="min-w-0">
             <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-              {wordmark()}
+              {content.brand.siteName}
             </p>
             <h1
               id="about-page-title"
               className="mt-3 max-w-[70ch] font-heading text-display text-ink [overflow-wrap:anywhere]"
             >
-              {site.practitionerName}
+              {content.brand.practitionerName}
             </h1>
             {intro ? (
               <div className="mt-6 border-l-2 border-primary pl-5 space-y-3 text-lead text-muted [overflow-wrap:anywhere]">
@@ -57,15 +57,16 @@ export default async function AboutPage() {
               </div>
             ) : null}
             <div className="mt-6 flex flex-wrap gap-2.5">
-              <Badge>5+ Years Experience</Badge>
-              <Badge>Ph.D. in Psychology</Badge>
-              {clientCount ? (
+              {about.heroBadges.map((badge) => (
+                <Badge key={badge}>{badge}</Badge>
+              ))}
+              {clientCount > 0 ? (
                 <Badge tone="accent">{clientCount.toLocaleString("en-IN")}+ Clients Supported</Badge>
               ) : null}
             </div>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button href={site.bookHref} className="w-full sm:w-auto">
-                {site.bookLabel}
+              <Button href={content.brand.bookHref} className="w-full sm:w-auto">
+                {content.brand.bookLabel}
               </Button>
               <Button href="/services" variant="secondary" className="w-full sm:w-auto">
                 Explore Services
@@ -76,9 +77,9 @@ export default async function AboutPage() {
           <div className="mx-auto w-full max-w-sm">
             <SiteImage
               src={portraitSrc}
-              alt={portraitPhoto?.alt ?? site.home.portrait.alt}
-              width={portraitPhoto?.width ?? site.home.portrait.width}
-              height={portraitPhoto?.height ?? site.home.portrait.height}
+              alt={portraitAlt}
+              width={site.home.portrait.width}
+              height={site.home.portrait.height}
               sizes="(min-width: 1024px) 22rem, 100vw"
               priority
               className="aspect-[4/5] w-full rounded-[1.25rem] object-cover shadow-card"
@@ -87,35 +88,13 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      {extraPhotos.length > 0 ? (
-        <Section aria-labelledby="about-photos-title" background="surface">
-          <Container>
-            <SectionHeading id="about-photos-title" eyebrow="Gallery" title="Photographs" />
-            <ul className="mt-8 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
-              {extraPhotos.map((photo, index) => (
-                <li key={`${photo.src}-${index}`} className="min-w-0">
-                  <SiteImage
-                    src={photo.src}
-                    alt={photo.alt}
-                    width={photo.width}
-                    height={photo.height}
-                    sizes="(min-width: 640px) 20rem, 100vw"
-                    className="aspect-[4/5] w-full rounded-[1.25rem] object-cover shadow-card"
-                  />
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </Section>
-      ) : null}
-
       {paragraphs.length > 0 ? (
         <Section aria-labelledby="about-biography-title" background="surface">
           <Container>
             <SectionHeading
               id="about-biography-title"
-              eyebrow="My Journey"
-              title="Biography"
+              eyebrow={about.biographyEyebrow}
+              title={about.biographyTitle}
               className="mx-auto text-center"
             />
             <Card className="mx-auto mt-8 max-w-4xl bg-background/70 p-6 sm:p-10">
@@ -131,7 +110,7 @@ export default async function AboutPage() {
                       </p>
                     );
                   }
-                  if (index === paragraphs.length - 1) {
+                  if (index === paragraphs.length - 1 && paragraphs.length > 2) {
                     return (
                       <p
                         key={index}
@@ -153,22 +132,24 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
-      {professionalWork && professionalWork.length > 0 ? (
+      {professionalWork.length > 0 ? (
         <Section aria-labelledby="about-work-title">
           <Container>
             <SectionHeading
               id="about-work-title"
-              eyebrow="Experience"
-              title="My Professional Work"
-              intro="Supporting students, adults, institutions, and emerging psychologists across clinical and educational settings."
+              eyebrow={about.workEyebrow}
+              title={about.workTitle}
+              intro={about.workIntro}
             />
             <div className="mt-8 grid gap-6 md:grid-cols-2">
-              {professionalWork.map((para, i) => (
+              {professionalWork.map((item, i) => (
                 <Card key={i} className="flex h-full flex-col p-6 sm:p-7">
                   <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-                    {i === 0 ? "School Counseling & Adolescents" : "Workshops & Supervision"}
+                    {item.eyebrow}
                   </p>
-                  <p className="mt-3 leading-relaxed text-muted [overflow-wrap:anywhere]">{para}</p>
+                  <p className="mt-3 leading-relaxed text-muted [overflow-wrap:anywhere]">
+                    {item.description}
+                  </p>
                 </Card>
               ))}
             </div>
@@ -176,14 +157,14 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
-      {researchPapers && researchPapers.length > 0 ? (
+      {researchPapers.length > 0 ? (
         <Section aria-labelledby="about-research-title" background="surface">
           <Container>
             <SectionHeading
               id="about-research-title"
-              eyebrow="Academic Work"
-              title="My Research"
-              intro={site.about.researchIntro}
+              eyebrow={about.researchEyebrow}
+              title={about.researchTitle}
+              intro={about.researchIntro}
             />
             <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-3">
               {researchPapers.map((paper, i) => (
@@ -203,54 +184,58 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
-      {concernsSupported && concernsSupported.length > 0 ? (
+      {concernsSupported.length > 0 || filled(about.certificationsSummary) ? (
         <Section aria-labelledby="about-certifications-title">
           <Container>
             <SectionHeading
               id="about-certifications-title"
-              eyebrow="Credentials & Focus"
-              title="My Certifications & Areas of Support"
+              eyebrow={about.certificationsEyebrow}
+              title={about.certificationsTitle}
             />
             <Card className="mt-8 p-6 sm:p-8">
               <p className="text-lead font-medium text-ink [overflow-wrap:anywhere]">
-                {site.about.certificationsSummary}
+                {about.certificationsSummary}
               </p>
               <p className="mt-3 max-w-[75ch] text-muted [overflow-wrap:anywhere]">
-                {site.about.certificationsPhilosophy}
+                {about.certificationsPhilosophy}
               </p>
-              <div className="mt-8 border-t border-border/60 pt-6">
-                <h3 className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-                  Concerns &amp; Challenges I Work With
-                </h3>
-                <div className="mt-4 flex flex-wrap gap-2.5">
-                  {concernsSupported.map((concern, i) => (
-                    <span
-                      key={i}
-                      className="rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-medium text-ink shadow-xs"
-                    >
-                      {concern}
-                    </span>
+              {concernsSupported.length > 0 ? (
+                <div className="mt-8 border-t border-border/60 pt-6">
+                  <h3 className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                    {about.concernsHeading}
+                  </h3>
+                  <div className="mt-4 flex flex-wrap gap-2.5">
+                    {concernsSupported.map((concern, i) => (
+                      <span
+                        key={i}
+                        className="rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-medium text-ink shadow-xs"
+                      >
+                        {concern}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {filled(about.concernsOutro) ? (
+                <div className="mt-8 border-l-2 border-primary pl-4 text-sm italic text-muted space-y-1.5 [overflow-wrap:anywhere]">
+                  {about.concernsOutro.split(/\n+/).map((line, i) => (
+                    <p key={i}>{line.trim()}</p>
                   ))}
                 </div>
-              </div>
-              <div className="mt-8 border-l-2 border-primary pl-4 text-sm italic text-muted space-y-1.5 [overflow-wrap:anywhere]">
-                {site.about.concernsOutro.split(/\n+/).map((line, i) => (
-                  <p key={i}>{line.trim()}</p>
-                ))}
-              </div>
+              ) : null}
             </Card>
           </Container>
         </Section>
       ) : null}
 
-      {approaches && approaches.length > 0 ? (
+      {approaches.length > 0 ? (
         <Section aria-labelledby="about-approaches-title" background="surface">
           <Container>
             <SectionHeading
               id="about-approaches-title"
-              eyebrow="Modalities"
-              title="My Approaches"
-              intro="My work draws from an integrative and flexible approach, adapted according to your needs, concerns, comfort, and goals:"
+              eyebrow={about.approachesEyebrow}
+              title={about.approachesTitle}
+              intro={about.approachesIntro}
               className="mx-auto text-center"
             />
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -275,8 +260,8 @@ export default async function AboutPage() {
                 <div>
                   <SectionHeading
                     id="about-qualifications-title"
-                    eyebrow="Training"
-                    title="Qualifications & Credentials"
+                    eyebrow={about.qualificationsEyebrow}
+                    title={about.qualificationsTitle}
                   />
                   <ul className="mt-6 grid list-none gap-3 p-0 sm:grid-cols-2">
                     {qualifications.map((item) => (
@@ -298,8 +283,8 @@ export default async function AboutPage() {
                 <div>
                   <SectionHeading
                     id="about-approach-title"
-                    eyebrow="Care Ethos"
-                    title="Philosophy of Care"
+                    eyebrow={about.philosophyEyebrow}
+                    title={about.philosophyTitle}
                   />
                   <Card className="mt-6 p-6 sm:p-8">
                     <p className="border-l-2 border-primary pl-5 leading-relaxed text-muted [overflow-wrap:anywhere]">
@@ -313,7 +298,13 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
-      <BookingCta headingId="about-booking-title" />
+      <BookingCta
+        headingId="about-booking-title"
+        title={content.homeSections.bookingTitle}
+        text={content.homeSections.bookingText}
+        bookHref={content.brand.bookHref}
+        bookLabel={content.brand.bookLabel}
+      />
     </>
   );
 }

@@ -8,20 +8,18 @@ import { Hero } from "@/components/home/hero";
 import { ReviewsPreview } from "@/components/home/reviews-preview";
 import { ServicesOverview } from "@/components/home/services-overview";
 import { SessionOptions } from "@/components/home/session-options";
-import { positioningLine, site, visibleClientCount, wordmark } from "@/content/site";
+import { site, wordmark } from "@/content/site";
 import {
   getEventsAndWorkshops,
   getGalleryItems,
-  getPractitionerProfile,
   getSessions,
   getTestimonials,
 } from "@/lib/content";
-
 import { getMetadataBase } from "@/lib/env.public";
 import { clockMs } from "@/lib/format";
+import { getSiteContent } from "@/lib/site-content.server";
 
 export const revalidate = 60;
-
 
 const homeTitle = wordmark();
 
@@ -57,12 +55,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [sessions, testimonials, events, gallery, profile] = await Promise.all([
+  const [sessions, testimonials, events, gallery, content] = await Promise.all([
     getSessions(),
     getTestimonials(),
     getEventsAndWorkshops(),
     getGalleryItems(),
-    getPractitionerProfile(),
+    getSiteContent(),
   ]);
   const nowMs = clockMs();
   const approvedReviews = testimonials
@@ -73,28 +71,85 @@ export default async function Home() {
   return (
     <>
       <Hero
+        siteName={content.brand.siteName}
+        support={content.hero.support}
+        primaryCtaLabel={content.hero.primaryCtaLabel || content.brand.bookLabel}
+        secondaryCtaLabel={content.hero.secondaryCtaLabel}
+        bookHref={content.brand.bookHref}
+        imageUrl={content.hero.imageUrl}
+        imageAlt={content.hero.imageAlt}
         heading={
           <h1
             id="home-hero-title"
             className="font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {positioningLine()}
+            {content.hero.tagline}
           </h1>
         }
       />
       <AboutPreview
-        intro={profile.about_intro}
-        portraitSrc={profile.profile_image_url}
-        title={profile.about_title}
+        eyebrow={content.homeSections.aboutEyebrow}
+        intro={content.homeSections.aboutIntro}
+        portraitSrc={content.homeSections.portraitUrl}
+        portraitAlt={content.homeSections.portraitAlt}
+        title={content.homeSections.aboutTitle}
+        linkLabel={content.homeSections.aboutLinkLabel}
       />
 
-      <ServicesOverview />
-      <SessionOptions sessions={sessions} />
-      <BookingCta />
-      <ReviewsPreview testimonials={approvedReviews} clientCount={visibleClientCount()} />
-      <EventsPreview events={events} nowMs={nowMs} />
-      <GalleryPreview items={gallery} />
-      <ContactSection />
+      <ServicesOverview
+        eyebrow={content.homeSections.servicesEyebrow}
+        title={content.homeSections.servicesTitle}
+        intro={content.homeSections.servicesIntro}
+        services={content.services}
+      />
+      <SessionOptions
+        sessions={sessions}
+        eyebrow={content.homeSections.sessionsEyebrow}
+        title={content.homeSections.sessionsTitle}
+        intro={content.homeSections.sessionsIntro}
+        linkLabel={content.homeSections.sessionsLinkLabel}
+      />
+      <BookingCta
+        title={content.homeSections.bookingTitle}
+        text={content.homeSections.bookingText}
+        bookHref={content.brand.bookHref}
+        bookLabel={content.brand.bookLabel}
+      />
+      <ReviewsPreview
+        testimonials={approvedReviews}
+        clientCount={content.brand.clientCount}
+        eyebrow={content.homeSections.reviewsEyebrow}
+        title={content.homeSections.reviewsTitle}
+        intro={content.homeSections.reviewsIntro}
+        linkLabel={content.homeSections.reviewsLinkLabel}
+      />
+      <EventsPreview
+        events={events}
+        nowMs={nowMs}
+        eyebrow={content.homeSections.eventsEyebrow}
+        title={content.homeSections.eventsTitle}
+        emptyText={content.homeSections.eventsEmpty}
+        linkLabel={content.homeSections.eventsLinkLabel}
+      />
+      <GalleryPreview
+        items={gallery}
+        eyebrow={content.homeSections.galleryEyebrow}
+        title={content.homeSections.galleryTitle}
+        emptyText={content.homeSections.galleryEmpty}
+        linkLabel={content.homeSections.galleryLinkLabel}
+      />
+      <ContactSection
+        eyebrow={content.homeSections.contactEyebrow}
+        title={content.homeSections.contactTitle}
+        intro={content.homeSections.contactIntro}
+        email={content.contact.email}
+        phone={content.contact.phone}
+        whatsapp={content.contact.whatsapp}
+        location={content.contact.location}
+        socials={content.contact.socials}
+        bookHref={content.brand.bookHref}
+        bookLabel={content.brand.bookLabel}
+      />
     </>
   );
 }

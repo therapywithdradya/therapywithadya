@@ -9,32 +9,41 @@ const textLinkClass =
   "inline-flex min-h-11 max-w-full items-center rounded-sm font-semibold text-primary underline-offset-4 [overflow-wrap:anywhere] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
 export function AboutPreview({
+  eyebrow,
   intro,
   portraitSrc,
+  portraitAlt,
   title,
+  linkLabel,
 }: {
+  eyebrow?: string;
   intro?: string;
   portraitSrc?: string;
+  portraitAlt?: string;
   title?: string;
+  linkLabel?: string;
 } = {}) {
   const portrait = site.home.portrait;
   const displaySrc = portraitSrc || portrait.src;
+  const displayAlt = portraitAlt || portrait.alt;
+  const displayEyebrow = eyebrow || "About";
   const displayTitle = title || site.home.aboutTitle;
   const displayIntro = intro || site.home.aboutIntro;
+  const displayLinkLabel = linkLabel || "Read more about me";
 
   return (
     <Section aria-labelledby="home-about-title" background="surface">
       <Container>
         <SectionHeading
           id="home-about-title"
-          eyebrow="About"
+          eyebrow={displayEyebrow}
           title={displayTitle}
           className="mx-auto text-center"
         />
         <div className="mx-auto mt-8 grid max-w-4xl items-center gap-8 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)]">
           <SiteImage
             src={displaySrc}
-            alt={portrait.alt}
+            alt={displayAlt}
             width={portrait.width}
             height={portrait.height}
             sizes="(min-width: 768px) 16rem, 100vw"
@@ -47,7 +56,7 @@ export function AboutPreview({
               ))}
             </div>
             <Link href="/about" className={`mt-4 ${textLinkClass}`}>
-              Read more about me
+              {displayLinkLabel}
             </Link>
           </div>
         </div>

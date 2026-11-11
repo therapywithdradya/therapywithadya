@@ -11,9 +11,17 @@ const textLinkClass =
 export function ReviewsPreview({
   testimonials,
   clientCount,
+  eyebrow,
+  title,
+  intro,
+  linkLabel,
 }: {
   testimonials: TestimonialRow[];
   clientCount?: number;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  linkLabel?: string;
 }) {
   if (testimonials.length === 0) {
     return null;
@@ -29,9 +37,9 @@ export function ReviewsPreview({
       <Container>
         <SectionHeading
           id="home-reviews-title"
-          eyebrow="Reviews"
-          title={site.home.reviewsTitle}
-          intro={site.home.reviewsIntro}
+          eyebrow={eyebrow || "Reviews"}
+          title={title || site.home.reviewsTitle}
+          intro={intro ?? site.home.reviewsIntro}
         />
         {countLabel ? <p className="mt-4 text-muted">{countLabel}</p> : null}
         <ul className="mt-8 grid list-none gap-6 p-0 lg:grid-cols-3">
@@ -51,7 +59,7 @@ export function ReviewsPreview({
           ))}
         </ul>
         <Link href="/reviews" className={`mt-8 ${textLinkClass}`}>
-          Read reviews
+          {linkLabel || "Read reviews"}
         </Link>
       </Container>
     </Section>

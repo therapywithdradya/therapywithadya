@@ -28,18 +28,30 @@ function kindLabel(kind: EventWorkshopRow["kind"]): string {
 export function EventsPreview({
   events,
   nowMs,
+  eyebrow,
+  title,
+  emptyText,
+  linkLabel,
 }: {
   events: EventWorkshopRow[];
   nowMs: number;
+  eyebrow?: string;
+  title?: string;
+  emptyText?: string;
+  linkLabel?: string;
 }) {
   const upcoming = upcomingEvents(events, nowMs);
 
   return (
     <Section aria-labelledby="home-events-title" background="surface">
       <Container>
-        <SectionHeading id="home-events-title" eyebrow="Events" title={site.home.eventsTitle} />
+        <SectionHeading
+          id="home-events-title"
+          eyebrow={eyebrow || "Events"}
+          title={title || site.home.eventsTitle}
+        />
         {upcoming.length === 0 ? (
-          <p className="mt-6 text-muted">{site.home.eventsEmpty}</p>
+          <p className="mt-6 text-muted">{emptyText ?? site.home.eventsEmpty}</p>
         ) : (
           <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2">
             {upcoming.map((event) => {
@@ -76,7 +88,7 @@ export function EventsPreview({
           </ul>
         )}
         <Link href="/events" className={`mt-8 ${textLinkClass}`}>
-          View events and workshops
+          {linkLabel || "View events and workshops"}
         </Link>
       </Container>
     </Section>

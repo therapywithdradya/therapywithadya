@@ -12,7 +12,15 @@ import { cn } from "@/lib/utils";
 
 const desktopQuery = "(min-width: 48rem)";
 
-export function SiteHeader() {
+export function SiteHeader({
+  siteName,
+  bookHref,
+  bookLabel,
+}: {
+  siteName?: string;
+  bookHref?: string;
+  bookLabel?: string;
+} = {}) {
   const pathname = usePathname();
   const menuId = "site-navigation";
   const headerRef = useRef<HTMLElement>(null);
@@ -22,7 +30,10 @@ export function SiteHeader() {
   const previousPathRef = useRef(pathname);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const bookCurrent = isCurrentPath(pathname, site.bookHref);
+  const resolvedBookHref = bookHref || site.bookHref;
+  const resolvedBookLabel = bookLabel || site.bookLabel;
+  const resolvedSiteName = siteName?.trim() || wordmark();
+  const bookCurrent = isCurrentPath(pathname, resolvedBookHref);
   const homeCurrent = pathname === "/";
 
   useEffect(() => {
@@ -157,15 +168,15 @@ export function SiteHeader() {
           aria-current={homeCurrent ? "page" : undefined}
           className="order-1 min-w-0 flex-1 rounded-sm font-heading text-xl font-semibold tracking-tight text-ink [overflow-wrap:anywhere] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          {wordmark()}
+          {resolvedSiteName}
         </Link>
         <div className="order-2 flex items-center gap-2 md:order-3">
           <Button
-            href={site.bookHref}
+            href={resolvedBookHref}
             size="sm"
             aria-current={bookCurrent ? "page" : undefined}
           >
-            {site.bookLabel}
+            {resolvedBookLabel}
           </Button>
           <button
             ref={menuButtonRef}

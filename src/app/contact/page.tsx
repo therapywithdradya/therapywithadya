@@ -6,8 +6,11 @@ import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { filled, listedSocials, site } from "@/content/site";
+import { filled, site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
+
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: site.pages.contact.title,
@@ -35,14 +38,22 @@ function parsePhoneForHref(phoneStr: string): string | null {
 const contactLinkClass =
   "inline-flex min-h-11 max-w-full items-center gap-3 rounded-sm text-ink underline-offset-4 [overflow-wrap:anywhere] hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-export default function ContactPage() {
-  const email = filled(site.email) ? site.email.trim() : undefined;
-  const phone = filled(site.phone) ? site.phone.trim() : undefined;
+export default async function ContactPage() {
+  const content = await getSiteContent();
+  const copy = content.pagesCopy.contact;
+  const email = filled(content.contact.email) ? content.contact.email.trim() : undefined;
+  const phone = filled(content.contact.phone) ? content.contact.phone.trim() : undefined;
   const phoneHref = phone ? parsePhoneForHref(phone) : null;
-  const whatsapp = filled(site.whatsapp) ? site.whatsapp.trim() : undefined;
+  const whatsapp = filled(content.contact.whatsapp) ? content.contact.whatsapp.trim() : undefined;
   const waDigits = whatsapp ? whatsapp.replace(/\D/g, "") : "";
-  const location = filled(site.location) ? site.location.trim() : undefined;
-  const socials = listedSocials();
+  const location = filled(content.contact.location) ? content.contact.location.trim() : undefined;
+  const socialDefs = [
+    { key: "instagram", label: "Instagram", href: content.contact.socials.instagram },
+    { key: "facebook", label: "Facebook", href: content.contact.socials.facebook },
+    { key: "youtube", label: "YouTube", href: content.contact.socials.youtube },
+    { key: "linkedin", label: "LinkedIn", href: content.contact.socials.linkedin },
+  ];
+  const socials = socialDefs.filter((item) => filled(item.href));
 
   const hasAnyContactMethod = Boolean(
     email || phone || (whatsapp && waDigits) || location || socials.length > 0,
@@ -54,25 +65,25 @@ export default function ContactPage() {
       <Section aria-labelledby="contact-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Get in Touch
+            {copy.eyebrow}
           </p>
           <h1
             id="contact-page-title"
             className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.contact.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.contact.intro}
+            {copy.intro}
           </p>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
             <Card className="p-6 sm:p-8">
               <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-                Direct Channels
+                {copy.cardEyebrow}
               </p>
               <h2 className="mt-2 font-heading text-heading text-ink">
-                Reach out to Dr. Adya Vats
+                {copy.cardTitle}
               </h2>
               <div className="mt-6">
                 {hasAnyContactMethod ? (
@@ -167,18 +178,18 @@ export default function ContactPage() {
             <Card className="flex flex-col justify-between p-6 sm:p-8">
               <div>
                 <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
-                  Appointments &amp; Programs
+                  {copy.appointmentsEyebrow}
                 </p>
                 <h2 className="mt-2 font-heading text-[clamp(1.25rem,2.4vw,1.6rem)] text-ink">
-                  Ready to schedule a session?
+                  {copy.appointmentsTitle}
                 </h2>
                 <p className="mt-3 border-l-2 border-primary pl-4 text-sm leading-relaxed text-muted [overflow-wrap:anywhere]">
-                  You can reserve 30-minute individual therapy, 60-minute individual therapy, or 60–75 minute couples therapy directly online. For school workshops, corporate seminars, tarot readings, or supervision, write in directly.
+                  {copy.appointmentsText}
                 </p>
               </div>
               <div className="mt-8 flex flex-col gap-3">
-                <Button href={site.bookHref} id="contact-book-btn" className="w-full">
-                  {site.bookLabel}
+                <Button href={content.brand.bookHref} id="contact-book-btn" className="w-full">
+                  {content.brand.bookLabel}
                 </Button>
                 <Button href="/sessions" variant="secondary" className="w-full">
                   View session options
@@ -195,8 +206,8 @@ export default function ContactPage() {
           <Container>
             <SectionHeading
               id="contact-changes-title"
-              eyebrow="Booking Support"
-              title="Cancel or change a booking"
+              eyebrow={copy.changesEyebrow}
+              title={copy.changesTitle}
             />
             <p className="mt-4 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
               To cancel or request a change for a confirmed booking, please email{" "}
@@ -225,7 +236,13 @@ export default function ContactPage() {
       {/* Safety notice section */}
       <Section aria-labelledby="contact-safety-title">
         <Container>
-          <SafetyNotice id="contact-safety-title" headingLevel="h2" />
+          <SafetyNotice
+            id="contact-safety-title"
+            headingLevel="h2"
+            heading={content.legalAndSafety.safetyHeading}
+            text={content.legalAndSafety.safetyText}
+            resources={content.legalAndSafety.safetyResources}
+          />
         </Container>
       </Section>
     </>

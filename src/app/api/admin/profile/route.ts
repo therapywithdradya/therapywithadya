@@ -60,8 +60,10 @@ export async function PUT(request: Request): Promise<Response> {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    revalidatePath("/", "layout");
     revalidatePath("/");
     revalidatePath("/about");
+    revalidatePath("/contact");
 
     return NextResponse.json({ success: true, profile: data });
   } catch (err) {

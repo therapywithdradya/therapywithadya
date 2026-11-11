@@ -1,16 +1,33 @@
 import { ExternalLink } from "lucide-react";
 import { SiteLink } from "@/components/site-link";
 import { Container } from "@/components/ui/container";
-import { filled, listedSocials, site, wordmark } from "@/content/site";
+import { filled, listedSocials, site, socialChannels, wordmark } from "@/content/site";
+import type { EditableSiteContent } from "@/lib/site-content-types";
 
-export function SiteFooter() {
+export function SiteFooter({ content }: { content?: EditableSiteContent } = {}) {
   const year = new Date().getFullYear();
-  const email = filled(site.email) ? site.email : undefined;
-  const phone = filled(site.phone) ? site.phone : undefined;
-  const whatsapp = filled(site.whatsapp) ? site.whatsapp : undefined;
-  const location = filled(site.location) ? site.location : undefined;
-  const socials = listedSocials();
-  const brand = wordmark();
+  const rawEmail = content ? content.contact.email : site.email;
+  const rawPhone = content ? content.contact.phone : site.phone;
+  const rawWhatsapp = content ? content.contact.whatsapp : site.whatsapp;
+  const rawLocation = content ? content.contact.location : site.location;
+  const rawTagline = content ? content.hero.tagline : site.tagline;
+  const rawPractitioner = content ? content.brand.practitionerName : site.practitionerName;
+  const bookHref = content ? content.brand.bookHref : site.bookHref;
+  const bookLabel = content ? content.brand.bookLabel : site.bookLabel;
+
+  const email = filled(rawEmail) ? rawEmail.trim() : undefined;
+  const phone = filled(rawPhone) ? rawPhone.trim() : undefined;
+  const whatsapp = filled(rawWhatsapp) ? rawWhatsapp.trim() : undefined;
+  const location = filled(rawLocation) ? rawLocation.trim() : undefined;
+  const brand = content?.brand.siteName?.trim() || wordmark();
+
+  const socials = content
+    ? socialChannels.flatMap((ch) => {
+        const href = content.contact.socials[ch.key];
+        return filled(href) ? [{ key: ch.key, label: ch.label, href: href.trim() }] : [];
+      })
+    : listedSocials();
+
   const hasContact = Boolean(email || phone || whatsapp || location);
 
   return (
@@ -20,9 +37,9 @@ export function SiteFooter() {
           <p className="font-heading text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]">
             {brand}
           </p>
-          {filled(site.tagline) ? <p className="mt-4 max-w-sm text-muted">{site.tagline}</p> : null}
-          {filled(site.practitionerName) && site.practitionerName !== brand ? (
-            <p className="mt-3 text-muted">{site.practitionerName}</p>
+          {filled(rawTagline) ? <p className="mt-4 max-w-sm text-muted">{rawTagline}</p> : null}
+          {filled(rawPractitioner) && rawPractitioner !== brand ? (
+            <p className="mt-3 text-muted">{rawPractitioner}</p>
           ) : null}
         </div>
         <nav aria-label="Quick links">
@@ -39,7 +56,7 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
-              <SiteLink href={site.bookHref}>{site.bookLabel}</SiteLink>
+              <SiteLink href={bookHref}>{bookLabel}</SiteLink>
             </li>
           </ul>
         </nav>
@@ -72,7 +89,9 @@ export function SiteFooter() {
               {whatsapp ? (
                 <li>
                   <a
-                    href={whatsapp}
+                    href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="rounded-sm text-ink underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                   >
                     WhatsApp
@@ -115,7 +134,6 @@ export function SiteFooter() {
           <SiteLink href="/terms-and-cancellation">Terms and cancellation</SiteLink>
           <SiteLink href="/admin">Practitioner Login</SiteLink>
         </nav>
-
       </Container>
     </footer>
   );

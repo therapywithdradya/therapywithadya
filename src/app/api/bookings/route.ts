@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import {
-  getSessionBySlug,
-  assertPayable,
-} from "@/lib/booking/session-config";
+import { assertPayable } from "@/lib/booking/session-config";
+import { resolveDynamicSessionBySlug } from "@/lib/site-content.server";
 import { bookingRules } from "@/lib/booking/booking-rules";
 import {
   generateConfirmationToken,
@@ -154,7 +152,7 @@ export async function POST(request: Request): Promise<Response> {
   } = parseResult.data;
 
   // 4. Validate session offering and price
-  const sessionConfig = getSessionBySlug(sessionSlug);
+  const sessionConfig = await resolveDynamicSessionBySlug(sessionSlug);
   if (!sessionConfig) {
     return NextResponse.json(
       { error: "invalid_session", message: `Unknown session offering: "${sessionSlug}"` },

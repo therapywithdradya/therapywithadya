@@ -1,7 +1,10 @@
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { filled, site, wordmark } from "@/content/site";
+import { filled, site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
+
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: site.pages.privacy.title,
@@ -9,17 +12,19 @@ export const metadata = marketingMetadata({
   path: "/privacy",
 });
 
-export default function PrivacyPage() {
-  const brand = wordmark();
-  const contactEmail = filled(site.email) ? site.email.trim() : null;
-  const minorsPolicy = filled(site.policies.minorsSummary)
-    ? site.policies.minorsSummary.trim()
+export default async function PrivacyPage() {
+  const content = await getSiteContent();
+  const brand = content.brand.siteName;
+  const contactEmail = filled(content.contact.email) ? content.contact.email.trim() : null;
+  const minorsPolicy = filled(content.legalAndSafety.policies.minorsSummary)
+    ? content.legalAndSafety.policies.minorsSummary.trim()
     : "Clients under 18 years of age require parental or guardian consent before commencing therapy sessions.";
+  const copy = content.pagesCopy.privacy;
 
   return (
     <>
       {/* Policy status notice */}
-      {!site.policies.confirmed ? (
+      {!content.legalAndSafety.policies.confirmed ? (
         <aside
           aria-label="Draft notice"
           className="border-b border-border bg-surface/80 py-3 text-center text-sm font-medium text-muted"
@@ -37,10 +42,10 @@ export default function PrivacyPage() {
             id="privacy-page-title"
             className="font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {site.pages.privacy.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {site.pages.privacy.intro}
+            {copy.intro}
           </p>
         </Container>
       </Section>
@@ -270,7 +275,7 @@ export default function PrivacyPage() {
                 Any updates to this privacy policy will be posted on this page.
               </p>
               <p className="text-sm text-muted">
-                Last updated: {site.legalLastUpdated}
+                Last updated: {content.legalAndSafety.legalLastUpdated}
               </p>
             </div>
           </div>

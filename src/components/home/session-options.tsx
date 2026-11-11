@@ -12,15 +12,27 @@ import type { PublicSession } from "@/lib/content";
 const textLinkClass =
   "inline-flex min-h-11 max-w-full items-center rounded-sm font-semibold text-primary underline-offset-4 [overflow-wrap:anywhere] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
+export function SessionOptions({
+  sessions,
+  eyebrow,
+  title,
+  intro,
+  linkLabel,
+}: {
+  sessions: PublicSession[];
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  linkLabel?: string;
+}) {
   return (
     <Section id="sessions" aria-labelledby="home-sessions-title" background="surface">
       <Container>
         <SectionHeading
           id="home-sessions-title"
-          eyebrow="Sessions"
-          title={site.home.sessionsTitle}
-          intro={site.home.sessionsIntro}
+          eyebrow={eyebrow || "Sessions"}
+          title={title || site.home.sessionsTitle}
+          intro={intro ?? site.home.sessionsIntro}
         />
         <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3">
           {sessions.map((session) => (
@@ -78,7 +90,7 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
           ))}
         </ul>
         <Link href="/sessions" className={`mt-8 ${textLinkClass}`}>
-          View full session details
+          {linkLabel || "View full session details"}
         </Link>
       </Container>
     </Section>

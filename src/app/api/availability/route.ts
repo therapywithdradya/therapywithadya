@@ -4,7 +4,7 @@ import { AvailabilityInputError } from "@/lib/availability/types";
 import { createSupabaseBookedProvider } from "@/lib/availability/supabase";
 import { createGoogleBusyProvider } from "@/lib/calendar/google";
 import { bookingRules } from "@/lib/booking/booking-rules";
-import { getSessionBySlug } from "@/lib/booking/session-config";
+import { resolveDynamicSessionBySlug } from "@/lib/site-content.server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 // ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   // 2. Validate session exists
-  const sessionConfig = getSessionBySlug(sessionSlug);
+  const sessionConfig = await resolveDynamicSessionBySlug(sessionSlug);
   if (!sessionConfig) {
     return NextResponse.json(
       {

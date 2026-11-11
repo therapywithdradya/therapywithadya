@@ -6,8 +6,11 @@ import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
+import { getSiteContent } from "@/lib/site-content.server";
 
 const pageCopy = site.pages.services;
+
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: pageCopy.title,
@@ -15,24 +18,26 @@ export const metadata = marketingMetadata({
   path: "/services",
 });
 
-export default function ServicesPage() {
-  const services = site.services;
+export default async function ServicesPage() {
+  const content = await getSiteContent();
+  const services = content.services;
+  const copy = content.servicesPage;
 
   return (
     <>
       <Section aria-labelledby="services-page-title">
         <Container>
           <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Services &amp; Modalities
+            {copy.eyebrow}
           </p>
           <h1
             id="services-page-title"
             className="mt-3 max-w-[70ch] font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
-            {pageCopy.title}
+            {copy.title}
           </h1>
           <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {pageCopy.intro}
+            {copy.intro}
           </p>
         </Container>
       </Section>
@@ -41,9 +46,9 @@ export default function ServicesPage() {
         <Container>
           <SectionHeading
             id="services-offerings-title"
-            eyebrow="Offerings"
-            title="Tailored psychological support & programs"
-            intro="Explore one-on-one therapy, couples sessions, intuitive reflection, institutional workshops, and mentorship for practitioners."
+            eyebrow={copy.offeringsEyebrow}
+            title={copy.offeringsTitle}
+            intro={copy.offeringsIntro}
             className="mx-auto text-center"
           />
 
@@ -66,9 +71,11 @@ export default function ServicesPage() {
                     >
                       {service.title}
                     </h2>
-                    <p className="mt-3 border-l-2 border-primary pl-3.5 text-sm font-medium italic text-ink/90 [overflow-wrap:anywhere]">
-                      {service.hook}
-                    </p>
+                    {service.hook ? (
+                      <p className="mt-3 border-l-2 border-primary pl-3.5 text-sm font-medium italic text-ink/90 [overflow-wrap:anywhere]">
+                        {service.hook}
+                      </p>
+                    ) : null}
                     <p className="mt-4 text-sm leading-relaxed text-muted [overflow-wrap:anywhere]">
                       {service.longDescription}
                     </p>
@@ -137,7 +144,13 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      <BookingCta headingId="services-booking-title" />
+      <BookingCta
+        headingId="services-booking-title"
+        title={content.homeSections.bookingTitle}
+        text={content.homeSections.bookingText}
+        bookHref={content.brand.bookHref}
+        bookLabel={content.brand.bookLabel}
+      />
     </>
   );
 }

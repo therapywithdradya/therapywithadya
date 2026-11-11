@@ -3,27 +3,66 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { filled, listedSocials, site } from "@/content/site";
+import { filled, listedSocials, site, socialChannels } from "@/content/site";
 
 const textLinkClass =
   "inline-flex min-h-11 max-w-full items-center gap-2 rounded-sm text-ink underline-offset-4 [overflow-wrap:anywhere] hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-export function ContactSection() {
-  const email = filled(site.email) ? site.email.trim() : undefined;
-  const phone = filled(site.phone) ? site.phone.trim() : undefined;
-  const whatsapp = filled(site.whatsapp) ? site.whatsapp.trim() : undefined;
-  const location = filled(site.location) ? site.location.trim() : undefined;
-  const socials = listedSocials();
+export function ContactSection({
+  eyebrow,
+  title,
+  intro,
+  email: propEmail,
+  phone: propPhone,
+  whatsapp: propWhatsapp,
+  location: propLocation,
+  socials: propSocials,
+  bookHref,
+  bookLabel,
+}: {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  email?: string;
+  phone?: string;
+  whatsapp?: string;
+  location?: string;
+  socials?: Partial<Record<"instagram" | "facebook" | "youtube" | "linkedin", string>>;
+  bookHref?: string;
+  bookLabel?: string;
+} = {}) {
+  const rawEmail = propEmail !== undefined ? propEmail : site.email;
+  const rawPhone = propPhone !== undefined ? propPhone : site.phone;
+  const rawWhatsapp = propWhatsapp !== undefined ? propWhatsapp : site.whatsapp;
+  const rawLocation = propLocation !== undefined ? propLocation : site.location;
+
+  const email = filled(rawEmail) ? rawEmail.trim() : undefined;
+  const phone = filled(rawPhone) ? rawPhone.trim() : undefined;
+  const whatsapp = filled(rawWhatsapp) ? rawWhatsapp.trim() : undefined;
+  const location = filled(rawLocation) ? rawLocation.trim() : undefined;
+  const socials = propSocials
+    ? socialChannels.flatMap((ch) => {
+        const href = propSocials[ch.key];
+        return filled(href) ? [{ key: ch.key, label: ch.label, href: href.trim() }] : [];
+      })
+    : listedSocials();
   const hasDetails = Boolean(email || phone || whatsapp || location || socials.length > 0);
+  const waDigits = whatsapp ? whatsapp.replace(/\D/g, "") : "";
+  const waUrl =
+    whatsapp && whatsapp.startsWith("http")
+      ? whatsapp
+      : waDigits
+        ? `https://wa.me/${waDigits}`
+        : undefined;
 
   return (
     <Section aria-labelledby="home-contact-title" background="surface">
       <Container>
         <SectionHeading
           id="home-contact-title"
-          eyebrow="Contact"
-          title={site.home.contactTitle}
-          intro={site.home.contactIntro}
+          eyebrow={eyebrow || "Contact"}
+          title={title || site.home.contactTitle}
+          intro={intro ?? site.home.contactIntro}
         />
         {hasDetails ? (
           <ul className="mt-6 max-w-xl list-none space-y-1 p-0">
@@ -43,10 +82,15 @@ export function ContactSection() {
                 </a>
               </li>
             ) : null}
-            {whatsapp ? (
+            {waUrl ? (
               <li>
-                <a href={whatsapp} className={textLinkClass}>
-                  <span>WhatsApp</span>
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={textLinkClass}
+                >
+                  <span>WhatsApp ({whatsapp})</span>
                 </a>
               </li>
             ) : null}
@@ -81,8 +125,8 @@ export function ContactSection() {
           <Button href="/contact" className="w-full sm:w-auto">
             Contact page
           </Button>
-          <Button href={site.bookHref} variant="secondary" className="w-full sm:w-auto">
-            {site.bookLabel}
+          <Button href={bookHref || site.bookHref} variant="secondary" className="w-full sm:w-auto">
+            {bookLabel || site.bookLabel}
           </Button>
         </div>
       </Container>

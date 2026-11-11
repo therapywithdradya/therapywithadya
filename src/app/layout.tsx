@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { site } from "@/content/site";
 import { fontBody, fontHeading } from "@/app/fonts";
 import { getMetadataBase } from "@/lib/env.public";
+import { getSiteContent } from "@/lib/site-content.server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,7 +38,9 @@ export const viewport: Viewport = {
   themeColor: "#0f1410",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const content = await getSiteContent();
+
   return (
     <html
       lang="en-IN"
@@ -54,26 +57,30 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`#site-navigation{display:flex !important;flex-wrap:wrap;}`}</style>
         </noscript>
-        <SiteHeader />
+        <SiteHeader
+          siteName={content.brand.siteName}
+          bookHref={content.brand.bookHref}
+          bookLabel={content.brand.bookLabel}
+        />
         <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>
-        <SiteFooter />
+        <SiteFooter content={content} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": ["MedicalBusiness", "Physician", "ProfessionalService"],
-              name: site.siteName,
-              legalName: "Dr. Adya Vats Clinical Psychology Practice",
+              name: content.brand.siteName,
+              legalName: `${content.brand.practitionerName} Clinical Psychology Practice`,
               url: "https://www.therapywithdradya.com",
               logo: "https://www.therapywithdradya.com/images/portrait-hero.jpg",
               image: "https://www.therapywithdradya.com/images/portrait-hero.jpg",
-              description: site.tagline,
+              description: content.hero.tagline,
               medicalSpecialty: ["Psychology", "Psychotherapy"],
-              email: site.email,
-              telephone: site.phone || undefined,
+              email: content.contact.email,
+              telephone: content.contact.phone || undefined,
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "Gurugram",
@@ -95,21 +102,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                   closes: "18:00",
                 },
               ],
-              priceRange: "₹1500 - ₹3500",
-              availableService: [
-                {
-                  "@type": "MedicalTherapy",
-                  name: "Individual Psychotherapy",
-                  description:
-                    "60-minute confidential counseling session addressing anxiety, mood, self-doubt, and life transitions.",
-                },
-                {
-                  "@type": "MedicalTherapy",
-                  name: "Integrative Counseling & Modality Session",
-                  description:
-                    "90-minute session combining CBT, REBT, hypnotherapy, and graphology insights.",
-                },
-              ],
+              priceRange: `₹${Math.min(...content.sessions.map((s) => Math.round(s.pricePaise / 100)))} - ₹${Math.max(...content.sessions.map((s) => Math.round(s.pricePaise / 100)))}`,
+              availableService: content.sessions.map((session) => ({
+                "@type": "MedicalTherapy",
+                name: session.name,
+                description: session.description,
+              })),
             }),
           }}
         />

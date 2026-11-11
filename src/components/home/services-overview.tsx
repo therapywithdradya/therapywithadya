@@ -4,24 +4,37 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
+import type { EditableServiceItem } from "@/lib/site-content-types";
 
 const textLinkClass =
   "inline-flex min-h-11 max-w-full items-center rounded-sm font-semibold text-primary underline-offset-4 [overflow-wrap:anywhere] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
-export function ServicesOverview() {
+export function ServicesOverview({
+  eyebrow,
+  title,
+  intro,
+  services,
+}: {
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  services?: readonly EditableServiceItem[];
+} = {}) {
+  const displayServices = services ?? site.services;
+
   return (
     <Section aria-labelledby="home-services-title">
       <Container>
         <SectionHeading
           id="home-services-title"
-          eyebrow="Services"
-          title={site.home.servicesTitle}
-          intro={site.home.servicesIntro}
+          eyebrow={eyebrow || "Services"}
+          title={title || site.home.servicesTitle}
+          intro={intro ?? site.home.servicesIntro}
           className="mx-auto text-center"
         />
-        {site.services.length > 0 ? (
+        {displayServices.length > 0 ? (
           <ul className="mt-8 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
-            {site.services.map((service) => (
+            {displayServices.map((service) => (
               <li key={service.slug} className="min-w-0">
                 <Card className="flex h-full flex-col">
                   <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
