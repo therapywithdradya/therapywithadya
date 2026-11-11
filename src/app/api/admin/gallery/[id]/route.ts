@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAuthenticatedAdmin } from "@/lib/admin/auth";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -19,6 +20,9 @@ export async function DELETE(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    revalidatePath("/");
+    revalidatePath("/gallery");
 
     return NextResponse.json({ success: true });
   } catch (err) {
@@ -53,6 +57,9 @@ export async function PATCH(
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    revalidatePath("/");
+    revalidatePath("/gallery");
 
     return NextResponse.json({ success: true, item: data });
   } catch (err) {

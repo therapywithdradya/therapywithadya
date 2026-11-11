@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
 import {
   getEventsAndWorkshops,
@@ -10,10 +11,8 @@ import { clockMs, formatEventDateRange } from "@/lib/format";
 import { marketingMetadata } from "@/lib/page-metadata";
 import type { EventWorkshopRow } from "@/types/database";
 
-// Time-based ISR: the upcoming/past split depends on the current time.
-// The page is regenerated at most once per hour (same mechanism as the home page).
-// An event that ends will remain in "Upcoming" until the next regeneration.
-export const dynamic = "force-dynamic";
+// ISR with 60s revalidation plus on-demand purge from admin handlers.
+export const revalidate = 60;
 
 
 export const metadata = marketingMetadata({
@@ -127,9 +126,12 @@ export default async function EventsPage() {
       {/* Hero / intro section — one h1 per page */}
       <Section aria-labelledby="events-page-title">
         <Container>
+          <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            Workshops &amp; Programs
+          </p>
           <h1
             id="events-page-title"
-            className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+            className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
             {site.pages.events.title}
           </h1>
@@ -156,12 +158,11 @@ export default async function EventsPage() {
           {/* Upcoming section */}
           <Section aria-labelledby="events-upcoming-title" background="surface">
             <Container>
-              <h2
+              <SectionHeading
                 id="events-upcoming-title"
-                className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
-              >
-                Upcoming
-              </h2>
+                eyebrow="Schedule"
+                title="Upcoming"
+              />
               {upcoming.length === 0 ? (
                 <p className="mt-6 text-muted">No upcoming events right now.</p>
               ) : (
@@ -180,12 +181,11 @@ export default async function EventsPage() {
           {past.length > 0 ? (
             <Section aria-labelledby="events-past-title">
               <Container>
-                <h2
+                <SectionHeading
                   id="events-past-title"
-                  className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
-                >
-                  Past
-                </h2>
+                  eyebrow="Archive"
+                  title="Past"
+                />
                 <ul className="mt-8 grid list-none gap-6 p-0 md:grid-cols-2 lg:grid-cols-3" role="list">
                   {past.map((event) => (
                     <li key={event.id} className="min-w-0">
@@ -202,12 +202,11 @@ export default async function EventsPage() {
       {/* Closing CTA */}
       <Section aria-labelledby="events-cta-title" background="surface">
         <Container>
-          <h2
+          <SectionHeading
             id="events-cta-title"
-            className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
-          >
-            Get in touch
-          </h2>
+            eyebrow="Institutional Inquiries"
+            title="Get in touch"
+          />
           <p className="mt-4 max-w-[60ch] text-muted [overflow-wrap:anywhere]">
             Interested in organizing a workshop for your school, college, or organization? Reach out to coordinate custom topics and dates.
           </p>

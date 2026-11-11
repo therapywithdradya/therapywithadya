@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAuthenticatedAdmin } from "@/lib/admin/auth";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
@@ -91,6 +92,7 @@ export async function POST(request: Request): Promise<Response> {
     const updated = [...withoutExisting, newCategory];
 
     await savePersistedCategories(supabase, updated);
+    revalidatePath("/gallery");
 
     return NextResponse.json({ success: true, category: newCategory, categories: updated });
   } catch (err) {
@@ -118,6 +120,7 @@ export async function PUT(request: Request): Promise<Response> {
 
     const supabase = getSupabaseAdmin();
     const saved = await savePersistedCategories(supabase, categories);
+    revalidatePath("/gallery");
 
     return NextResponse.json({ success: true, categories: saved });
   } catch (err) {
@@ -172,6 +175,8 @@ export async function PATCH(request: Request): Promise<Response> {
         .eq("category", oldSlug);
     }
 
+    revalidatePath("/gallery");
+
     return NextResponse.json({ success: true, slug: newSlug, label: newLabel, categories: updated });
   } catch (err) {
     return NextResponse.json(
@@ -204,6 +209,8 @@ export async function DELETE(request: Request): Promise<Response> {
 
     // Also delete photos belonging to this deleted category
     await supabase.from("gallery_items").delete().eq("category", slug);
+    revalidatePath("/");
+    revalidatePath("/gallery");
 
     return NextResponse.json({ success: true, deletedSlug: slug, categories: updated });
   } catch (err) {

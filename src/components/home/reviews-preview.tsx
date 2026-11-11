@@ -37,12 +37,14 @@ export function ReviewsPreview({
         <ul className="mt-8 grid list-none gap-6 p-0 lg:grid-cols-3">
           {testimonials.map((item) => (
             <li key={item.id} className="min-w-0">
-              <figure className="h-full rounded-card border border-border bg-surface p-6 shadow-soft">
-                <blockquote>
-                  <p className="line-clamp-6 text-ink [overflow-wrap:anywhere]">{item.quote}</p>
+              <figure className="flex h-full flex-col rounded-card border border-border bg-surface p-6 shadow-soft">
+                <blockquote className="grow">
+                  <p className="line-clamp-6 leading-relaxed text-ink [overflow-wrap:anywhere]">
+                    {item.quote}
+                  </p>
                 </blockquote>
-                <figcaption className="mt-4 font-semibold text-muted [overflow-wrap:anywhere]">
-                  {item.display_name}
+                <figcaption className="mt-4 border-t border-border/60 pt-3 font-semibold text-primary [overflow-wrap:anywhere]">
+                  — {item.display_name || "Anonymous"}
                 </figcaption>
               </figure>
             </li>

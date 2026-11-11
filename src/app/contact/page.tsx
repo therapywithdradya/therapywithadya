@@ -2,8 +2,10 @@ import Link from "next/link";
 import { ExternalLink, Mail, MapPin, MessageSquare, Phone } from "lucide-react";
 import { SafetyNotice } from "@/components/common/safety-notice";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { filled, listedSocials, site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
 
@@ -51,9 +53,12 @@ export default function ContactPage() {
       {/* Intro section — single h1 */}
       <Section aria-labelledby="contact-page-title">
         <Container>
+          <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            Get in Touch
+          </p>
           <h1
             id="contact-page-title"
-            className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+            className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
             {site.pages.contact.title}
           </h1>
@@ -61,99 +66,125 @@ export default function ContactPage() {
             {site.pages.contact.intro}
           </p>
 
-          <div className="mt-10">
-            {hasAnyContactMethod ? (
-              <ul className="list-none space-y-4 p-0" role="list">
-                {email ? (
-                  <li className="min-w-0">
-                    <a
-                      href={`mailto:${email}`}
-                      className={contactLinkClass}
-                      aria-label={`Email ${email}`}
-                    >
-                      <Mail className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                      <span className="font-medium [overflow-wrap:anywhere]">{email}</span>
-                    </a>
-                  </li>
-                ) : null}
+          <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
+            <Card className="p-6 sm:p-8">
+              <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                Direct Channels
+              </p>
+              <h2 className="mt-2 font-heading text-heading text-ink">
+                Reach out to Dr. Adya Vats
+              </h2>
+              <div className="mt-6">
+                {hasAnyContactMethod ? (
+                  <ul className="list-none space-y-4 p-0" role="list">
+                    {email ? (
+                      <li className="min-w-0">
+                        <a
+                          href={`mailto:${email}`}
+                          className={contactLinkClass}
+                          aria-label={`Email ${email}`}
+                        >
+                          <Mail className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                          <span className="font-medium [overflow-wrap:anywhere]">{email}</span>
+                        </a>
+                      </li>
+                    ) : null}
 
-                {phone ? (
-                  <li className="min-w-0">
-                    {phoneHref ? (
-                      <a
-                        href={`tel:${phoneHref}`}
-                        className={contactLinkClass}
-                        aria-label={`Call ${phone}`}
-                      >
-                        <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                        <span className="font-medium [overflow-wrap:anywhere]">{phone}</span>
-                      </a>
-                    ) : (
-                      <span className="inline-flex min-h-11 items-center gap-3 text-ink [overflow-wrap:anywhere]">
-                        <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                        <span className="font-medium">{phone}</span>
-                      </span>
-                    )}
-                  </li>
-                ) : null}
-
-                {whatsapp && waDigits ? (
-                  <li className="min-w-0">
-                    <a
-                      href={`https://wa.me/${waDigits}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={contactLinkClass}
-                      aria-label={`Chat on WhatsApp with ${whatsapp} (opens in a new tab)`}
-                    >
-                      <MessageSquare className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                      <span className="font-medium [overflow-wrap:anywhere]">
-                        WhatsApp ({whatsapp})
-                      </span>
-                    </a>
-                  </li>
-                ) : null}
-
-                {location ? (
-                  <li className="flex min-h-11 items-center gap-3 text-ink [overflow-wrap:anywhere]">
-                    <MapPin className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                    <span>{location}</span>
-                  </li>
-                ) : null}
-
-                {socials.length > 0 ? (
-                  <li className="pt-2">
-                    <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-                      Social profiles
-                    </p>
-                    <ul className="mt-3 flex flex-wrap gap-4 list-none p-0" role="list">
-                      {socials.map((item) => (
-                        <li key={item.key}>
+                    {phone ? (
+                      <li className="min-w-0">
+                        {phoneHref ? (
                           <a
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={`tel:${phoneHref}`}
                             className={contactLinkClass}
+                            aria-label={`Call ${phone}`}
                           >
-                            <ExternalLink className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                            <span>{item.label}</span>
-                            <span className="sr-only"> (opens in a new tab)</span>
+                            <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                            <span className="font-medium [overflow-wrap:anywhere]">{phone}</span>
                           </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ) : null}
-              </ul>
-            ) : (
-              <p className="text-muted">Contact details coming soon.</p>
-            )}
+                        ) : (
+                          <span className="inline-flex min-h-11 items-center gap-3 text-ink [overflow-wrap:anywhere]">
+                            <Phone className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                            <span className="font-medium">{phone}</span>
+                          </span>
+                        )}
+                      </li>
+                    ) : null}
 
-            <div className="mt-10">
-              <Button href={site.bookHref} id="contact-book-btn">
-                {site.bookLabel}
-              </Button>
-            </div>
+                    {whatsapp && waDigits ? (
+                      <li className="min-w-0">
+                        <a
+                          href={`https://wa.me/${waDigits}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={contactLinkClass}
+                          aria-label={`Chat on WhatsApp with ${whatsapp} (opens in a new tab)`}
+                        >
+                          <MessageSquare className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                          <span className="font-medium [overflow-wrap:anywhere]">
+                            WhatsApp ({whatsapp})
+                          </span>
+                        </a>
+                      </li>
+                    ) : null}
+
+                    {location ? (
+                      <li className="flex min-h-11 items-center gap-3 text-ink [overflow-wrap:anywhere]">
+                        <MapPin className="size-5 shrink-0 text-primary" aria-hidden="true" />
+                        <span>{location}</span>
+                      </li>
+                    ) : null}
+
+                    {socials.length > 0 ? (
+                      <li className="border-t border-border/60 pt-4">
+                        <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+                          Social profiles
+                        </p>
+                        <ul className="mt-3 flex flex-wrap gap-4 list-none p-0" role="list">
+                          {socials.map((item) => (
+                            <li key={item.key}>
+                              <a
+                                href={item.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={contactLinkClass}
+                              >
+                                <ExternalLink className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                                <span>{item.label}</span>
+                                <span className="sr-only"> (opens in a new tab)</span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ) : null}
+                  </ul>
+                ) : (
+                  <p className="text-muted">Contact details coming soon.</p>
+                )}
+              </div>
+            </Card>
+
+            <Card className="flex flex-col justify-between p-6 sm:p-8">
+              <div>
+                <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                  Appointments &amp; Programs
+                </p>
+                <h2 className="mt-2 font-heading text-[clamp(1.25rem,2.4vw,1.6rem)] text-ink">
+                  Ready to schedule a session?
+                </h2>
+                <p className="mt-3 border-l-2 border-primary pl-4 text-sm leading-relaxed text-muted [overflow-wrap:anywhere]">
+                  You can reserve 30-minute individual therapy, 60-minute individual therapy, or 60–75 minute couples therapy directly online. For school workshops, corporate seminars, tarot readings, or supervision, write in directly.
+                </p>
+              </div>
+              <div className="mt-8 flex flex-col gap-3">
+                <Button href={site.bookHref} id="contact-book-btn" className="w-full">
+                  {site.bookLabel}
+                </Button>
+                <Button href="/sessions" variant="secondary" className="w-full">
+                  View session options
+                </Button>
+              </div>
+            </Card>
           </div>
         </Container>
       </Section>
@@ -162,12 +193,11 @@ export default function ContactPage() {
       {email ? (
         <Section aria-labelledby="contact-changes-title" background="surface">
           <Container>
-            <h2
+            <SectionHeading
               id="contact-changes-title"
-              className="font-heading text-heading text-ink [overflow-wrap:anywhere]"
-            >
-              Cancel or change a booking
-            </h2>
+              eyebrow="Booking Support"
+              title="Cancel or change a booking"
+            />
             <p className="mt-4 max-w-[70ch] text-muted [overflow-wrap:anywhere]">
               To cancel or request a change for a confirmed booking, please email{" "}
               <a

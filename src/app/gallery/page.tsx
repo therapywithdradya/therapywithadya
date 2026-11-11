@@ -2,12 +2,13 @@ import { GalleryLightbox } from "@/components/gallery/gallery-lightbox";
 import { SiteImage } from "@/components/ui/SiteImage";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
 import { getGalleryCategories, getGalleryItems, type PublicGalleryCategory } from "@/lib/content";
 import { marketingMetadata } from "@/lib/page-metadata";
 import type { GalleryItemRow } from "@/types/database";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = marketingMetadata({
   title: site.pages.gallery.title,
@@ -142,9 +143,12 @@ export default async function GalleryPage() {
       {/* Hero / intro section — one h1 per page */}
       <Section aria-labelledby="gallery-page-title">
         <Container>
+          <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+            Visual Journal
+          </p>
           <h1
             id="gallery-page-title"
-            className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+            className="mt-3 font-heading text-display text-ink [overflow-wrap:anywhere]"
           >
             {site.pages.gallery.title}
           </h1>
@@ -165,16 +169,13 @@ export default async function GalleryPage() {
             background={groupIndex % 2 === 1 ? "surface" : "default"}
           >
             <Container>
-              <h2
-                id={sectionId}
-                className={
-                  isVisuallyHidden
-                    ? "sr-only"
-                    : "font-heading text-heading text-ink [overflow-wrap:anywhere]"
-                }
-              >
-                {group.label}
-              </h2>
+              {isVisuallyHidden ? (
+                <h2 id={sectionId} className="sr-only">
+                  {group.label}
+                </h2>
+              ) : (
+                <SectionHeading id={sectionId} eyebrow="Collection" title={group.label} />
+              )}
 
               {group.items.length === 0 ? (
                 <div className="mt-6 rounded-card border border-dashed border-border/70 bg-surface/40 p-8 text-center">

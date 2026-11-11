@@ -34,9 +34,16 @@ export type InternalPath = (typeof internalPaths)[number];
 
 export type ServiceListing = {
   slug: string;
+  eyebrow: string;
   title: string;
+  hook: string;
   shortDescription: string;
   longDescription: string;
+  highlightsTitle?: string;
+  highlights?: readonly string[];
+  secondaryHighlightsTitle?: string;
+  secondaryHighlights?: readonly string[];
+  metaNote?: string;
   href?: InternalPath;
   linkLabel?: string;
 };
@@ -127,61 +134,149 @@ export const site = {
   services: [
     {
       slug: "individual-psychotherapy",
+      eyebrow: "01 • Individual Care",
       title: "Individual Psychotherapy",
+      hook: "Feeling overwhelmed, stuck, or unsure where to begin? You’re in the right place.",
       shortDescription:
         "Personalized, trauma-informed therapy to help you understand what you’re experiencing, work through challenges, and move forward with clarity and self-compassion.",
       longDescription:
-        "Feeling overwhelmed, stuck, or unsure where to begin? You’re in the right place. Personalized, trauma-informed therapy to help you understand what you’re experiencing, work through challenges, and move forward with greater clarity and self-compassion. Therapy can offer a space to pause, reflect, understand your patterns, and work towards meaningful change at your own pace.\n\nApproaches may include: CBT • REBT • Gestalt • Mindfulness • Hypnotherapy • Art Therapy • Graphology • Trauma-informed approaches.\n\nSession Options: 30-minute session (₹1,000) • 60-minute session (₹2,000).",
+        "Personalized, trauma-informed therapy to help you understand what you’re experiencing, work through challenges, and move forward with greater clarity and self-compassion. Therapy can offer a space to pause, reflect, understand your patterns, and work towards meaningful change at your own pace.",
+      highlightsTitle: "Approaches may include",
+      highlights: [
+        "CBT & REBT",
+        "Gestalt Therapy",
+        "Mindfulness",
+        "Hypnotherapy",
+        "Art Therapy",
+        "Graphology",
+        "Trauma-informed approaches",
+      ],
+      metaNote: "Session Options: 30-minute session — ₹1,000  •  60-minute session — ₹2,000",
       href: "/sessions",
       linkLabel: "View Session Options",
     },
     {
       slug: "couples-therapy",
+      eyebrow: "02 • Relationships",
       title: "Couples Therapy",
+      hook: "Finding it difficult to communicate, understand each other, or feel connected again?",
       shortDescription:
         "A supportive space for couples to communicate openly, understand each other better, work through recurring conflict, and build a connected relationship.",
       longDescription:
-        "Finding it difficult to communicate, understand each other, or feel connected again? Couples therapy offers a supportive space to communicate openly, understand each other better, work through recurring challenges, and build a healthier, more connected relationship.\n\nThe approach is tailored to the needs of each couple and may include: CBT • REBT • Gestalt • Mindfulness • Hypnotherapy • Art Therapy • Graphology • Trauma-informed approaches.\n\nSession Details: Duration 60–75 minutes • Fee: ₹3,000.",
+        "Couples therapy offers a supportive space to communicate openly, understand each other better, work through recurring challenges, and build a healthier, more connected relationship.",
+      highlightsTitle: "Tailored approaches may include",
+      highlights: [
+        "CBT & REBT",
+        "Gestalt Therapy",
+        "Mindfulness",
+        "Hypnotherapy",
+        "Art Therapy",
+        "Graphology",
+        "Trauma-informed approaches",
+      ],
+      metaNote: "Session Details: Duration 60–75 minutes  •  Fee: ₹3,000",
       href: "/sessions",
       linkLabel: "Book a Couples Session",
     },
     {
       slug: "tarot-card-reading",
+      eyebrow: "03 • Intuitive Clarity",
       title: "Tarot Card Reading",
+      hook: "Looking for a little clarity, reflection, or a different perspective?",
       shortDescription:
         "A reflective space to explore your thoughts, emotions, life questions, and possibilities with openness and without judgment.",
       longDescription:
-        "Looking for a little clarity, reflection, or a different perspective? Tarot readings can offer a reflective space to explore your thoughts, emotions, questions, and the possibilities you may be considering. Each reading is approached with openness and without judgment, helping you reflect on your present situation and gain a different perspective on what may be unfolding in your life.\n\nAreas explored include: Love & relationships, Career & professional life, Personal growth, Life transitions, Decision-making, Emotional clarity, and General guidance. A space to pause, reflect, and see things from a different perspective.",
+        "Tarot readings can offer a reflective space to explore your thoughts, emotions, questions, and the possibilities you may be considering. Each reading is approached with openness and without judgment, helping you reflect on your present situation and gain a different perspective on what may be unfolding in your life.",
+      highlightsTitle: "Areas explored include",
+      highlights: [
+        "Love & relationships",
+        "Career & professional life",
+        "Personal growth",
+        "Life transitions",
+        "Decision-making",
+        "Emotional clarity",
+        "General guidance",
+      ],
+      metaNote: "A space to pause, reflect, and see things from a different perspective.",
       href: "/contact",
       linkLabel: "Book a Tarot Reading",
     },
     {
       slug: "workshops",
+      eyebrow: "04 • Institutional Programs",
       title: "Workshops, Seminars & Institutional Programs",
+      hook: "Looking to create a healthier, more resilient, and better-functioning environment?",
       shortDescription:
         "Interactive mental health workshops, seminars, and wellbeing programs customized for schools, colleges, educational institutions, and corporate teams.",
       longDescription:
-        "Looking to create a healthier, more resilient, and better-functioning environment? I conduct interactive mental health workshops, seminars, and institutional programs for schools, colleges, educational institutions, and corporate teams. Each program is customized according to the needs, concerns, and goals of the institution, making the sessions practical, engaging, and relevant.\n\nFor Schools & Institutions: Mental health awareness, stress and exam anxiety, emotional regulation, building resilience, self-esteem, peer relationships, bullying & healthy boundaries, digital wellbeing, teacher burnout, and supporting student mental health.\n\nFor Corporates: Workplace stress and burnout, work-life balance, emotional wellbeing at work, effective communication, team building, managing difficult emotions, and creating a psychologically healthier workplace.",
+        "I conduct interactive mental health workshops, seminars, and institutional programs for schools, colleges, educational institutions, and corporate teams. Each program is customized according to the needs, concerns, and goals of the institution, making the sessions practical, engaging, and relevant.",
+      highlightsTitle: "For Schools & Educational Institutions",
+      highlights: [
+        "Mental health awareness",
+        "Stress & exam anxiety",
+        "Emotional regulation & coping",
+        "Building resilience",
+        "Self-esteem & confidence",
+        "Peer relationships & bullying",
+        "Digital wellbeing & screen habits",
+        "Teacher wellbeing & burnout",
+      ],
+      secondaryHighlightsTitle: "For Corporates & Professional Teams",
+      secondaryHighlights: [
+        "Workplace stress & burnout",
+        "Work-life balance & boundaries",
+        "Emotional wellbeing at work",
+        "Effective communication",
+        "Team building & relationships",
+        "Focus, productivity & efficiency",
+      ],
+      metaNote: "Practical awareness. Meaningful conversations. Skills carried beyond the session.",
       href: "/events",
       linkLabel: "Enquire About a Workshop",
     },
     {
       slug: "supervision",
+      eyebrow: "05 • Clinical Mentorship",
       title: "Supervision for Budding Psychologists",
+      hook: "Starting your practice but unsure how to navigate the therapy room?",
       shortDescription:
         "Supportive clinical supervision and practical mentorship for practicing psychologists navigating difficult sessions and therapy room dynamics.",
       longDescription:
-        "Starting your practice but unsure how to navigate the therapy room? You may have studied the theories, but starting your own practice brings a completely different set of questions: What do I do when I feel stuck with a client? How do I navigate a difficult session? What if I’m not sure what to do next? How do I feel more confident while taking sessions?\n\nSupervision offers a supportive space where you can bring these concerns and receive practical guidance: navigating difficult sessions, case discussions & therapeutic planning, applying therapeutic approaches in practice, building confidence, structuring therapy sessions, and ethical guidance. You don’t have to navigate your practice alone.",
+        "You may have studied the theories, but starting your own practice can bring a completely different set of questions. Supervision offers a supportive space where you can bring these concerns and receive practical guidance to navigate your work as a practicing psychologist with clarity and confidence.",
+      highlightsTitle: "Supervision supports you with",
+      highlights: [
+        "Navigating challenging sessions",
+        "Moving forward when feeling stuck",
+        "Case discussions & planning",
+        "Applying approaches in practice",
+        "Building therapy room confidence",
+        "Structuring client sessions",
+        "Professional & ethical guidance",
+      ],
+      metaNote: "You don’t have to navigate your practice alone.",
       href: "/contact",
       linkLabel: "Enquire About Supervision",
     },
     {
       slug: "internships-courses",
+      eyebrow: "06 • Practical Training",
       title: "Internships & Courses",
+      hook: "Want to move beyond learning theories and actually understand how to use them in practice?",
       shortDescription:
         "Hands-on learning, therapeutic approaches, and simulated clinical training for psychology students moving from theory to practice.",
       longDescription:
-        "Want to move beyond learning theories and actually understand how to use them in practice? Psychology is more than knowing the theories—it's about understanding how to translate what you learn into the therapy room. Upcoming internships and courses will focus on practical learning, therapeutic approaches, and developing the confidence to apply what you learn in real-world settings.\n\nComing Soon: Internships • Therapy Courses • Practical Training Programs. Learn. Practice. Apply. Grow. Stay tuned for upcoming programs.",
+        "Psychology is more than knowing the theories—it’s about understanding how to translate what you learn into the therapy room. Upcoming internships and courses focus on practical learning, therapeutic approaches, and developing the confidence to apply what you learn in real-world settings.",
+      highlightsTitle: "Courses may include",
+      highlights: [
+        "Different therapeutic approaches",
+        "Principles behind each therapy",
+        "Practical application techniques",
+        "Case-based learning",
+        "Role plays & simulated sessions",
+        "Structuring therapy sessions",
+        "Bridging theory & practice",
+      ],
+      metaNote: "Coming Soon: Internships • Therapy Courses • Practical Training Programs",
       href: "/contact",
       linkLabel: "Stay Tuned for Programs",
     },

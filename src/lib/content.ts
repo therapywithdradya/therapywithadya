@@ -116,7 +116,14 @@ export async function getTestimonials(): Promise<TestimonialRow[]> {
       .order("created_at", { ascending: false });
 
     if (!error && data && data.length > 0) {
-      return data;
+      const cleaned = data.filter(
+        (item) =>
+          !/\[(?:DUMMY|PLACEHOLDER)\]/i.test(item.quote) &&
+          !/^dummy client/i.test(item.display_name.trim()),
+      );
+      if (cleaned.length > 0) {
+        return cleaned;
+      }
     }
   } catch {
     // fallback

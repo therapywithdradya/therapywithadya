@@ -24,15 +24,20 @@ export function ServicesOverview() {
             {site.services.map((service) => (
               <li key={service.slug} className="min-w-0">
                 <Card className="flex h-full flex-col">
-                  <h3 className="line-clamp-2 font-heading text-[clamp(1.15rem,2vw,1.4rem)] text-ink [overflow-wrap:anywhere]">
+                  <p className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                    {service.eyebrow}
+                  </p>
+                  <h3 className="mt-2 line-clamp-2 font-heading text-[clamp(1.15rem,2vw,1.4rem)] leading-snug text-ink [overflow-wrap:anywhere]">
                     {service.title}
                   </h3>
                   <p className="mt-3 line-clamp-4 flex-1 text-muted [overflow-wrap:anywhere]">
                     {service.shortDescription}
                   </p>
-                  <Link href="/services" className={`mt-4 ${textLinkClass}`}>
-                    View {service.title}
-                  </Link>
+                  <div className="mt-5 border-t border-border/60 pt-3">
+                    <Link href={`/services#${service.slug}`} className={textLinkClass}>
+                      View {service.title}
+                    </Link>
+                  </div>
                 </Card>
               </li>
             ))}

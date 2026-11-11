@@ -26,24 +26,31 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
           {sessions.map((session) => (
             <li key={session.slug} className="min-w-0">
               <Card className="flex h-full flex-col">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <h3 className="line-clamp-2 min-w-0 flex-1 font-heading text-[clamp(1.15rem,2vw,1.4rem)] text-ink [overflow-wrap:anywhere]">
-                    {session.name}
-                  </h3>
-                  {session.mode === "online" ? <Badge>Online</Badge> : null}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-heading text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                    {session.durationLabel ?? formatDuration(session.durationMinutes)}
+                  </span>
+                  {session.mode === "online" ? <Badge className="shrink-0">Online</Badge> : null}
                 </div>
+                <h3 className="mt-3 font-heading text-[clamp(1.2rem,2vw,1.45rem)] leading-snug text-ink [overflow-wrap:anywhere]">
+                  {session.name}
+                </h3>
                 <p className="mt-3 line-clamp-3 text-muted [overflow-wrap:anywhere]">
                   {session.description}
                 </p>
-                <dl className="mt-4 space-y-3">
+                <dl className="mt-5 flex-1 space-y-3 border-t border-border/60 pt-4 text-sm">
                   <div className="min-w-0">
                     <dt className="font-semibold text-ink">Duration</dt>
-                    <dd className="text-muted">{session.durationLabel ?? formatDuration(session.durationMinutes)}</dd>
+                    <dd className="text-muted">
+                      {session.durationLabel ?? formatDuration(session.durationMinutes)}
+                    </dd>
                   </div>
                   {session.approaches ? (
                     <div className="min-w-0">
                       <dt className="font-semibold text-ink">Approaches</dt>
-                      <dd className="line-clamp-2 text-muted [overflow-wrap:anywhere]">{session.approaches}</dd>
+                      <dd className="line-clamp-2 text-muted [overflow-wrap:anywhere]">
+                        {session.approaches}
+                      </dd>
                     </div>
                   ) : null}
                   <div className="min-w-0">
@@ -53,15 +60,19 @@ export function SessionOptions({ sessions }: { sessions: PublicSession[] }) {
                     </dd>
                   </div>
                 </dl>
-                {session.priceLabel ? (
-                  <p className="mt-4 text-lg font-bold text-primary [overflow-wrap:anywhere]">{session.priceLabel}</p>
-                ) : null}
-                <Button
-                  href={`/book?session=${encodeURIComponent(session.slug)}`}
-                  className="mt-6 w-full"
-                >
-                  Book this session
-                </Button>
+                <div className="mt-6 border-t border-border/60 pt-5">
+                  {session.priceLabel ? (
+                    <p className="text-xl font-bold text-primary [overflow-wrap:anywhere]">
+                      {session.priceLabel}
+                    </p>
+                  ) : null}
+                  <Button
+                    href={`/book?session=${encodeURIComponent(session.slug)}`}
+                    className="mt-4 w-full"
+                  >
+                    Book this session
+                  </Button>
+                </div>
               </Card>
             </li>
           ))}
