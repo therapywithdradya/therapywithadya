@@ -462,33 +462,47 @@ export function AboutEditorTab({
             {about.qualifications.map((qual, idx) => (
               <div
                 key={idx}
-                className="flex flex-col gap-2 rounded-xl border border-border bg-background p-3 sm:flex-row sm:items-center"
+                className="space-y-2 rounded-xl border border-border bg-background p-3"
               >
-                <input
-                  type="text"
-                  value={qual.title}
-                  onChange={(e) => updateQualification(idx, { title: e.target.value })}
-                  className={`${inputClass} mt-0 flex-1`}
-                  placeholder="Degree / Certification title"
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <input
+                    type="text"
+                    value={qual.title}
+                    onChange={(e) => updateQualification(idx, { title: e.target.value })}
+                    className={`${inputClass} mt-0 flex-1`}
+                    placeholder="Category / Title (e.g. CBT & REBT)"
+                  />
+                  <input
+                    type="text"
+                    value={qual.subtitle ?? qual.issuer ?? ""}
+                    onChange={(e) =>
+                      updateQualification(idx, {
+                        subtitle: e.target.value,
+                        issuer: e.target.value,
+                      })
+                    }
+                    className={`${inputClass} mt-0 sm:w-64`}
+                    placeholder="Credential / Role (optional)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateAbout({
+                        qualifications: about.qualifications.filter((_, i) => i !== idx),
+                      })
+                    }
+                    className="shrink-0 rounded border border-red-900/40 bg-[#2a1215] px-2.5 py-2 text-xs font-medium text-red-400 hover:bg-red-950"
+                  >
+                    Remove
+                  </button>
+                </div>
+                <textarea
+                  rows={2}
+                  value={qual.description ?? ""}
+                  onChange={(e) => updateQualification(idx, { description: e.target.value })}
+                  className={`${textareaClass} mt-0`}
+                  placeholder="Certification description (optional)..."
                 />
-                <input
-                  type="text"
-                  value={qual.issuer ?? ""}
-                  onChange={(e) => updateQualification(idx, { issuer: e.target.value })}
-                  className={`${inputClass} mt-0 sm:w-56`}
-                  placeholder="Institution / Issuer (optional)"
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateAbout({
-                      qualifications: about.qualifications.filter((_, i) => i !== idx),
-                    })
-                  }
-                  className="shrink-0 rounded border border-red-900/40 bg-[#2a1215] px-2.5 py-2 text-xs font-medium text-red-400 hover:bg-red-950"
-                >
-                  Remove
-                </button>
               </div>
             ))}
           </div>

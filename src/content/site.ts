@@ -51,6 +51,8 @@ export type ServiceListing = {
 export type Qualification = {
   title: string;
   issuer?: string;
+  subtitle?: string;
+  description?: string;
 };
 
 export const socialChannels = [
@@ -348,16 +350,55 @@ export const site = {
     background:
       "Ph.D. in Psychology. Over 5 years of professional clinical experience and dedicated academic study. School Counsellor, trauma-informed therapist, certified CBT & REBT practitioner, hypnotherapist, and researcher on resilience, hope, and optimism.",
     qualifications: [
-      { title: "Ph.D. in Psychology", issuer: "Doctor of Philosophy" },
-      { title: "Certified CBT Practitioner", issuer: "Cognitive Behavioral Therapy" },
-      { title: "Certified REBT Practitioner", issuer: "Rational Emotive Behavior Therapy" },
-      { title: "Trauma-Informed Psychologist & Therapist" },
-      { title: "Certified Hypnotherapist" },
-      { title: "Certified Art Therapist" },
-      { title: "Certified Graphologist", issuer: "Handwriting Analyst" },
-      { title: "Career Counselor" },
-      { title: "Certified in Trauma & Grief Counselling" },
-      { title: "Tarot Card Reader" },
+      {
+        title: "CBT & REBT",
+        subtitle: "Certified CBT & REBT Practitioner",
+        issuer: "Certified CBT & REBT Practitioner",
+        description:
+          "Using cognitive and behavioural techniques to identify unhelpful thought patterns, challenge limiting beliefs, and develop healthier ways of thinking and responding.",
+      },
+      {
+        title: "Hypnotherapy",
+        subtitle: "Certified Hypnotherapist",
+        issuer: "Certified Hypnotherapist",
+        description:
+          "Using guided hypnosis to work with the deeper, subconscious patterns that may influence thoughts, emotions, beliefs, and behaviours, supporting greater self-awareness and therapeutic change.",
+      },
+      {
+        title: "Art Therapy",
+        subtitle: "Certified Art Therapist",
+        issuer: "Certified Art Therapist",
+        description:
+          "Using creative expression to explore and communicate emotions, experiences, and thoughts that may be difficult to express through words.",
+      },
+      {
+        title: "Graphology",
+        subtitle: "Certified Graphologist",
+        issuer: "Certified Graphologist",
+        description:
+          "Using handwriting analysis as an exploratory tool for self-reflection and understanding personality and behavioural patterns.",
+      },
+      {
+        title: "Career Counselling",
+        subtitle: "Certified Career Counsellor",
+        issuer: "Certified Career Counsellor",
+        description:
+          "Supporting individuals with career exploration, decision-making, transitions, and identifying suitable career directions.",
+      },
+      {
+        title: "Trauma & Grief Counselling",
+        subtitle: "Certified in Trauma & Grief Counselling",
+        issuer: "Certified in Trauma & Grief Counselling",
+        description:
+          "Supporting individuals navigating the emotional impact of traumatic experiences, loss, grief, and significant life changes.",
+      },
+      {
+        title: "Ph.D. in Psychology",
+        subtitle: "Doctor of Philosophy",
+        issuer: "Doctor of Philosophy",
+        description:
+          "Dedicated academic study and clinical research focusing on resilience, hope, and optimism.",
+      },
     ] as Qualification[],
     approach:
       "My therapeutic approach is grounded in empathy, safety, and non-judgment. I view every client as the author of their own story, providing the tools, perspective, and compassionate containment needed to navigate emotional distress. Drawing from an integrative and flexible approach, the tools we use are selected and adapted according to your needs, concerns, comfort, and goals.",

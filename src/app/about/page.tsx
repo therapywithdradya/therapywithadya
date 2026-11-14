@@ -270,8 +270,17 @@ export default async function AboutPage() {
                         className="rounded-card border border-border bg-surface p-4 shadow-soft [overflow-wrap:anywhere]"
                       >
                         <p className="font-heading text-sm font-semibold text-ink">{item.title}</p>
-                        {filled(item.issuer) ? (
-                          <p className="mt-1 text-xs text-muted">{item.issuer.trim()}</p>
+                        {filled(item.subtitle) ? (
+                          <p className="mt-1 text-xs font-medium text-primary">
+                            {item.subtitle.trim()}
+                          </p>
+                        ) : filled(item.issuer) && item.issuer !== item.title ? (
+                          <p className="mt-1 text-xs font-medium text-primary">{item.issuer.trim()}</p>
+                        ) : null}
+                        {filled(item.description) ? (
+                          <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                            {item.description.trim()}
+                          </p>
                         ) : null}
                       </li>
                     ))}
