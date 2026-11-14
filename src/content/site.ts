@@ -137,7 +137,7 @@ export const site = {
     {
       slug: "individual-psychotherapy",
       eyebrow: "01 • Individual Care",
-      title: "Individual Counselling & Therapy",
+      title: "Individual Psychotherapy",
       hook: "Feeling overwhelmed, stuck, or unsure where to begin? You’re in the right place.",
       shortDescription:
         "Personalized, trauma-informed therapy to help you understand what you’re experiencing, work through challenges, and move forward with clarity and self-compassion.",
