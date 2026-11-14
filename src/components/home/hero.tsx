@@ -34,17 +34,17 @@ export function Hero({
   const resolvedImageAlt = imageAlt?.trim() || image.alt;
 
   return (
-    <Section aria-labelledby="home-hero-title">
-      <Container className="grid min-w-0 items-center gap-10 lg:grid-cols-2">
+    <Section aria-labelledby="home-hero-title" className="pt-6 sm:pt-10 lg:pt-12">
+      <Container className="grid min-w-0 items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12 xl:gap-16">
         <div className="min-w-0">
-          <p className="max-w-full font-heading text-sm font-semibold tracking-[0.18em] text-primary uppercase [overflow-wrap:anywhere]">
+          <p className="max-w-full font-heading text-xs sm:text-sm font-semibold tracking-[0.18em] text-primary uppercase [overflow-wrap:anywhere]">
             {resolvedBrand}
           </p>
-          <div className="mt-4 min-w-0">{heading}</div>
-          <p className="mt-4 max-w-xl text-lead text-muted [overflow-wrap:anywhere]">
+          <div className="mt-3.5 min-w-0">{heading}</div>
+          <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-muted [overflow-wrap:anywhere]">
             {resolvedSupport}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Button href={resolvedBookHref} className="w-full sm:w-auto">
               {resolvedPrimaryLabel}
             </Button>
@@ -53,15 +53,23 @@ export function Hero({
             </Button>
           </div>
         </div>
-        <SiteImage
-          src={resolvedImageUrl}
-          alt={resolvedImageAlt}
-          width={image.width}
-          height={image.height}
-          sizes="(min-width: 1024px) 36rem, 100vw"
-          priority
-          className="aspect-video w-full rounded-[1.25rem] object-cover shadow-card"
-        />
+        <div className="relative flex items-center justify-center lg:justify-end">
+          <div className="relative w-full">
+            <div
+              className="absolute -inset-1.5 rounded-[1.75rem] bg-gradient-to-tr from-primary/15 via-primary/5 to-transparent blur-lg opacity-60 pointer-events-none"
+              aria-hidden="true"
+            />
+            <SiteImage
+              src={resolvedImageUrl}
+              alt={resolvedImageAlt}
+              width={image.width}
+              height={image.height}
+              sizes="(min-width: 1024px) 36rem, 100vw"
+              priority
+              className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] w-full rounded-[1.5rem] border border-border/60 object-cover shadow-2xl"
+            />
+          </div>
+        </div>
       </Container>
     </Section>
   );

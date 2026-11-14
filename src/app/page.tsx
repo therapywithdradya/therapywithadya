@@ -81,7 +81,7 @@ export default async function Home() {
         heading={
           <h1
             id="home-hero-title"
-            className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+            className="font-heading text-[clamp(1.85rem,3.4vw,2.85rem)] font-medium leading-[1.22] tracking-tight text-ink [overflow-wrap:anywhere]"
           >
             {content.hero.tagline}
           </h1>
