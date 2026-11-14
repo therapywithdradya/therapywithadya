@@ -349,7 +349,7 @@ export const DEFAULT_SITE_CONTENT: EditableSiteContent = {
     certificationsEyebrow: "Credentials & Focus",
     certificationsTitle: "My Certifications & Areas of Support",
     certificationsSummary:
-      "I am a trauma-informed therapist and a Tarot Card Reader, certified in CBT, REBT, Hypnotherapy, Art Therapy, Career Counselling, Trauma & Grief Counselling, and Graphotology.",
+      "I am a Trauma-Informed Therapist, REBT & CBT Therapist, Hypnotherapist, Art Therapist, Career Counselor, Graphologist, and Tarot Card Reader.",
     certificationsPhilosophy:
       "I believe therapy should never be one-size-fits-all. My work draws from an integrative and flexible approach, adapting to the individual’s needs, concerns, comfort, and goals.",
     concernsHeading: "Concerns & Challenges I Work With",
@@ -399,45 +399,52 @@ export const DEFAULT_SITE_CONTENT: EditableSiteContent = {
     qualifications: [
       {
         title: "CBT & REBT",
-        subtitle: "Certified CBT & REBT Practitioner",
-        issuer: "Certified CBT & REBT Practitioner",
+        subtitle: "REBT & CBT Therapist",
+        issuer: "REBT & CBT Therapist",
         description:
           "Using cognitive and behavioural techniques to identify unhelpful thought patterns, challenge limiting beliefs, and develop healthier ways of thinking and responding.",
       },
       {
         title: "Hypnotherapy",
-        subtitle: "Certified Hypnotherapist",
-        issuer: "Certified Hypnotherapist",
+        subtitle: "Hypnotherapist",
+        issuer: "Hypnotherapist",
         description:
           "Using guided hypnosis to work with the deeper, subconscious patterns that may influence thoughts, emotions, beliefs, and behaviours, supporting greater self-awareness and therapeutic change.",
       },
       {
         title: "Art Therapy",
-        subtitle: "Certified Art Therapist",
-        issuer: "Certified Art Therapist",
+        subtitle: "Art Therapist",
+        issuer: "Art Therapist",
         description:
           "Using creative expression to explore and communicate emotions, experiences, and thoughts that may be difficult to express through words.",
       },
       {
         title: "Graphology",
-        subtitle: "Certified Graphologist",
-        issuer: "Certified Graphologist",
+        subtitle: "Graphologist",
+        issuer: "Graphologist",
         description:
           "Using handwriting analysis as an exploratory tool for self-reflection and understanding personality and behavioural patterns.",
       },
       {
         title: "Career Counselling",
-        subtitle: "Certified Career Counsellor",
-        issuer: "Certified Career Counsellor",
+        subtitle: "Career Counselor",
+        issuer: "Career Counselor",
         description:
           "Supporting individuals with career exploration, decision-making, transitions, and identifying suitable career directions.",
       },
       {
         title: "Trauma & Grief Counselling",
-        subtitle: "Certified in Trauma & Grief Counselling",
-        issuer: "Certified in Trauma & Grief Counselling",
+        subtitle: "Trauma & Grief Counselor",
+        issuer: "Trauma & Grief Counselor",
         description:
           "Supporting individuals navigating the emotional impact of traumatic experiences, loss, grief, and significant life changes.",
+      },
+      {
+        title: "Tarot Card Reading",
+        subtitle: "Tarot Card Reader",
+        issuer: "Tarot Card Reader",
+        description:
+          "Offering reflective readings for self-exploration, clarity, and personal perspective.",
       },
       {
         title: "Ph.D. in Psychology",
@@ -725,7 +732,7 @@ export const DEFAULT_SITE_CONTENT: EditableSiteContent = {
       appointmentsEyebrow: "Appointments & Programs",
       appointmentsTitle: "Ready to schedule a session?",
       appointmentsText:
-        "You can reserve 30-minute individual therapy, 60-minute individual therapy, or 60–75 minute couples therapy directly online. For school workshops, corporate seminars, tarot readings, or supervision, write in directly.",
+        "You can reserve 30-minute individual therapy, 60-minute individual therapy, or 60–75 minute couples therapy directly online. For school workshops, corporate seminars, or supervision, write in directly.",
       changesEyebrow: "Booking Support",
       changesTitle: "Cancel or change a booking",
     },

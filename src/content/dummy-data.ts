@@ -71,7 +71,7 @@ export function getDummyTestimonials(): TestimonialRow[] {
       id: "11111111-1111-4111-8111-111111111106",
       display_name: "Anonymous",
       quote:
-        "I had an incredible experience with Adya Vats, a highly skilled psychologist and tarot reader. She provided exceptional guidance during a pivotal career decision, helping me weigh the pros and cons of choosing between a high-paying role and one offering better growth opportunities. Her insights were thoughtful, accurate, and deeply resonated with my situation. Adya's empathetic and professional approach made me feel confident and clear-headed about my choice. I highly recommend her to anyone seeking clarity and guidance in life's important decisions.",
+        "I had an incredible experience with Adya Vats, a highly skilled psychologist and counsellor. She provided exceptional guidance during a pivotal career decision, helping me weigh the pros and cons of choosing between a high-paying role and one offering better growth opportunities. Her insights were thoughtful, accurate, and deeply resonated with my situation. Adya's empathetic and professional approach made me feel confident and clear-headed about my choice. I highly recommend her to anyone seeking clarity and guidance in life's important decisions.",
       rating: 5,
       is_approved: true,
       sort_order: 6,
