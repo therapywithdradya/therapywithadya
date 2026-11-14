@@ -305,7 +305,7 @@ export const site = {
       "“Resilience, Hope, and Optimism and Their Role in Shaping Future Orientation Post-Pandemic”",
     ],
     certificationsSummary:
-      "I am certified as a CBT & REBT Practitioner, Trauma-Informed Therapist, Hypnotherapist, Art Therapist, Career Counselor, Graphologist, and Tarot Card Reader.",
+      "I am a trauma-informed therapist and a Tarot Card Reader, certified in CBT, REBT, Hypnotherapy, Art Therapy, Career Counselling, Trauma & Grief Counselling, and Graphotology.",
     certificationsPhilosophy:
       "I believe therapy should never be one-size-fits-all. My work draws from an integrative and flexible approach, adapting to the individual’s needs, concerns, comfort, and goals.",
     concernsSupported: [
@@ -346,6 +346,7 @@ export const site = {
       { title: "Certified Art Therapist" },
       { title: "Certified Graphologist", issuer: "Handwriting Analyst" },
       { title: "Career Counselor" },
+      { title: "Certified in Trauma & Grief Counselling" },
       { title: "Tarot Card Reader" },
     ] as Qualification[],
     approach:
