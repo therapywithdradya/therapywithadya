@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { site } from "@/content/site";
 import { marketingMetadata } from "@/lib/page-metadata";
 import { getSiteContent } from "@/lib/site-content.server";
@@ -25,46 +24,28 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <Section aria-labelledby="services-page-title">
+      <Section aria-labelledby="services-page-title" background="surface">
         <Container>
-          <p className="font-heading text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            {copy.eyebrow}
-          </p>
-          <h1
-            id="services-page-title"
-            className="mt-3 max-w-[70ch] font-heading text-display text-ink [overflow-wrap:anywhere]"
-          >
-            {copy.title}
-          </h1>
-          <div className="mt-4 max-w-[70ch] space-y-2 text-lead text-muted [overflow-wrap:anywhere]">
-            {copy.intro.split(/\n\n+/).map((para, i) => (
-              <p
-                key={i}
-                className={
-                  para.startsWith("*") && para.endsWith("*")
-                    ? "italic text-ink/90"
-                    : undefined
-                }
-              >
-                {para.replace(/^\*|\*$/g, "").trim()}
-              </p>
-            ))}
+          <div className="mx-auto max-w-3xl text-center">
+            <h1
+              id="services-page-title"
+              className="font-heading text-display text-ink [overflow-wrap:anywhere]"
+            >
+              {copy.title || "Services"}
+            </h1>
+            <h2
+              id="services-offerings-title"
+              className="mt-3 font-heading text-heading text-primary"
+            >
+              {copy.offeringsTitle || "What I Offer"}
+            </h2>
+            <p className="mt-4 text-lead text-muted [overflow-wrap:anywhere]">
+              {copy.offeringsIntro || copy.intro}
+            </p>
           </div>
-        </Container>
-      </Section>
-
-      <Section aria-labelledby="services-offerings-title" background="surface">
-        <Container>
-          <SectionHeading
-            id="services-offerings-title"
-            eyebrow={copy.offeringsEyebrow}
-            title={copy.offeringsTitle}
-            intro={copy.offeringsIntro}
-            className="mx-auto text-center"
-          />
 
           {services.length > 0 ? (
-            <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <div className="mt-12 grid gap-6 lg:grid-cols-2">
               {services.map((service) => (
                 <section
                   key={service.slug}
@@ -87,16 +68,23 @@ export default async function ServicesPage() {
                         {service.hook}
                       </p>
                     ) : null}
-                    <p className="mt-4 text-sm leading-relaxed text-muted [overflow-wrap:anywhere]">
-                      {service.longDescription}
-                    </p>
+                    <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted [overflow-wrap:anywhere]">
+                      {service.longDescription.split(/\n\n+/).map((para, i) => (
+                        <p key={i}>{para.trim()}</p>
+                      ))}
+                    </div>
 
-                    <div className="mt-5 flex-1 space-y-4 border-t border-border/60 pt-5">
-                      {service.highlights && service.highlights.length > 0 ? (
-                        <div>
-                          <h3 className="text-xs font-semibold tracking-wider text-primary uppercase">
-                            {service.highlightsTitle ?? "Focus areas"}
+                    {service.highlights && service.highlights.length > 0 ? (
+                      <div className="mt-5 flex-1 space-y-4 border-t border-border/60 pt-5">
+                        {service.topicsHeading ? (
+                          <h3 className="font-heading text-xs font-bold tracking-wider text-ink uppercase">
+                            {service.topicsHeading}
                           </h3>
+                        ) : null}
+                        <div>
+                          <h4 className="text-xs font-semibold tracking-wider text-primary uppercase">
+                            {service.highlightsTitle ?? "Focus areas"}
+                          </h4>
                           <ul className="mt-2.5 flex list-none flex-wrap gap-2 p-0">
                             {service.highlights.map((item) => (
                               <li
@@ -108,26 +96,26 @@ export default async function ServicesPage() {
                             ))}
                           </ul>
                         </div>
-                      ) : null}
 
-                      {service.secondaryHighlights && service.secondaryHighlights.length > 0 ? (
-                        <div>
-                          <h3 className="text-xs font-semibold tracking-wider text-primary uppercase">
-                            {service.secondaryHighlightsTitle}
-                          </h3>
-                          <ul className="mt-2.5 flex list-none flex-wrap gap-2 p-0">
-                            {service.secondaryHighlights.map((item) => (
-                              <li
-                                key={item}
-                                className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-ink"
-                              >
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null}
-                    </div>
+                        {service.secondaryHighlights && service.secondaryHighlights.length > 0 ? (
+                          <div>
+                            <h4 className="text-xs font-semibold tracking-wider text-primary uppercase">
+                              {service.secondaryHighlightsTitle}
+                            </h4>
+                            <ul className="mt-2.5 flex list-none flex-wrap gap-2 p-0">
+                              {service.secondaryHighlights.map((item) => (
+                                <li
+                                  key={item}
+                                  className="rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-ink"
+                                >
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
 
                     <div className="mt-6 border-t border-border/60 pt-5">
                       {service.metaNote ? (
