@@ -36,9 +36,20 @@ export default async function ServicesPage() {
           >
             {copy.title}
           </h1>
-          <p className="mt-4 max-w-[70ch] text-lead text-muted [overflow-wrap:anywhere]">
-            {copy.intro}
-          </p>
+          <div className="mt-4 max-w-[70ch] space-y-2 text-lead text-muted [overflow-wrap:anywhere]">
+            {copy.intro.split(/\n\n+/).map((para, i) => (
+              <p
+                key={i}
+                className={
+                  para.startsWith("*") && para.endsWith("*")
+                    ? "italic text-ink/90"
+                    : undefined
+                }
+              >
+                {para.replace(/^\*|\*$/g, "").trim()}
+              </p>
+            ))}
+          </div>
         </Container>
       </Section>
 

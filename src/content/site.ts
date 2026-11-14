@@ -114,7 +114,7 @@ export const site = {
     } satisfies SiteImageSource,
     servicesTitle: "Services",
     servicesIntro:
-      "Tailored, compassionate care blending evidence-based psychology with holistic healing tools, workshops, and clinical mentorship.",
+      "A range of personalised psychological services, professional guidance, and reflective offerings designed to support your wellbeing, personal growth, and journey forward.\n\n*Tailored support for where you are, at your own pace.*",
     sessionsTitle: "Session Options",
     sessionsIntro:
       "Choose a focused 30-minute session, an in-depth 60-minute therapy space, or couples counseling tailored to your immediate needs.",
@@ -137,7 +137,7 @@ export const site = {
     {
       slug: "individual-psychotherapy",
       eyebrow: "01 • Individual Care",
-      title: "Individual Psychotherapy",
+      title: "Individual Counselling & Therapy",
       hook: "Feeling overwhelmed, stuck, or unsure where to begin? You’re in the right place.",
       shortDescription:
         "Personalized, trauma-informed therapy to help you understand what you’re experiencing, work through challenges, and move forward with clarity and self-compassion.",
@@ -181,31 +181,8 @@ export const site = {
       linkLabel: "Book a Couples Session",
     },
     {
-      slug: "tarot-card-reading",
-      eyebrow: "03 • Intuitive Clarity",
-      title: "Tarot Card Reading",
-      hook: "Looking for a little clarity, reflection, or a different perspective?",
-      shortDescription:
-        "A reflective space to explore your thoughts, emotions, life questions, and possibilities with openness and without judgment.",
-      longDescription:
-        "Tarot readings can offer a reflective space to explore your thoughts, emotions, questions, and the possibilities you may be considering. Each reading is approached with openness and without judgment, helping you reflect on your present situation and gain a different perspective on what may be unfolding in your life.",
-      highlightsTitle: "Areas explored include",
-      highlights: [
-        "Love & relationships",
-        "Career & professional life",
-        "Personal growth",
-        "Life transitions",
-        "Decision-making",
-        "Emotional clarity",
-        "General guidance",
-      ],
-      metaNote: "A space to pause, reflect, and see things from a different perspective.",
-      href: "/contact",
-      linkLabel: "Book a Tarot Reading",
-    },
-    {
       slug: "workshops",
-      eyebrow: "04 • Institutional Programs",
+      eyebrow: "03 • Institutional Programs",
       title: "Workshops, Seminars & Institutional Programs",
       hook: "Looking to create a healthier, more resilient, and better-functioning environment?",
       shortDescription:
@@ -238,7 +215,7 @@ export const site = {
     },
     {
       slug: "supervision",
-      eyebrow: "05 • Clinical Mentorship",
+      eyebrow: "04 • Clinical Mentorship",
       title: "Supervision for Budding Psychologists",
       hook: "Starting your practice but unsure how to navigate the therapy room?",
       shortDescription:
@@ -261,7 +238,7 @@ export const site = {
     },
     {
       slug: "internships-courses",
-      eyebrow: "06 • Practical Training",
+      eyebrow: "05 • Practical Training",
       title: "Internships & Courses",
       hook: "Want to move beyond learning theories and actually understand how to use them in practice?",
       shortDescription:
@@ -281,6 +258,29 @@ export const site = {
       metaNote: "Coming Soon: Internships • Therapy Courses • Practical Training Programs",
       href: "/contact",
       linkLabel: "Stay Tuned for Programs",
+    },
+    {
+      slug: "tarot-reading",
+      eyebrow: "06 • Reflective Guidance",
+      title: "Tarot Reading",
+      hook: "Looking for a little clarity, reflection, or a different perspective?",
+      shortDescription:
+        "A reflective space to explore your thoughts, emotions, life questions, and possibilities with openness and without judgment.",
+      longDescription:
+        "Tarot readings can offer a reflective space to explore your thoughts, emotions, questions, and the possibilities you may be considering. Each reading is approached with openness and without judgment, helping you reflect on your present situation and gain a different perspective on what may be unfolding in your life.",
+      highlightsTitle: "Areas explored include",
+      highlights: [
+        "Love & relationships",
+        "Career & professional life",
+        "Personal growth",
+        "Life transitions",
+        "Decision-making",
+        "Emotional clarity",
+        "General guidance",
+      ],
+      metaNote: "A space to pause, reflect, and see things from a different perspective.",
+      href: "/contact",
+      linkLabel: "Book a Tarot Reading",
     },
   ] satisfies ServiceListing[],
   about: {
@@ -429,7 +429,7 @@ export const site = {
       description:
         "Explore psychotherapy services, CBT & REBT counseling, hypnotherapy, art therapy, graphology, workshops, and clinical supervision.",
       intro:
-        "A comprehensive range of evidence-based psychological services and specialized modalities designed to support your personal growth and well-being.",
+        "A range of personalised psychological services, professional guidance, and reflective offerings designed to support your wellbeing, personal growth, and journey forward.\n\n*Tailored support for where you are, at your own pace.*",
     },
     sessions: {
       title: "Sessions",

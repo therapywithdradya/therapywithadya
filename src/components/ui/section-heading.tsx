@@ -23,7 +23,22 @@ export function SectionHeading({
       <h2 id={id} className="mt-2 font-heading text-heading text-ink">
         {title}
       </h2>
-      {intro ? <p className="mt-3 text-lead text-muted">{intro}</p> : null}
+      {intro ? (
+        <div className="mt-3 space-y-2 text-lead text-muted [overflow-wrap:anywhere]">
+          {intro.split(/\n\n+/).map((para, i) => (
+            <p
+              key={i}
+              className={
+                para.startsWith("*") && para.endsWith("*")
+                  ? "italic text-ink/90"
+                  : undefined
+              }
+            >
+              {para.replace(/^\*|\*$/g, "").trim()}
+            </p>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
