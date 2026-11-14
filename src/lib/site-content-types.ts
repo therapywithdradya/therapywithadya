@@ -375,19 +375,22 @@ export const DEFAULT_SITE_CONTENT: EditableSiteContent = {
     concernsOutro:
       "At the heart of my work is something I learned through my own journey: understanding yourself can be the beginning of changing how you experience your life.\nAnd sometimes, you don’t have to figure it all out alone.",
     approachesEyebrow: "Modalities",
-    approachesTitle: "My Approaches",
+    approachesTitle: "My Approach",
     approachesIntro:
-      "My work draws from an integrative and flexible approach, adapted according to your needs, concerns, comfort, and goals:",
+      "My work is grounded in a trauma-informed, emotion-focused, and mindfulness-based approach. I adapt my therapeutic work to each individual’s experiences, needs, comfort, and goals.",
     approaches: [
-      { name: "Cognitive Behavioural Therapy (CBT)", desc: "Identifying and reframing unhelpful thought patterns and behaviors." },
-      { name: "Rational Emotive Behaviour Therapy (REBT)", desc: "Transforming irrational beliefs into resilient, self-accepting perspectives." },
-      { name: "Gestalt Therapy", desc: "Focusing on present-moment awareness and resolving unfinished emotional experiences." },
-      { name: "Mindfulness-Based Approaches", desc: "Cultivating calm, grounding, and non-judgmental awareness of emotions." },
-      { name: "Hypnotherapy", desc: "Accessing subconscious pathways for deep emotional release and reprogramming." },
-      { name: "Art Therapy", desc: "Using creative expressive mediums to process complex, non-verbal feelings." },
-      { name: "Graphology", desc: "Handwriting analysis to reveal subconscious personality patterns and emotional blocks." },
-      { name: "Trauma-Informed Approaches", desc: "Creating absolute safety, agency, and paced healing for past emotional wounds." },
-      { name: "Emotion-Focused Therapy", desc: "Understanding, accepting, and transforming core emotional experiences." },
+      {
+        name: "Trauma-Informed",
+        desc: "Creating a safe, compassionate, and empowering space that recognises the impact of past experiences while respecting each person’s pace, boundaries, and sense of safety.",
+      },
+      {
+        name: "Emotion-Focused",
+        desc: "Helping you understand, process, and make sense of your emotions, rather than simply suppressing or avoiding them.",
+      },
+      {
+        name: "Mindfulness-Based",
+        desc: "Cultivating present-moment awareness and developing a more compassionate relationship with thoughts, emotions, and experiences.",
+      },
     ],
     qualificationsEyebrow: "Training",
     qualificationsTitle: "Qualifications & Credentials",
