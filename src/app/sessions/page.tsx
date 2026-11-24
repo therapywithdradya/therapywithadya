@@ -65,16 +65,6 @@ export default async function SessionsPage() {
                         {session.durationLabel ?? formatDuration(session.durationMinutes)}
                       </dd>
                     </div>
-                    {session.approaches ? (
-                      <div className="min-w-0">
-                        <dt className="font-semibold text-ink">Approaches may include</dt>
-                        <dd className="text-muted [overflow-wrap:anywhere]">{session.approaches}</dd>
-                      </div>
-                    ) : null}
-                    <div className="min-w-0">
-                      <dt className="font-semibold text-ink">Who it is for</dt>
-                      <dd className="text-muted [overflow-wrap:anywhere]">{session.whoItFor}</dd>
-                    </div>
                   </dl>
                   <div className="mt-6 border-t border-border/60 pt-5">
                     {session.priceLabel ? (
