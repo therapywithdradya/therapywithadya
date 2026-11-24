@@ -6,7 +6,6 @@ import Image from "next/image";
 import {
   Brain,
   Sparkles,
-  Users,
   ChevronLeft,
   ChevronRight,
   Play,
@@ -21,52 +20,54 @@ import {
   Sun,
   Flame,
   ChevronDown,
+  MapPin,
+  Mail,
 } from "lucide-react";
 
 export default function DesignOnePage() {
   // Concerns slider state
   const concerns = [
     {
-      title: "Pain Management",
-      desc: "Pain is temporary; resilience is forever. Let us help you manage and heal.",
-      icon: Feather,
-      color: "bg-red-50 text-red-600 border-red-100",
-      pill: "bg-rose-100/70",
-    },
-    {
       title: "Anxiety & Stress",
-      desc: "Quiet the mental noise, break the loop of overwhelm, and ground into the present.",
+      desc: "Learn to quiet racing thoughts, manage panic and chronic worry, and cultivate grounded coping strategies.",
       icon: Sun,
       color: "bg-amber-50 text-amber-600 border-amber-100",
       pill: "bg-amber-100/70",
     },
     {
-      title: "Anger Management",
-      desc: "Our therapy and meditation sessions can guide you to a calmer, more balanced state.",
-      icon: Flame,
-      color: "bg-orange-50 text-orange-600 border-orange-100",
-      pill: "bg-orange-100/70",
-    },
-    {
-      title: "Relax & Unwind",
-      desc: "Escape the daily stress & chaos. Recharge your mind & body with our relaxation & unwinding sessions.",
-      icon: Smile,
-      color: "bg-blue-50 text-blue-600 border-blue-100",
-      pill: "bg-blue-100/70",
-    },
-    {
-      title: "Low Mood & Depression",
-      desc: "Rebuild emotional vitality, understand difficult feelings, and find clarity with safe support.",
+      title: "Depression & Low Mood",
+      desc: "Rebuild emotional vitality, understand difficult internal patterns, and reconnect with energy and meaning.",
       icon: Heart,
       color: "bg-purple-50 text-purple-600 border-purple-100",
       pill: "bg-purple-100/70",
     },
     {
-      title: "Relationship Patterns",
-      desc: "Work through communication breakdowns, heal attachment wounds, and build lasting safety.",
+      title: "Relationship Concerns",
+      desc: "Navigate recurring conflicts, understand attachment needs, and build healthier, more communicative bonds.",
       icon: Compass,
       color: "bg-emerald-50 text-emerald-600 border-emerald-100",
       pill: "bg-emerald-100/70",
+    },
+    {
+      title: "Trauma & Grief",
+      desc: "A trauma-informed space respecting your boundaries to process loss, difficult experiences, and life transitions.",
+      icon: Feather,
+      color: "bg-rose-50 text-rose-600 border-rose-100",
+      pill: "bg-rose-100/70",
+    },
+    {
+      title: "Self-Doubt & Transitions",
+      desc: "Challenge limiting beliefs, clarify career and life directions, and build unshakeable self-compassion.",
+      icon: Smile,
+      color: "bg-blue-50 text-blue-600 border-blue-100",
+      pill: "bg-blue-100/70",
+    },
+    {
+      title: "Burnout & Overwhelm",
+      desc: "Escape the cycle of exhaustion, set healthy emotional boundaries, and restore harmony to your work and life.",
+      icon: Flame,
+      color: "bg-orange-50 text-orange-600 border-orange-100",
+      pill: "bg-orange-100/70",
     },
   ];
 
@@ -78,16 +79,96 @@ export default function DesignOnePage() {
     setConcernIndex((prev) => (prev - 1 < 0 ? concerns.length - 3 : prev - 1));
   };
 
-  // Audio widget practice state
-  const practiceTabs = [
-    "Mindfulness",
-    "Breathwork",
-    "Sleep Stories",
-    "Guided Meditation",
-    "Soothing Soundscapes",
-    "Ambient Sounds",
+  // Approaches / Modalities tabbed interactive widget
+  const approachTabs = [
+    {
+      id: "trauma-informed",
+      label: "Trauma-Informed",
+      heading: "Trauma-Informed Therapy",
+      tagline: "Safety, pacing, and empowerment at your own pace",
+      description:
+        "Creating a safe, compassionate, and empowering space that recognises the impact of past experiences while respecting each person’s pace, boundaries, and sense of safety.",
+      benefits:
+        "Benefits: Emotional Safety • Respects Boundaries • Rebuilds Inner Trust • Paced Processing",
+      practiceTitle: "Grounding & Somatic Safety Check-in",
+      practiceDuration: "02:30",
+    },
+    {
+      id: "emotion-focused",
+      label: "Emotion-Focused",
+      heading: "Emotion-Focused Approach",
+      tagline: "Making sense of emotions rather than suppressing them",
+      description:
+        "Helping you understand, process, and make sense of your emotions, rather than simply suppressing, intellectualising, or avoiding them in daily life.",
+      benefits:
+        "Benefits: Emotional Awareness • Unpacking Triggers • Reducing Numbness • Self-Validation",
+      practiceTitle: "Mindful Emotion Naming & Softening",
+      practiceDuration: "02:00",
+    },
+    {
+      id: "cbt-rebt",
+      label: "REBT & CBT",
+      heading: "REBT & CBT Therapy",
+      tagline: "Cognitive restructuring & healthier behavioral responses",
+      description:
+        "Using cognitive and behavioural techniques to identify unhelpful thought patterns, challenge limiting beliefs, and develop healthier ways of thinking and responding to life.",
+      benefits:
+        "Benefits: Cognitive Restructuring • Reframing Automatic Thoughts • Behavioral Activation",
+      practiceTitle: "Thought Reframing & Thought-Record Exercise",
+      practiceDuration: "03:15",
+    },
+    {
+      id: "mindfulness",
+      label: "Mindfulness-Based",
+      heading: "Mindfulness-Based Practice",
+      tagline: "Cultivating present-moment awareness & gentle presence",
+      description:
+        "Cultivating present-moment awareness and developing a more compassionate, curious relationship with your thoughts, emotions, and bodily experiences.",
+      benefits:
+        "Benefits: Decreased Rumination • Nervous System Regulation • Focus • Present Awareness",
+      practiceTitle: "5-Sense Sensory Anchor & Mindful Breathing",
+      practiceDuration: "02:15",
+    },
+    {
+      id: "hypnotherapy",
+      label: "Hypnotherapy",
+      heading: "Clinical Hypnotherapy",
+      tagline: "Subconscious patterns & deep therapeutic change",
+      description:
+        "Using guided hypnosis to work with the deeper, subconscious patterns that influence thoughts, emotions, beliefs, and behaviours, supporting greater self-awareness.",
+      benefits:
+        "Benefits: Subconscious Alignment • Deep Relaxation • Releasing Habits • Core Healing",
+      practiceTitle: "Subconscious Relaxation & Mental Sanctuary",
+      practiceDuration: "03:00",
+    },
+    {
+      id: "art-therapy",
+      label: "Art Therapy",
+      heading: "Art & Creative Expression",
+      tagline: "Expressing thoughts beyond words",
+      description:
+        "Using creative expression to explore and communicate emotions, experiences, and thoughts that may feel too complex or difficult to put into ordinary words.",
+      benefits:
+        "Benefits: Non-Verbal Exploration • Somatic Release • Creative Catharsis • Insight",
+      practiceTitle: "Guided Visual Reflection & Journaling Prompt",
+      practiceDuration: "02:45",
+    },
   ];
-  const [activePracticeTab, setActivePracticeTab] = useState("Mindfulness");
+
+  const [activeApproachTab, setActiveApproachTab] = useState<(typeof approachTabs)[number]>(
+    approachTabs[0] ?? {
+      id: "trauma-informed",
+      label: "Trauma-Informed",
+      heading: "Trauma-Informed Therapy",
+      tagline: "Safety, pacing, and empowerment at your own pace",
+      description:
+        "Creating a safe, compassionate, and empowering space that recognises the impact of past experiences while respecting each person’s pace, boundaries, and sense of safety.",
+      benefits:
+        "Benefits: Emotional Safety • Respects Boundaries • Rebuilds Inner Trust • Paced Processing",
+      practiceTitle: "Grounding & Somatic Safety Check-in",
+      practiceDuration: "02:30",
+    }
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioSeconds, setAudioSeconds] = useState(0);
 
@@ -96,7 +177,7 @@ export default function DesignOnePage() {
     if (isPlaying) {
       interval = setInterval(() => {
         setAudioSeconds((prev) => {
-          if (prev >= 119) {
+          if (prev >= 150) {
             setIsPlaying(false);
             return 0;
           }
@@ -116,11 +197,11 @@ export default function DesignOnePage() {
   // Anonymous toggle demo
   const [isAnonymous, setIsAnonymous] = useState(true);
 
-  // Form submission demo
+  // Form submission state
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [focusArea, setFocusArea] = useState("Anxiety & Stress Management");
+  const [focusArea, setFocusArea] = useState("Individual Counselling & Therapy");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,30 +210,35 @@ export default function DesignOnePage() {
       setFormSubmitted(false);
       setName("");
       setPhone("");
-    }, 4000);
+    }, 4500);
   };
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
       {/* Top Demo Bar */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-2 px-4 flex items-center justify-between border-b border-slate-800">
+      <div className="bg-slate-950 text-slate-300 text-xs py-2 px-4 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Sample Design 1 Demo • Mindhouse Aesthetic (Dr. Adya Practice)</span>
+          <span>Sample Design 1 Demo • Mindhouse Aesthetic with Dr. Adya Website Content</span>
         </div>
-        <Link
-          href="/tempPages"
-          className="text-purple-300 hover:text-white underline font-medium"
-        >
-          ← Design Hub
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/tempPages"
+            className="text-purple-300 hover:text-white underline font-medium"
+          >
+            ← All Designs Hub
+          </Link>
+          <Link href="/" className="text-slate-400 hover:text-white">
+            Current Live Site
+          </Link>
+        </div>
       </div>
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm transition">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full border-2 border-purple-600 flex items-center justify-center p-1 bg-purple-50">
               <svg viewBox="0 0 100 100" className="w-full h-full text-purple-600 stroke-current fill-none stroke-[6]">
                 <circle cx="50" cy="50" r="40" strokeDasharray="180" strokeLinecap="round" />
@@ -161,45 +247,50 @@ export default function DesignOnePage() {
               </svg>
             </div>
             <div>
-              <span className="font-bold text-xl tracking-tight text-slate-900 block leading-tight">
-                MINDHOUSE
-              </span>
-              <span className="text-[10px] tracking-widest uppercase text-slate-400 font-semibold block">
+              <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 block leading-tight">
                 Therapy with Dr. Adya
               </span>
+              <span className="text-[10px] tracking-wider uppercase text-slate-500 font-medium block">
+                Psychologist &amp; Counselor
+              </span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
-            <a href="#therapy" className="hover:text-purple-600 transition">
-              Therapy
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-700">
+            <a href="#about" className="hover:text-purple-600 transition">
+              About
             </a>
-            <a href="#meditation" className="hover:text-purple-600 transition">
-              Meditation
+            <a href="#services" className="hover:text-purple-600 transition">
+              Services
             </a>
-            <div className="relative group cursor-pointer flex items-center gap-1 hover:text-purple-600 transition">
-              <span>Community</span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
-            </div>
-            <a href="#corporate" className="hover:text-purple-600 transition">
-              Corporate plan
+            <a href="#sessions" className="hover:text-purple-600 transition">
+              Sessions
             </a>
+            <a href="#approaches" className="hover:text-purple-600 transition">
+              Approaches
+            </a>
+            <a href="#reviews" className="hover:text-purple-600 transition">
+              Reviews
+            </a>
+            <Link href="/contact" className="hover:text-purple-600 transition">
+              Contact
+            </Link>
           </nav>
 
           {/* CTA */}
           <div className="flex items-center gap-3">
-            <a
-              href="#booking-section"
+            <Link
+              href="/book"
               className="px-5 py-2.5 rounded-full bg-[#7a5af8] hover:bg-[#6847f2] text-white text-sm font-medium transition shadow-md shadow-purple-500/20"
             >
-              Book a Session
-            </a>
+              Book a session
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section (Image 1) */}
+      {/* Hero Section (Image 1 Structure with Dr. Adya's Real Tagline & Pillars) */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#182559] via-[#141e4d] to-[#0d1434] text-white pt-20 pb-28 sm:pb-36">
         {/* Satin Sheen wave effect */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
@@ -220,70 +311,66 @@ export default function DesignOnePage() {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
-            Make time for your mind <br className="hidden sm:inline" />
-            with Mindhouse
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-purple-200 tracking-wider uppercase mb-6">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            Therapy with Dr. Adya Vats
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
+            A safe, compassionate space to acknowledge what you’re carrying, understand yourself more deeply, and take meaningful steps forward.
           </h1>
-          <p className="text-lg sm:text-xl text-slate-300 font-light max-w-2xl mx-auto mb-14">
-            The only sanctuary you need for all your mental health and emotional well-being needs.
+
+          <p className="text-base sm:text-lg text-slate-300 font-light max-w-2xl mx-auto mb-14 leading-relaxed">
+            Supporting adolescents and adults through anxiety, stress, depression, self-doubt, trauma, relationship concerns, life transitions, and emotional wellbeing.
           </p>
 
-          {/* 3 Glassmorphic Feature Cards */}
+          {/* 3 Glassmorphic Feature Cards (Dr. Adya's Core Approaches) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            {/* Card 1 */}
-            <a
-              href="#therapy"
-              className="group bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg"
-            >
-              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-105 transition">
+            {/* Card 1: Trauma-Informed */}
+            <div className="bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
+                <Shield className="w-6 h-6 text-amber-300" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white text-base">Trauma-Informed</h3>
+                <p className="text-xs text-slate-300 mt-0.5">Pacing, boundaries, and safety</p>
+              </div>
+            </div>
+
+            {/* Card 2: Emotion-Focused */}
+            <div className="bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
+                <Heart className="w-6 h-6 text-amber-300" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white text-base">Emotion-Focused</h3>
+                <p className="text-xs text-slate-300 mt-0.5">Making sense of deep emotions</p>
+              </div>
+            </div>
+
+            {/* Card 3: Mindfulness-Based */}
+            <div className="bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
                 <Brain className="w-6 h-6 text-amber-300" />
               </div>
               <div>
-                <h3 className="font-semibold text-white text-base">Therapy</h3>
-                <p className="text-xs text-slate-300 mt-0.5">Get help from a professional</p>
+                <h3 className="font-semibold text-white text-base">Mindfulness-Based</h3>
+                <p className="text-xs text-slate-300 mt-0.5">Present awareness &amp; compassion</p>
               </div>
-            </a>
-
-            {/* Card 2 */}
-            <a
-              href="#meditation"
-              className="group bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg"
-            >
-              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-105 transition">
-                <Sparkles className="w-6 h-6 text-amber-300" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white text-base">Meditation</h3>
-                <p className="text-xs text-slate-300 mt-0.5">Train your Mind</p>
-              </div>
-            </a>
-
-            {/* Card 3 */}
-            <a
-              href="#community"
-              className="group bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-left flex items-center gap-4 transition shadow-lg"
-            >
-              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-105 transition">
-                <Users className="w-6 h-6 text-amber-300" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white text-base">Community</h3>
-                <p className="text-xs text-slate-300 mt-0.5">Learn from relatable experiences</p>
-              </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Concerns We Address Section (Image 2) */}
-      <section id="therapy" className="py-24 bg-white relative">
+      <section className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-3">
               Concerns we address
             </h2>
             <p className="text-slate-500 text-base sm:text-lg">
-              Transform Your Life with Mindhouse: Your Path to Wellness and Fulfillment
+              Personalised support tailored for where you are, at your own pace
             </p>
           </div>
 
@@ -346,19 +433,19 @@ export default function DesignOnePage() {
         </div>
       </section>
 
-      {/* Discover Your Perfect Therapist (Image 3) */}
+      {/* Discover Your Path to Healing (Image 3 Structure with Dr. Adya's Real Background & Experience) */}
       <section className="py-24 bg-[#2b0d66] text-white relative overflow-hidden">
         {/* Glow ambient background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6 tracking-tight">
-            Discover your perfect Therapist <br className="hidden sm:inline" />
-            with Mindhouse
+            Discover your path forward <br className="hidden sm:inline" />
+            with Dr. Adya Vats
           </h2>
 
           <p className="text-base sm:text-lg text-purple-200 max-w-3xl mx-auto mb-16 font-light leading-relaxed">
-            Our signature questionnaire, <span className="underline decoration-purple-300 font-medium">The Harmony Profile</span>, delves into your personality and needs, guiding us to match you with the ideal therapist. Our diverse team brings a wealth of experiences and expertise across various fields and walks of life.
+            My therapeutic approach is grounded in empathy, safety, and non-judgment. I view every client as the author of their own story, providing the tools, perspective, and compassionate containment needed to navigate emotional distress into lasting clarity.
           </p>
 
           {/* Central Silhouette Head Wire Visual */}
@@ -369,7 +456,7 @@ export default function DesignOnePage() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Left Silhouette (Calm Spiral) */}
+              {/* Left Silhouette (Calm Spiral - Self-Awareness) */}
               <g className="text-purple-300/40">
                 <path
                   d="M140 260 C140 260 140 230 140 220 C140 190 120 180 120 150 C120 110 145 70 190 70 C240 70 270 100 270 150 C270 180 250 200 250 220 C250 240 250 260 250 260 Z"
@@ -395,7 +482,7 @@ export default function DesignOnePage() {
                 className="animate-pulse"
               />
 
-              {/* Right Silhouette (Tangled Scribble) */}
+              {/* Right Silhouette (Tangled Scribble - Life Challenges) */}
               <g className="text-purple-300/40">
                 <path
                   d="M460 260 C460 260 460 230 460 220 C460 190 480 180 480 150 C480 110 455 70 410 70 C360 70 330 100 330 150 C330 180 350 200 350 220 C350 240 350 260 350 260 Z"
@@ -415,77 +502,80 @@ export default function DesignOnePage() {
             </svg>
           </div>
 
-          {/* 3 Key Stats at Bottom */}
+          {/* 3 Key Stats at Bottom (Dr. Adya's Real Credentials & Reach) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-purple-800/60 text-left">
             <div>
-              <div className="text-4xl font-bold text-white mb-2">70%</div>
+              <div className="text-4xl font-bold text-white mb-2">1,000+</div>
               <p className="text-purple-200 text-sm">
-                Female therapists for diverse perspectives and relatable empathy.
+                Clients guided through individual psychotherapy, emotional healing, and personal growth.
               </p>
             </div>
 
             <div>
-              <div className="text-4xl font-bold text-white mb-2">50% Therapists</div>
+              <div className="text-4xl font-bold text-white mb-2">Multi-Modality</div>
               <p className="text-purple-200 text-sm">
-                Speak multiple languages. Insights from 25+ cities and diverse backgrounds.
+                Integrative care drawing from Trauma-Informed, REBT &amp; CBT, Mindfulness, and Hypnotherapy.
               </p>
             </div>
 
             <div>
-              <div className="text-4xl font-bold text-white mb-2">250+ years</div>
+              <div className="text-4xl font-bold text-white mb-2">5+ Years</div>
               <p className="text-purple-200 text-sm">
-                Of combined experience to empower your well-being and personal growth.
+                Dedicated clinical practice, academic research, institutional workshops, and supervision.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Train Your Mind Interactive Practice Widget (Image 4) */}
-      <section id="meditation" className="py-24 bg-white">
+      {/* My Approaches & Interactive Reflective Widget (Image 4 Structure) */}
+      <section id="approaches" className="py-24 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 tracking-tight">
-            Train your mind with Mindhouse
+            My Therapeutic Approaches
           </h2>
-          <p className="text-slate-500 text-base sm:text-lg mb-10">
-            Practice with our specially designed content, tailored for your goals
+          <p className="text-slate-500 text-base sm:text-lg mb-10 max-w-2xl mx-auto">
+            Tools and modalities selected and adapted according to your individual needs, comfort, and goals.
           </p>
 
           {/* Practice Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10">
-            {practiceTabs.map((tab) => (
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8">
+            {approachTabs.map((tab) => (
               <button
-                key={tab}
-                onClick={() => setActivePracticeTab(tab)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition ${
-                  activePracticeTab === tab
-                    ? "bg-white text-slate-900 border-2 border-slate-900 shadow-sm"
+                key={tab.id}
+                onClick={() => setActiveApproachTab(tab)}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition ${
+                  activeApproachTab.id === tab.id
+                    ? "bg-slate-900 text-white shadow-sm"
                     : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200"
                 }`}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
 
           {/* Benefits Pastel Green Banner */}
           <div className="bg-[#e4f7eb] text-[#1e6b3c] font-medium text-xs sm:text-sm py-3 px-6 rounded-2xl max-w-3xl mx-auto mb-8 shadow-sm">
-            Benefits of {activePracticeTab}: Improve Focus, Manage Anxiety, Anger Management
+            {activeApproachTab.benefits}
           </div>
 
-          {/* Interactive Player Card */}
+          {/* Interactive Modality Card */}
           <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-8 text-left">
-            {/* Left Audio Details */}
+            {/* Left Content */}
             <div className="flex-1 w-full">
               <span className="inline-block bg-[#fff0e6] text-[#e8602b] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
-                FREE SAMPLE
+                {activeApproachTab.label}
               </span>
 
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                Musical Mindfulness
+              <h3 className="text-2xl font-bold text-slate-900 mb-1">
+                {activeApproachTab.heading}
               </h3>
-              <p className="text-slate-500 text-sm mb-6">
-                Train your mind to build awareness and focus on the present moment
+              <p className="text-purple-600 text-xs font-semibold mb-3">
+                {activeApproachTab.tagline}
+              </p>
+              <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+                {activeApproachTab.description}
               </p>
 
               {/* Scrubber Bar */}
@@ -493,16 +583,16 @@ export default function DesignOnePage() {
                 <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden relative">
                   <div
                     className="h-full bg-purple-600 transition-all duration-300"
-                    style={{ width: `${(audioSeconds / 119) * 100}%` }}
+                    style={{ width: `${(audioSeconds / 150) * 100}%` }}
                   ></div>
                 </div>
                 <span className="text-xs font-medium text-slate-400 min-w-16">
-                  {formatAudioTime(audioSeconds)} / 01:59
+                  {formatAudioTime(audioSeconds)} / {activeApproachTab.practiceDuration}
                 </span>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
                   className="w-11 h-11 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-700 flex items-center justify-center transition shrink-0"
-                  aria-label={isPlaying ? "Pause audio" : "Play audio"}
+                  aria-label={isPlaying ? "Pause practice" : "Play practice"}
                 >
                   {isPlaying ? (
                     <Pause className="w-5 h-5 fill-current" />
@@ -512,71 +602,111 @@ export default function DesignOnePage() {
                 </button>
               </div>
 
-              <button
-                onClick={() => alert("Redirecting to session consultation with Dr. Adya Vats")}
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#7a5af8] hover:bg-[#6847f2] text-white font-medium text-sm transition shadow-md shadow-purple-500/20"
+              <Link
+                href="/book"
+                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#7a5af8] hover:bg-[#6847f2] text-white font-medium text-sm transition shadow-md shadow-purple-500/20 inline-block text-center"
               >
-                Continue in Mindhouse App
-              </button>
+                Book a Session with Dr. Adya
+              </Link>
             </div>
 
-            {/* Right Visual (Zen Stones) */}
+            {/* Right Visual (Zen Stones & Mindful Space) */}
             <div className="w-full md:w-64 h-64 relative rounded-2xl overflow-hidden shadow-md shrink-0 bg-slate-900">
               <Image
                 src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80"
-                alt="Zen meditation stones representing mindfulness"
+                alt="Mindfulness practice and safe therapeutic presence"
                 fill
                 sizes="(max-width: 768px) 100vw, 256px"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
-                <p className="font-semibold text-sm">Musical Mindfulness</p>
-                <p className="text-[11px] text-slate-300">Train your mind to build awareness</p>
+                <p className="font-semibold text-sm">{activeApproachTab.practiceTitle}</p>
+                <p className="text-[11px] text-slate-300">Reflective calming exercise</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Unlock Full Experience & Form (Image 5) */}
-      <section id="booking-section" className="py-20 bg-slate-50 border-t border-slate-100">
+      {/* Services & Session Options Section (Image 5 Structure with Dr. Adya's Real Offerings) */}
+      <section id="services" className="py-20 bg-slate-50 border-t border-slate-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
-            {/* Left Perks List */}
+            {/* Left Services / Sessions Breakdown */}
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-8">
-                Unlock the full Mindhouse <br />
-                experience
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-100/70 px-3 py-1 rounded-full mb-4">
+                What I Offer
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-4">
+                Personalised support for where you are
               </h2>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                Explore one-on-one therapy, relationship support, institutional programs, professional mentorship, practical training, and reflective offerings.
+              </p>
 
-              <ul className="space-y-5">
+              <div className="space-y-4">
                 {[
-                  "Early access to Mindhouse therapy & Meditation Classes.",
-                  "Early bird discounts across platform.",
-                  "Access to exclusive Mindhouse content on App.",
-                  "Daily inspirational content to start your day right.",
-                ].map((perk, i) => (
-                  <li key={i} className="flex items-start gap-3">
+                  {
+                    title: "Individual Counselling & Therapy",
+                    meta: "30-min (₹1,000) • 60-min (₹2,000)",
+                    desc: "Personalised, trauma-informed therapy to work through challenges and move forward with greater clarity.",
+                  },
+                  {
+                    title: "Couples Therapy",
+                    meta: "60–75 min (₹3,000)",
+                    desc: "A supportive space for couples to communicate openly, work through recurring challenges, and rebuild connection.",
+                  },
+                  {
+                    title: "Workshops & Institutional Programs",
+                    meta: "Schools, Colleges & Corporates",
+                    desc: "Customised mental health workshops on stress, burnout, emotional regulation, and resilience.",
+                  },
+                  {
+                    title: "Supervision for Budding Psychologists",
+                    meta: "Professional Mentorship",
+                    desc: "Practical case guidance, structuring sessions, and building therapy-room confidence.",
+                  },
+                ].map((srv, i) => (
+                  <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-2xl border border-slate-200/70 shadow-sm">
                     <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
-                    <span className="text-slate-700 text-base font-normal">{perk}</span>
-                  </li>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="font-semibold text-slate-900 text-sm">{srv.title}</h4>
+                        <span className="text-[11px] font-medium text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md">
+                          {srv.meta}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">{srv.desc}</p>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
-            {/* Right Callback Form */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
+            {/* Right Callback / Quick Booking Enquiry */}
+            <div id="sessions" className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
+              <h3 className="text-xl font-bold text-slate-900 mb-2">Book or Inquire About a Session</h3>
+              <p className="text-xs text-slate-500 mb-6">
+                Share your details and focus area. I will reach out to schedule your preferred time slot.
+              </p>
+
               {formSubmitted ? (
                 <div className="text-center py-8">
                   <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Check className="w-7 h-7 stroke-[2.5]" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Request Received!</h3>
-                  <p className="text-sm text-slate-600">
-                    Thank you! Our care coordinator will connect with you via WhatsApp/call shortly.
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">Enquiry Received</h3>
+                  <p className="text-sm text-slate-600 mb-4">
+                    Thank you! I will connect with you via WhatsApp or email to confirm your session.
                   </p>
+                  <Link
+                    href="/book"
+                    className="inline-block px-5 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-semibold"
+                  >
+                    Or Reserve Time Online Directly
+                  </Link>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -600,7 +730,7 @@ export default function DesignOnePage() {
                     <input
                       type="tel"
                       required
-                      placeholder="Enter your phone number"
+                      placeholder="Enter your phone or WhatsApp number"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="flex-1 px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm bg-slate-50/50"
@@ -614,12 +744,11 @@ export default function DesignOnePage() {
                       onChange={(e) => setFocusArea(e.target.value)}
                       className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm bg-slate-50/50 text-slate-700"
                     >
-                      <option>Select your focus area</option>
-                      <option>Anxiety & Overwhelm</option>
-                      <option>Depression & Low Energy</option>
-                      <option>Relationship & Couples Therapy</option>
-                      <option>Burnout & Corporate Stress</option>
-                      <option>Trauma & Grief Counselling</option>
+                      <option>Individual Counselling &amp; Therapy (30 min / 60 min)</option>
+                      <option>Couples Therapy (60–75 min)</option>
+                      <option>Workshops &amp; Institutional Programs</option>
+                      <option>Supervision for Budding Psychologists</option>
+                      <option>Tarot Card Reading (Reflective Session)</option>
                     </select>
                   </div>
 
@@ -627,43 +756,52 @@ export default function DesignOnePage() {
                     type="submit"
                     className="w-full py-4 rounded-xl bg-[#7a5af8] hover:bg-[#6847f2] text-white font-medium text-sm transition shadow-md shadow-purple-500/20"
                   >
-                    Submit details
+                    Request Session Information
                   </button>
+
+                  <div className="pt-2 text-center">
+                    <Link
+                      href="/book"
+                      className="text-xs text-purple-600 hover:text-purple-700 font-semibold"
+                    >
+                      Prefer instant online scheduling? Click here to book directly →
+                    </Link>
+                  </div>
                 </form>
               )}
             </div>
           </div>
         </div>
 
-        {/* Wavy Purple Safe Space Banner (Image 5 Bottom) */}
-        <div id="community" className="bg-[#b39ef7] text-slate-900 pt-16 pb-20 relative overflow-hidden">
+        {/* Wavy Purple Confidentiality Banner (Image 5 Bottom) */}
+        <div className="bg-[#b39ef7] text-slate-900 pt-16 pb-20 relative overflow-hidden">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-2">
-                A safe space for sharing and support
+                A safe, confidential space for sharing and support
               </h2>
               <p className="text-slate-800/80 text-sm sm:text-base">
-                Be a part of our Mindhouse community.
+                Take the first step toward self-compassion and mental clarity.
               </p>
             </div>
 
-            {/* Mobile App Confidentiality Showcase */}
+            {/* Mobile App Confidentiality Demonstration */}
             <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
-              {/* Phone Mockup Window */}
+              {/* Privacy Mockup Window */}
               <div className="w-full max-w-sm bg-slate-900 rounded-[2.5rem] p-4 shadow-2xl border-4 border-slate-800 text-white">
                 <div className="bg-slate-950 rounded-2xl p-4">
                   <div className="flex justify-between items-center text-xs text-slate-400 mb-4 pb-2 border-b border-slate-800">
-                    <span className="font-semibold text-white">Mindhouse Community</span>
-                    <span className="bg-purple-900/60 text-purple-300 text-[10px] px-2 py-0.5 rounded-full">
-                      Protected
+                    <span className="font-semibold text-white">Client Privacy &amp; Boundaries</span>
+                    <span className="bg-emerald-900/60 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full">
+                      Strictly Confidential
                     </span>
                   </div>
 
-                  {/* Anonymous Switch Demonstration */}
+                  {/* Anonymous / Privacy Switch Demonstration */}
                   <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
                     <div className="flex items-center justify-between gap-3 mb-2">
                       <span className="text-xs font-semibold text-slate-200">
-                        Do you want to post this anonymously?
+                        Confidential consultation guarantee
                       </span>
                       <button
                         onClick={() => setIsAnonymous(!isAnonymous)}
@@ -676,8 +814,8 @@ export default function DesignOnePage() {
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">
                       {isAnonymous
-                        ? "Other users won't be able to see your name and profile picture."
-                        : "Your public display name will be visible to members."}
+                        ? "All session notes, disclosures, and communications are held in strict ethical containment."
+                        : "Clinical records maintained strictly per ethical psychological guidelines."}
                     </p>
                   </div>
                 </div>
@@ -692,195 +830,282 @@ export default function DesignOnePage() {
                   Speak your mind without fear.
                 </h3>
                 <p className="text-slate-800/80 text-sm leading-relaxed mb-4">
-                  Connect with others on a deeper level while maintaining your complete privacy on Mindhouse.
+                  Everything you share remains safe, protected, and completely non-judgmental throughout your therapeutic journey.
                 </p>
-                <div className="inline-flex items-center gap-2 text-xs font-semibold bg-white/40 px-3 py-1.5 rounded-full">
-                  <span>Join our Community</span>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 text-xs font-semibold bg-white/40 px-3 py-1.5 rounded-full hover:bg-white/60 transition"
+                >
+                  <span>Connect with Dr. Adya</span>
                   <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section (Image 6) */}
-      <section className="py-24 bg-white">
+      {/* Testimonials Section (Image 6 Structure with Dr. Adya's Real Client Quotes) */}
+      <section id="reviews" className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-3">
-              Testimonials
+              Client Testimonials
             </h2>
             <p className="text-slate-500 text-base sm:text-lg">
-              Stories of growth and resilience with Mindhouse
+              Stories of growth, resilience, and healing with Dr. Adya Vats
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Testimonial 1 */}
+            {/* Real Testimonial 1 */}
             <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-lg shadow-slate-100 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-purple-100 shrink-0">
-                    <Image
-                      src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80"
-                      alt="Monica Thukral"
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
+                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-purple-100 text-purple-700 font-bold flex items-center justify-center shrink-0">
+                    A
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base">Monica Thukral</h3>
-                    <p className="text-xs text-slate-400">Mindfulness Member</p>
+                    <h3 className="font-bold text-slate-900 text-base">Anonymous Client</h3>
+                    <p className="text-xs text-slate-400">Individual Therapy</p>
                   </div>
                 </div>
                 <p className="text-slate-600 text-sm leading-relaxed italic">
-                  &ldquo;My morning meditation classes with Mindhouse have made my work days much more productive! I feel completely fresh &amp; energized through the day, and my ability to focus at work has improved. The cyclic meditation class is my favorite, with an interesting mix of movements and meditation.&rdquo;
+                  &ldquo;Regarding the feedback, I must say I was in the right place when I needed it the most. All your efforts are clearly reflected in my progress, and your ability to deeply understand and listen to someone in need is remarkable. Every session I had with you was very calming at that time, and it helped me a lot in overcoming that phase. I would rate every session 10 on 10.&rdquo;
                 </p>
               </div>
             </div>
 
-            {/* Testimonial 2 */}
+            {/* Real Testimonial 2 */}
             <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-lg shadow-slate-100 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-blue-100 shrink-0">
-                    <Image
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
-                      alt="Prabir Banerjee"
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
+                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-blue-100 text-blue-700 font-bold flex items-center justify-center shrink-0">
+                    S
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base">Prabir Banerjee</h3>
-                    <p className="text-xs text-slate-400">Therapy Client</p>
+                    <h3 className="font-bold text-slate-900 text-base">Therapy Client</h3>
+                    <p className="text-xs text-slate-400">Anxiety &amp; Fear Management</p>
                   </div>
                 </div>
                 <p className="text-slate-600 text-sm leading-relaxed italic">
-                  &ldquo;I love the goal based meditation classes on the Mindhouse app. The instructors make it very easy for beginners to follow. The productivity tools have been especially helpful while working from home. I absolutely recommend it to anyone feeling stressed or anxious!&rdquo;
+                  &ldquo;Therapy sessions bahut helpful rahe. Therapist ne meri baat patience aur understanding ke saath suni. Unki guidance se mujhe anxiety aur fear ko better handle karne mein help mili. Sessions comfortable aur supportive feel hote hain. Main emotionally kaafi better feel kar rahi hoon. Highly recommended.&rdquo;
                 </p>
               </div>
             </div>
 
-            {/* Testimonial 3 */}
+            {/* Real Testimonial 3 */}
             <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-lg shadow-slate-100 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-emerald-100 shrink-0">
-                    <Image
-                      src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80"
-                      alt="Shantanu Saha"
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
+                  <div className="w-12 h-12 rounded-full overflow-hidden relative bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">
+                    P
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-base">Shantanu Saha</h3>
-                    <p className="text-xs text-slate-400">Corporate Member</p>
+                    <h3 className="font-bold text-slate-900 text-base">Long-term Client</h3>
+                    <p className="text-xs text-slate-400">Personal Growth &amp; Coping</p>
                   </div>
                 </div>
                 <p className="text-slate-600 text-sm leading-relaxed italic">
-                  &ldquo;The first class was so interesting that I immediately signed up for an unlimited membership. The awesome studio, extremely user-friendly app, wonderful trainers, extremely helpful staff and the various sessions have me hooked!&rdquo;
+                  &ldquo;I’ve been seeing Adya for a long time and I can honestly say it’s been a life-changing experience. She created a safe, non-judgmental space for me to explore my thoughts, emotions, and concerns. Adya is an exceptional listener, empathetic, and insightful. If you’re struggling with mental health issues or seeking personal growth, I highly recommend her.&rdquo;
                 </p>
               </div>
             </div>
           </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/reviews"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-700"
+            >
+              <span>Read all client reflections &amp; reviews</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Train your mind at Mindhouse - Warm Split Gallery (Image 7) */}
-      <section id="corporate" className="py-24 bg-[#faf5ee] border-t border-slate-200/60">
+      {/* About Dr. Adya Vats & Tranquil Space - Warm Split Gallery (Image 7 Structure) */}
+      <section id="about" className="py-24 bg-[#faf5ee] border-t border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
+            {/* Left Content (Dr. Adya's Real Bio) */}
             <div className="lg:col-span-5 text-left">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-3 py-1 rounded-full mb-4">
+                About Dr. Adya Vats
+              </div>
               <h2 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-6 leading-tight">
-                Train your mind at Mindhouse
+                A space where you can come as you are
               </h2>
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-8">
-                Mindhouse is your personal mind gym to help you take care of your mental well-being. We offer a diverse range of exercises and tools designed to strengthen your emotional resilience, boost mindfulness, and foster a positive mindset.
+              <p className="text-slate-600 text-base sm:text-lg leading-relaxed mb-4">
+                Hi, I’m Dr. Adya Vats. With 5 years of experience, I believe therapy begins with acknowledging what you’re going through, understanding yourself with greater compassion, and finding a way forward with clarity and self-awareness.
+              </p>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-8">
+                My work is trauma-informed, compassionate, and tailored to you — helping you navigate life’s challenges, understand your patterns, and create meaningful change. You don’t have to figure it out alone.
               </p>
 
-              {/* App / Booking Action Buttons */}
+              {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4">
-                <a
-                  href="#booking-section"
+                <Link
+                  href="/book"
                   className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition shadow-lg flex items-center gap-2"
                 >
-                  <span>Book a Consultation</span>
+                  <span>Book a Session</span>
                   <ArrowRight className="w-4 h-4" />
-                </a>
+                </Link>
                 <Link
-                  href="/services"
+                  href="/about"
                   className="px-6 py-3.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-medium text-sm transition shadow-sm"
                 >
-                  View All Services
+                  Read Full Bio &amp; Qualifications
                 </Link>
               </div>
             </div>
 
-            {/* Right Asymmetrical Photo Collage (Matches Image 7) */}
+            {/* Right Asymmetrical Photo Collage (Using Dr. Adya's Real Practice Photos) */}
             <div className="lg:col-span-7 grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                {/* Photo 1: Meditating on dock */}
-                <div className="h-64 sm:h-72 relative rounded-3xl overflow-hidden shadow-md">
+                {/* Photo 1: Dr. Adya Portrait */}
+                <div className="h-64 sm:h-72 relative rounded-3xl overflow-hidden shadow-md bg-purple-50">
                   <Image
-                    src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80"
-                    alt="Man meditating peacefully outdoors"
+                    src="/images/dr-adya-portrait.jpg"
+                    alt="Dr. Adya Vats - Psychologist and Counselor"
                     fill
                     sizes="(max-width: 768px) 50vw, 400px"
-                    className="object-cover hover:scale-105 transition duration-500"
+                    className="object-cover object-top hover:scale-105 transition duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+                    <p className="font-semibold text-sm">Dr. Adya Vats</p>
+                    <p className="text-[11px] text-slate-200">Psychologist &amp; Counselor</p>
+                  </div>
                 </div>
 
-                {/* Photo 2: Headphone mindfulness */}
-                <div className="h-64 sm:h-72 relative rounded-3xl overflow-hidden shadow-md">
+                {/* Photo 2: Art Therapy / Workshop */}
+                <div className="h-64 sm:h-72 relative rounded-3xl overflow-hidden shadow-md bg-slate-100">
                   <Image
-                    src="https://images.unsplash.com/photo-1516307365426-bea591f05011?auto=format&fit=crop&w=800&q=80"
-                    alt="Listening to guided mindfulness audio"
+                    src="/images/gallery-art-therapy.jpg"
+                    alt="Art Therapy and creative healing workshop"
                     fill
                     sizes="(max-width: 768px) 50vw, 400px"
                     className="object-cover hover:scale-105 transition duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
+                    <p className="font-semibold text-sm">Art Therapy &amp; Creative Expression</p>
+                    <p className="text-[11px] text-slate-200">Expressing beyond words</p>
+                  </div>
                 </div>
               </div>
 
-              {/* Photo 3: Therapy session room */}
-              <div className="h-[33rem] sm:h-[37rem] relative rounded-3xl overflow-hidden shadow-md">
+              {/* Photo 3: Therapy Room Space */}
+              <div className="h-[33rem] sm:h-[37rem] relative rounded-3xl overflow-hidden shadow-md bg-slate-100">
                 <Image
-                  src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?auto=format&fit=crop&w=800&q=80"
-                  alt="Therapy and supportive group space"
+                  src="/images/hero-space.jpg"
+                  alt="Tranquil and welcoming therapy space for Dr. Adya Vats practice"
                   fill
                   sizes="(max-width: 768px) 50vw, 400px"
                   className="object-cover hover:scale-105 transition duration-500"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
+                  <p className="font-bold text-base">A Calming, Grounded Space</p>
+                  <p className="text-xs text-slate-200 mt-1">
+                    Online worldwide and in-person consultations by appointment
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Demo Footer */}
-      <footer className="bg-white border-t border-slate-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-slate-500">
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-slate-900 tracking-tight">MINDHOUSE</span>
-            <span className="text-slate-300">|</span>
-            <span>Dr. Adya Vats Practice Design Concept</span>
+      {/* Footer (Real Practice Information) */}
+      <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            {/* Col 1 */}
+            <div className="md:col-span-2">
+              <h3 className="font-bold text-xl text-white tracking-tight mb-2">
+                Therapy with Dr. Adya Vats
+              </h3>
+              <p className="text-sm text-slate-400 max-w-sm mb-4 leading-relaxed">
+                A safe, compassionate, and trauma-informed space to acknowledge what you’re carrying, understand yourself more deeply, and take meaningful steps forward.
+              </p>
+              <div className="flex items-center gap-3 text-slate-400 text-sm">
+                <MapPin className="w-4 h-4 text-purple-400 shrink-0" />
+                <span>Online Sessions (Worldwide) &amp; In-Person by Appointment</span>
+              </div>
+            </div>
+
+            {/* Col 2 */}
+            <div>
+              <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
+                Explore
+              </h4>
+              <ul className="space-y-2.5 text-sm text-slate-400">
+                <li>
+                  <Link href="/about" className="hover:text-white transition">About Dr. Adya</Link>
+                </li>
+                <li>
+                  <Link href="/services" className="hover:text-white transition">Services &amp; Programs</Link>
+                </li>
+                <li>
+                  <Link href="/sessions" className="hover:text-white transition">Session Options</Link>
+                </li>
+                <li>
+                  <Link href="/events" className="hover:text-white transition">Workshops &amp; Seminars</Link>
+                </li>
+                <li>
+                  <Link href="/reviews" className="hover:text-white transition">Client Reviews</Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3 */}
+            <div>
+              <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
+                Get in Touch
+              </h4>
+              <ul className="space-y-2.5 text-sm text-slate-400">
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-purple-400" />
+                  <a href="mailto:adyavats13@gmail.com" className="hover:text-white">adyavats13@gmail.com</a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-purple-400 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                  <a
+                    href="https://www.instagram.com/dr.adya_vats"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-white"
+                  >
+                    @dr.adya_vats
+                  </a>
+                </li>
+                <li className="pt-2">
+                  <Link
+                    href="/book"
+                    className="inline-block px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold"
+                  >
+                    Book a session
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex items-center gap-6">
-            <Link href="/tempPages" className="text-purple-600 hover:text-purple-700 font-medium">
-              View Design Hub
-            </Link>
-            <Link href="/" className="hover:text-slate-900">
-              Live Website
-            </Link>
-            <span>&copy; {new Date().getFullYear()} Mindhouse Demo. All rights reserved.</span>
+          {/* Safety & Emergency Notice */}
+          <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-xs text-slate-400 mb-8 leading-relaxed">
+            <strong className="text-slate-200">Emergency and crisis support:</strong> This practice does not provide emergency crisis services. If you or someone you know is in immediate danger, please reach out to national emergency services at <strong className="text-slate-200">112</strong> or Tele-MANAS at <strong className="text-slate-200">14416</strong>.
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-800 text-xs text-slate-500">
+            <div>&copy; {new Date().getFullYear()} Therapy with Dr. Adya Vats. All rights reserved.</div>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="hover:text-slate-400">Privacy Policy</Link>
+              <Link href="/terms-and-cancellation" className="hover:text-slate-400">Terms &amp; Cancellation</Link>
+              <Link href="/tempPages" className="text-purple-400 hover:text-purple-300">Design Review Hub</Link>
+            </div>
           </div>
         </div>
       </footer>
