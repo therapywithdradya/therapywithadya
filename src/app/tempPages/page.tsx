@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function TempPagesIndex() {
   return (
@@ -45,31 +45,28 @@ export default function TempPagesIndex() {
                 and a warm linen review section.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100 text-sm text-slate-700">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Satin indigo hero with 3 glassmorphic cards</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Interactive concerns carousel</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Dual-mind therapeutic connection visual</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Interactive mindfulness audio preview widget</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Consultation enquiry with confidentiality reassurance</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Asymmetric warm photo & testimonial showcase</span>
-                </div>
+              <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-100">
+                <Link
+                  href="/tempPages/design-1"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-semibold hover:bg-purple-700 transition"
+                >
+                  <span>Main Home Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/tempPages/design-1/book"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition"
+                >
+                  <span>Book a Slot Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/tempPages/design-1/contact"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition"
+                >
+                  <span>Contact Page Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
 
