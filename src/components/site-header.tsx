@@ -152,6 +152,11 @@ export function SiteHeader({
     };
   }, [open]);
 
+  // Hide default header when viewing temporary demo preview pages
+  if (pathname?.startsWith("/tempPages") || pathname?.startsWith("/temp-pages")) {
+    return null;
+  }
+
   return (
     <header
       ref={headerRef}

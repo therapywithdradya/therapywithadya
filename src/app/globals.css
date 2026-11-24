@@ -146,3 +146,15 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+/* Temp demo pages root isolation */
+body:has(#temp-pages-root) > footer {
+  display: none !important;
+}
+body:has(#temp-pages-root) {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+body:has(#temp-pages-root) > a.sr-only {
+  display: none !important;
+}
