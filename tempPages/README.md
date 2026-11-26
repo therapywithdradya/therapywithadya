@@ -56,10 +56,15 @@ This folder and route (`/tempPages`) hold alternative frontend design concepts f
   - Sleek dark studio aesthetic with glowing borders.
 
 ### 6. Sample Design 6: Bloom & Hope (`/tempPages/design-6`)
-- **Aesthetic**: Hopeful Multi-Pastel Journey — Each Section a Different Gentle Color.
-- **Palette**: Light Yellowish-Cream (`#FFFDF2`), Light Indigo (`#EAE8FF`), Light Sky Blue (`#EFF8FF`), Warm Beige (`#FBF8F3`), Soft Sage Green (`#F0F7F2`), Blush Pink (`#FFF5F7`), Soft Lavender (`#F5F0FF`).
-- **Highlights**:
-  - Multi-pastel section progression designed to evoke warmth, variety, and hope.
-  - Light pastel indigo & yellowish-cream "Discover your path forward" banner.
-  - Color-coded interactive service pills and 8 pastel concern cards.
-  - Responsive appointment request form with instant confirmation.
+- **Aesthetic**: Full Multi-Page Mirror of Main Site — Multi-Pastel Hopeful Theme.
+- **Palette**: Light Yellowish-Cream (`#FFFDF2`), Light Indigo (`#EAE8FF`), Light Sky Blue (`#EFF8FF`), Warm Beige (`#FBF7EE`), Soft Sage Green (`#EFF8F2`), Blush Pink (`#FFF5F7`), Soft Lavender (`#F5F2FF`).
+- **Separate Pages Included**:
+  - Home (`/tempPages/design-6`)
+  - About (`/tempPages/design-6/about`)
+  - Services (`/tempPages/design-6/services`)
+  - Sessions (`/tempPages/design-6/sessions`)
+  - Events (`/tempPages/design-6/events`)
+  - Gallery (`/tempPages/design-6/gallery`)
+  - Reviews (`/tempPages/design-6/reviews`)
+  - Contact (`/tempPages/design-6/contact`)
+  - Book (`/tempPages/design-6/book`)

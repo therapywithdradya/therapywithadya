@@ -113,17 +113,17 @@ export default function TempPagesIndex() {
     {
       id: "design-6",
       number: "Demo 6",
-      name: "Bloom & Hope",
-      tagline: "Multi-Pastel Hopeful Experience — Each Section a Different Gentle Color",
-      palette: "Soft Cream, Light Indigo, Pastel Blue, Sage Green, Blush Pink, Warm Beige, Lavender",
-      paletteColors: ["#F5F0FF", "#EFF8FF", "#F0F7F2", "#FFF5F7", "#FBF8F3", "#6366F1"],
-      theme: "Hopeful Multi-Pastel Journey",
-      idealFor: "Clients seeking a warm, colorful, uplifting experience that evokes hope and emotional safety through gentle pastel variety.",
+      name: "Bloom & Hope (Full Multi-Page Mirror)",
+      tagline: "Full Mirror of Main Site — Multi-Pastel Hopeful Theme Across All 9 Pages",
+      palette: "Yellowish-White, Light Indigo, Sky Blue, Warm Beige, Sage Green, Blush Pink, Lavender",
+      paletteColors: ["#FFFDF2", "#EAE8FF", "#EFF8FF", "#FBF7EE", "#EFF8F2", "#FFF5F7"],
+      theme: "Full Site Redesign (Multi-Pastel)",
+      idealFor: "Experiencing the exact main website (Home, About, Services, Sessions, Events, Gallery, Reviews, Contact, Book) re-themed with hopeful pastel colors.",
       highlights: [
-        "Sections shift from cream → sky blue → beige → sage green → blush pink → lavender",
-        "Color-coded service selector pills (each service has its own pastel)",
-        "Soft gradient hero with multi-pastel blobs",
-        "Interactive concerns grid with 8 color-coded concern cards",
+        "All 9 separate pages matching the live website structure & copy",
+        "Each section shifts gently: yellowish-white → beige → blue → sage → pink → lavender",
+        "Live Booking Wizard, Gallery Lightbox, and full Services & About content",
+        "Light pastel indigo accents replacing heavy dark colors",
       ],
       link: "/tempPages/design-6",
       badgeColor: "bg-gradient-to-r from-indigo-100 to-pink-100 text-indigo-700 border-indigo-200",
@@ -159,19 +159,23 @@ export default function TempPagesIndex() {
             Each concept incorporates your authentic credentials, real pricing, and official services while exploring different emotional tones, color palettes, and client engagement flows.
           </p>
 
-          <div className="mt-8 pt-8 border-t border-slate-100 flex flex-wrap gap-4 text-xs font-semibold text-slate-700">
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Check className="w-4 h-4 text-emerald-600" /> Real Pricing (₹1k / ₹2k / ₹3k)
-            </span>
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Check className="w-4 h-4 text-emerald-600" /> All 6 Official Services
-            </span>
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Check className="w-4 h-4 text-emerald-600" /> Fully Responsive Mobile/Desktop
-            </span>
-            <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-lg">
-              <Check className="w-4 h-4 text-emerald-600" /> Isolated from Production Site
-            </span>
+          <div className="mt-8 pt-8 border-t border-slate-100 flex flex-wrap gap-3">
+            {demos.map((d) => (
+              <Link
+                key={d.id}
+                href={d.link}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition shadow-xs ${
+                  d.id === "design-6"
+                    ? "bg-indigo-600 text-white hover:bg-indigo-700 ring-2 ring-indigo-200"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                <span>{d.number}: {d.name.split(" (")[0]}</span>
+                {d.id === "design-6" ? (
+                  <span className="ml-1 rounded-full bg-white/20 px-1.5 py-0.5 text-[10px]">New</span>
+                ) : null}
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -271,6 +275,29 @@ export default function TempPagesIndex() {
                       >
                         Contact
                       </Link>
+                    </div>
+                  )}
+
+                  {demo.id === "design-6" && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { label: "About", href: "/tempPages/design-6/about" },
+                        { label: "Services", href: "/tempPages/design-6/services" },
+                        { label: "Sessions", href: "/tempPages/design-6/sessions" },
+                        { label: "Events", href: "/tempPages/design-6/events" },
+                        { label: "Gallery", href: "/tempPages/design-6/gallery" },
+                        { label: "Reviews", href: "/tempPages/design-6/reviews" },
+                        { label: "Contact", href: "/tempPages/design-6/contact" },
+                        { label: "Book", href: "/tempPages/design-6/book" },
+                      ].map((sub) => (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          className="py-1.5 px-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
                     </div>
                   )}
                 </div>
