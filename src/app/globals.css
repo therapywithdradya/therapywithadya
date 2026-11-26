@@ -151,6 +151,9 @@ img {
 body:has(#temp-pages-root) > footer {
   display: none !important;
 }
+body:has(#temp-pages-root) > header {
+  display: none !important;
+}
 body:has(#temp-pages-root) {
   background: #ffffff !important;
   color: #0f172a !important;
