@@ -110,6 +110,25 @@ export default function TempPagesIndex() {
       badgeColor: "bg-emerald-950 text-emerald-300 border-emerald-800",
       btnColor: "bg-[#1E4330] hover:bg-[#285A41] text-[#A3D9B5] border border-[#3A7B59]",
     },
+    {
+      id: "design-6",
+      number: "Demo 6",
+      name: "Bloom & Hope",
+      tagline: "Multi-Pastel Hopeful Experience — Each Section a Different Gentle Color",
+      palette: "Soft Cream, Light Indigo, Pastel Blue, Sage Green, Blush Pink, Warm Beige, Lavender",
+      paletteColors: ["#F5F0FF", "#EFF8FF", "#F0F7F2", "#FFF5F7", "#FBF8F3", "#6366F1"],
+      theme: "Hopeful Multi-Pastel Journey",
+      idealFor: "Clients seeking a warm, colorful, uplifting experience that evokes hope and emotional safety through gentle pastel variety.",
+      highlights: [
+        "Sections shift from cream → sky blue → beige → sage green → blush pink → lavender",
+        "Color-coded service selector pills (each service has its own pastel)",
+        "Soft gradient hero with multi-pastel blobs",
+        "Interactive concerns grid with 8 color-coded concern cards",
+      ],
+      link: "/tempPages/design-6",
+      badgeColor: "bg-gradient-to-r from-indigo-100 to-pink-100 text-indigo-700 border-indigo-200",
+      btnColor: "bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white",
+    },
   ];
 
   const handleSubmitFinalSelection = (e: React.FormEvent) => {
@@ -128,7 +147,7 @@ export default function TempPagesIndex() {
               Dr. Adya Vats • Client Design Review Suite
             </div>
             <span className="text-xs text-slate-500 font-medium">
-              5 Live Frontend Concepts Available
+              6 Live Frontend Concepts Available
             </span>
           </div>
 
@@ -136,7 +155,7 @@ export default function TempPagesIndex() {
             Explore &amp; Finalize Your Website Design
           </h1>
           <p className="text-base sm:text-lg text-slate-600 max-w-3xl leading-relaxed">
-            We have crafted <strong className="text-slate-900">5 distinct design directions</strong> for Dr. Adya Vats’s practice.
+            We have crafted <strong className="text-slate-900">6 distinct design directions</strong> for Dr. Adya Vats’s practice.
             Each concept incorporates your authentic credentials, real pricing, and official services while exploring different emotional tones, color palettes, and client engagement flows.
           </p>
 
@@ -159,7 +178,7 @@ export default function TempPagesIndex() {
         {/* 5 DESIGN CARDS GRID */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-slate-900">The 5 Design Options</h2>
+            <h2 className="text-2xl font-bold text-slate-900">The 6 Design Options</h2>
             <span className="text-xs text-slate-500">Click any demo to experience live</span>
           </div>
 
@@ -329,6 +348,17 @@ export default function TempPagesIndex() {
                 <td className="py-4 px-4">Interactive 6-Service Clinical Suite matrix</td>
                 <td className="py-4 px-4">
                   <Link href="/tempPages/design-5" className="text-emerald-700 font-bold hover:underline">
+                    View →
+                  </Link>
+                </td>
+              </tr>
+              <tr>
+                <td className="py-4 px-4 font-bold text-indigo-600">Demo 6 (Bloom &amp; Hope)</td>
+                <td className="py-4 px-4">Hopeful, uplifting, multi-pastel color journey</td>
+                <td className="py-4 px-4">Cream → Sky Blue → Beige → Sage → Pink → Lavender</td>
+                <td className="py-4 px-4">Color-coded service pills &amp; pastel concern cards</td>
+                <td className="py-4 px-4">
+                  <Link href="/tempPages/design-6" className="text-indigo-600 font-bold hover:underline">
                     View →
                   </Link>
                 </td>

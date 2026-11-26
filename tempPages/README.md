@@ -8,7 +8,7 @@ This folder and route (`/tempPages`) hold alternative frontend design concepts f
 
 ---
 
-## The 5 Complete Design Demos
+## The 6 Complete Design Demos
 
 ### 1. Sample Design 1: Mindhouse Wellness (`/tempPages/design-1`)
 - **Aesthetic**: Modern Mental Health & Mindfulness App.
@@ -54,3 +54,12 @@ This folder and route (`/tempPages`) hold alternative frontend design concepts f
   - Interactive 6-Service Clinical Suite matrix with instant switching.
   - Transparent fee structures and credential verification.
   - Sleek dark studio aesthetic with glowing borders.
+
+### 6. Sample Design 6: Bloom & Hope (`/tempPages/design-6`)
+- **Aesthetic**: Hopeful Multi-Pastel Journey — Each Section a Different Gentle Color.
+- **Palette**: Light Yellowish-Cream (`#FFFDF2`), Light Indigo (`#EAE8FF`), Light Sky Blue (`#EFF8FF`), Warm Beige (`#FBF8F3`), Soft Sage Green (`#F0F7F2`), Blush Pink (`#FFF5F7`), Soft Lavender (`#F5F0FF`).
+- **Highlights**:
+  - Multi-pastel section progression designed to evoke warmth, variety, and hope.
+  - Light pastel indigo & yellowish-cream "Discover your path forward" banner.
+  - Color-coded interactive service pills and 8 pastel concern cards.
+  - Responsive appointment request form with instant confirmation.
