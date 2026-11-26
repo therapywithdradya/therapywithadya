@@ -70,8 +70,53 @@ export default function TempPagesIndex() {
               </div>
             </div>
 
-            <div className="border border-dashed border-slate-200 rounded-2xl p-6 text-center text-slate-400">
-              <p className="text-sm font-medium">Additional sample designs will appear here as you share them.</p>
+            {/* Sample Design 2 Card */}
+            <div className="border border-slate-200 rounded-2xl p-6 sm:p-8 hover:border-emerald-400 hover:shadow-md transition bg-gradient-to-br from-white to-[#faf8f5]">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
+                    Sample Design 2
+                  </span>
+                  <h2 className="text-2xl font-serif font-bold text-slate-900 mt-2">
+                    BetterHelp-Inspired Matching &amp; Intake Platform
+                  </h2>
+                </div>
+                <Link
+                  href="/tempPages/design-2"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#2e5b3f] text-white font-medium hover:bg-[#234731] transition shadow-sm w-fit"
+                >
+                  View Live Demo
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <p className="text-slate-600 mb-6">
+                A warm, clean, accessible clinical onboarding aesthetic in sage &amp; forest green. Features a guided interactive questionnaire, clinical outcome gauges (69% anxiety / 73% mood improvement), comparative value table, and personalized onboarding guide.
+              </p>
+
+              <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-100">
+                <Link
+                  href="/tempPages/design-2"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#2e5b3f] text-white text-xs font-semibold hover:bg-[#234731] transition"
+                >
+                  <span>Intake Questionnaire Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/tempPages/design-2/book"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition"
+                >
+                  <span>Booking Flow Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/tempPages/design-2/contact"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition"
+                >
+                  <span>Contact Page Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
           </div>
 
